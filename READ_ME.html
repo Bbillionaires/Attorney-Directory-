@@ -1,0 +1,55 @@
+
+<p><font size="2" face="Arial, Helvetica, sans-serif"><strong>Legal Forms Site</strong></font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">Open conn.php and edit your 
+  database info as follows:</font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">//enter your MySQL database host 
+  name, often it is not necessary to edit this line<br>
+  $db_host = &quot;<font color="#FF0000">localhost</font>&quot;;</font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">//enter your MySQL database username<br>
+  $db_username = &quot;<font color="#FF0000">database_user</font>&quot;;</font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">//enter your MySQL database password<br>
+  $db_password = &quot;<font color="#FF0000">password</font>&quot;;</font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">//enter your MySQL database 
+  name<br>
+  $db_name = &quot;<font color="#FF0000">database_name</font>&quot;;<br>
+  </font><br>
+  <font size="2" face="Arial, Helvetica, sans-serif">//Script URL<br>
+  $site_url = &quot;<font color="#FF0000">http://www.yourdomain.com</font>&quot;;</font></p>
+<p>&nbsp;</p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">Upload all the files and directories 
+  at the main html directory at your server, using your favorite FTP program. 
+  Keep the same directory structure</font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">Change the directory permissions 
+  as follow: </font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">"banners" directory -> chmod 
+  777 <br>
+  <br>
+  <br>
+  <br>
+  To install the database tables, point your browser to: http://www.your-domain.com/install.php 
+  <br>
+  <br>
+  After pressing the "Install" button, the database tables will be installed. 
+  It is better to delete the "install.php" file after the installation is completed. 
+  </font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">After the installer has 
+  been run, you can now populate the 85 legal forms that are included in the website. 
+  Do do this, login to your hostings control panel and load PHPmyADMIN which is 
+  usually accessible from your Database page. In cpanel it is located at the bottom 
+  of your page where you create your database. When PHPmyADMIN loads, click on 
+  the database you just created. In the main window, click on SQL. Next using 
+  the Browse button under a big white box, navigate your way to the Forms.sql 
+  found in the website files of this package. After you find it and select it. 
+  Click GO. This will create the tables and enter the data for your website to 
+  run. </font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">The admin panel is situated 
+  at: http://www.your-domain/siteadmin username & password: <strong>admin</strong> 
+  To change the admin's username and password, login at your admin panel and follow 
+  the "Edit Info" link (the last link before "Logout" link). A form will be placed. 
+  Using this form, you will be able to change the admin username, password, name 
+  and email. To change the logo image, you need to edit "<strong>logo_blank.gif</strong>" 
+  file and re-write "<strong>logo.gif</strong>". </font></p>
+<p><font size="2" face="Arial, Helvetica, sans-serif">The site by default uses 
+  PayPal and Stormpay IPN. If you only want to use one. Open PaymentTemplate.php 
+  in the templates folder and delete whcih processor you do not want to use. DO 
+  NOT EDIT any field information as the variables work with the site system.</font></p>
