@@ -196,20 +196,20 @@ function file_get_contents($ipnget) {
 		{
 			include_once("conn.php");
 			$q1 = "update dd_orders_info set order_paid = 'y' where OrderID = '$custom'  ";
-			mysql_query($q1) or die(mysql_error());
+			$pdo->query($q1) or die(mysql_error());
 			
 			$q3 = "select email from dd_orders_info where OrderID = '$custom'";
-			$r = mysql_query($q3) or die(mysql_error());
+			$r = $pdo->query($q3) or die(mysql_error());
 			if($r) { 
 				$e = mysql_fetch_row($r);
 			}
 						
 			$q2 = "select ItemID from dd_orders_content where OrderID = '$custom'";
-			$result = mysql_query($q2) or die(mysql_error());
+			$result = $pdo->query($q2) or die(mysql_error());
 			if($result) {
 				while($row = mysql_fetch_row($result)) {
 					$q4 = "select ItemName, downloadURL from dd_catalog where ItemID = '$row[0]'";
-					$rr = mysql_query($q4) or die(mysql_error());
+					$rr = $pdo->query($q4) or die(mysql_error());
 					if($rr) {
 						$d = mysql_fetch_row($rr);
 						$download_links .= "$d[0]: <a href=\"$d[1]\">$d[1]</a><br>";
@@ -217,7 +217,7 @@ function file_get_contents($ipnget) {
 				}
 				if($download_links) {
 					$q5 = "select ContactEmail from dd_settings";
-					$rr = mysql_query($q5) or die(mysql_error());
+					$rr = $pdo->query($q5) or die(mysql_error());
 					$ce = mysql_fetch_row($rr);
 					mail($e[0],"Download links from $_SERVER[HTTP_HOST]!",$download_links,"Content-Type: text/html\nFrom: $ce[0]\n\n");
 				}

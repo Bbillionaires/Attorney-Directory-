@@ -3,7 +3,7 @@ include_once("conn.php");
 
 //get the product info
 $q1 = "select * from dd_catalog where ItemID = '$_GET[ItemID]' ";
-$r1 = mysql_query($q1) or die(mysql_error());
+$r1 = $pdo->query($q1) or die(mysql_error());
 $a1 = mysql_fetch_array($r1);
 
 //add to cart
@@ -13,7 +13,7 @@ $q2 = "insert into dd_orders_content set
 							ItemPrice = '$a1[ItemPrice]',
 							ItemQty = '1',
 							ItemTotal = '$a1[ItemPrice]' ";
-mysql_query($q2) or die(mysql_error());
+$pdo->query($q2) or die(mysql_error());
 
 //view cart
 header("location:view_cart.php");

@@ -5,7 +5,7 @@ require_once("includes.php");
 
 //get the cart content
 $q1 = "select * from dd_orders_content, dd_catalog where dd_orders_content.OrderID = '$_COOKIE[PHPSESSID]' and dd_orders_content.ItemID = dd_catalog.ItemID order by dd_catalog.ItemName";
-$r1 = mysql_query($q1) or die(mysql_error());
+$r1 = $pdo->query($q1) or die(mysql_error());
 
 $col = "white";
 
@@ -58,18 +58,18 @@ if(isset($_POST[submit_out]) || isset($_POST[submit_out_x]))
 									order_date = '$t',
 									order_total = '$order_total' ";
 
-		mysql_query($q1) or die(mysql_error());
+		$pdo->query($q1) or die(mysql_error());
 
 		$order_id = mysql_insert_id();
 
 		$q2 = "update dd_orders_content set OrderID = '$order_id' where OrderID = '$_COOKIE[PHPSESSID]' ";
-		mysql_query($q2) or die(mysql_error());
+		$pdo->query($q2) or die(mysql_error());
 
 		//update the mailing list table
 		$q3 = "insert into dd_maling_list set 
 									names = '$my_sFirstName $my_sLastName',
 									email = '$my_clientEmail' ";
-		mysql_query($q3);
+		$pdo->query($q3);
 		
 		$payment_option = $_REQUEST[payment_option];
 		if($payment_option == 2) {

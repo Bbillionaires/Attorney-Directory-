@@ -7,7 +7,7 @@ if(isset($_POST[smail]))
 	if(!empty($_POST[nEmail]) && ereg("@", $_POST[nEmail]))
 	{
 		$q1 = "insert into dd_newsletter set nemail = '$_POST[nEmail]' ";
-		mysql_query($q1);
+		$pdo->query($q1);
 
 		if(!mysql_error())
 		{

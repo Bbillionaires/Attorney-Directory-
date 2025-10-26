@@ -2,7 +2,7 @@
 require("conn.php");
 
 $q1 = "DROP TABLE IF EXISTS dd_admin";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "CREATE TABLE dd_admin (
   AdminID int(10) NOT NULL auto_increment,
@@ -11,13 +11,13 @@ $q1 = "CREATE TABLE dd_admin (
   email varchar(255) NOT NULL default '',
   PRIMARY KEY (AdminID),
   UNIQUE KEY username(username)) ";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "INSERT INTO dd_admin VALUES (1, 'admin', 'admin', 'neo@cyberia.ca')";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "DROP TABLE IF EXISTS dd_banners";
-mysql_query($q1) or die(mysql_error()." at row ".__LINE__);
+$pdo->query($q1) or die(mysql_error()." at row ".__LINE__);
 
 $q1 = "CREATE TABLE dd_banners (
   BannerID int(10) NOT NULL auto_increment,
@@ -25,10 +25,10 @@ $q1 = "CREATE TABLE dd_banners (
   BannerAlt varchar(255) NOT NULL default '',
   BannerURL text NOT NULL,
   PRIMARY KEY (BannerID))";
-mysql_query($q1) or die(mysql_error()." at row ".__LINE__);
+$pdo->query($q1) or die(mysql_error()." at row ".__LINE__);
 
 $q1 = "DROP TABLE IF EXISTS dd_catalog";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "CREATE TABLE dd_catalog (
 				ItemID int(10) not null primary key auto_increment,
@@ -39,21 +39,21 @@ $q1 = "CREATE TABLE dd_catalog (
 				DownloadURL text not null,
 				ItemCategory int(10) not null,
 				ItemSubcategory int(10) not null) ";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "DROP TABLE IF EXISTS dd_categories";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "CREATE TABLE dd_categories (
   CategoryID int(10) NOT NULL auto_increment,
   CategoryName varchar(255) NOT NULL default '',
   PRIMARY KEY (CategoryID),
   UNIQUE KEY CategoryName(CategoryName)) ";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 
 $q1 = "DROP TABLE IF EXISTS dd_settings";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "CREATE TABLE dd_settings (
   id int(1) NOT NULL default '0',
@@ -70,23 +70,23 @@ $q1 = "CREATE TABLE dd_settings (
   sp_payee_email varchar(255) not null,
   sp_vendor_email varchar(255) not null,
   sp_secret_code varchar(255) not null)";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 
 $q1 = "DROP TABLE IF EXISTS dd_subcategories";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "CREATE TABLE dd_subcategories (
   SubcategoryID int(10) NOT NULL auto_increment,
   SubcategoryName varchar(255) NOT NULL default '',
   CategoryID int(10) NOT NULL default '0',
   PRIMARY KEY (SubcategoryID)) ";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 
 
 $q1 = "DROP TABLE IF EXISTS dd_orders_content";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "create table dd_orders_content (
 					OrderID varchar(32) not null,
@@ -95,10 +95,10 @@ $q1 = "create table dd_orders_content (
 					ItemQty int(10) not null,
 					ItemTotal float(10,2) not null default '0.00',
 					download_status char(1) not null default 'n')";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "DROP TABLE IF EXISTS dd_orders_info";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "create table dd_orders_info (
 					OrderID int(10) not null primary key auto_increment,
@@ -109,25 +109,25 @@ $q1 = "create table dd_orders_info (
 					order_date int(10) not null,
 					order_total float(10,2) not null,
 					ExpDate int(10) not null default '0')";
-mysql_query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
+$pdo->query($q1) or die(mysql_error()." (script line: ".__LINE__.")");
 
 $q1 = "DROP TABLE IF EXISTS dd_newsletter";
-mysql_query($q1) or die(mysql_error()." at line ". __LINE__);	
+$pdo->query($q1) or die(mysql_error()." at line ". __LINE__);	
 	
 $q1 = "CREATE TABLE dd_newsletter (
 	nemail varchar(150) NOT NULL default '',
 	PRIMARY KEY (nemail)) ";
-mysql_query($q1) or die(mysql_error()." at line ". __LINE__);
+$pdo->query($q1) or die(mysql_error()." at line ". __LINE__);
 
 $q1 = "DROP TABLE IF EXISTS dd_links";
-	mysql_query($q1) or die(mysql_error()." at line ". __LINE__);
+	$pdo->query($q1) or die(mysql_error()." at line ". __LINE__);
 	
 $q1 = "CREATE TABLE dd_links (
      LinkID int(10) NOT NULL auto_increment,
 	 LinkName varchar(255) NOT NULL default '',
 	 LinkURL varchar(255) NOT NULL default '',
 	 PRIMARY KEY (LinkID)) ";
-mysql_query($q1) or die(mysql_error()." at line ". __LINE__);
+$pdo->query($q1) or die(mysql_error()." at line ". __LINE__);
 ?>
 
 

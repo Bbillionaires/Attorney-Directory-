@@ -1,9 +1,9 @@
 <?
 //get the link
 $q1 = "select * from dd_links";
-$r1 = mysql_query($q1) or die(mysql_error());
+$r1 = $pdo->query($q1) or die(mysql_error());
 
-if(mysql_num_rows($r1) == '0')
+if($stmt->rowCount($r1) == '0')
 {
 	echo ("");
 	//exit();

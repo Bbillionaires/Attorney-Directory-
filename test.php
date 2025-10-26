@@ -2,11 +2,11 @@
 
 //get the categories 
 $qi = "select * from re2_categories order by CategoryName";
-$ri = mysql_query($qi) or die(mysql_error());
+$ri = $pdo->query($qi) or die(mysql_error());
 
 $Account = "<table width=200>\n";
 
-if(mysql_num_rows($ri) > '0')
+if($stmt->rowCount($ri) > '0')
 {
 	while($ai = mysql_fetch_array($ri))
 	{
@@ -14,9 +14,9 @@ if(mysql_num_rows($ri) > '0')
 
 		//get the subcategories
 		$qs = "select * from re2_subcategories where CategoryID = '$ai[CategoryID]' order by SubcategoryName ";
-		$rs = mysql_query($qs) or die(mysql_error());
+		$rs = $pdo->query($qs) or die(mysql_error());
 
-		if(mysql_num_rows($rs) > '0')
+		if($stmt->rowCount($rs) > '0')
 		{
 			while($as = mysql_fetch_array($rs))
 			{
@@ -49,7 +49,7 @@ if(mysql_num_rows($ri) > '0')
 
 		//get the number of posted listings
 		$qpl = "select count(*) from re2_listings where AgentID = '$_SESSION[AgentID]' ";
-		$rpl = mysql_query($qpl) or die(mysql_error());
+		$rpl = $pdo->query($qpl) or die(mysql_error());
 		$apl = mysql_fetch_array($rpl);
 
 		$ace = date('d M Y', $_SESSION[AccountExpireDate]);

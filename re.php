@@ -24,7 +24,7 @@ if(isset($_POST[s100]) || isset($_POST[s100_x]))
 										where ItemID = '$v' and OrderID = '$_COOKIE[PHPSESSID]' ";
 		}
 
-		mysql_query($q1) or die(mysql_error());
+		$pdo->query($q1) or die(mysql_error());
 
 	}
 
@@ -35,7 +35,7 @@ elseif(isset($_POST[s200]) || isset($_POST[s200_x]))
 {
 	//empty cart
 	$q1 = "delete from dd_orders_content where OrderID = '$_COOKIE[PHPSESSID]' ";
-	mysql_query($q1) or die(mysql_error());
+	$pdo->query($q1) or die(mysql_error());
 
 	header("location:view_cart.php");
 	exit();
