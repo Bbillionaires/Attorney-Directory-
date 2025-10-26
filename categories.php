@@ -51,9 +51,9 @@ else
 
 //show the catalog content
 $q1 = "select ItemID, ItemName, ItemCategory ItemPrice from dd_catalog $my_query $order_by limit $Start, $ByPage";
-$r1 = mysql_query($q1) or die(mysql_error());
+$r1 = $pdo->query($q1) or die(mysql_error());
 
-if(mysql_num_rows($r1) > '0')
+if($stmt->rowCount($r1) > '0')
 {
 	
 	$col = "#D7D7D7";
@@ -74,7 +74,7 @@ if(mysql_num_rows($r1) > '0')
 	
 
 	$qnav = "select count(*) from dd_catalog $my_query";
-	$rnav = mysql_query($qnav) or die(mysql_error());
+	$rnav = $pdo->query($qnav) or die(mysql_error());
 	$anav = mysql_fetch_array($rnav);
 	$rows = $anav[0];
 

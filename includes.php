@@ -2,15 +2,15 @@
 require_once("conn.php");
 
 $qset = "select * from dd_settings";
-$rset = mysql_query($qset) or die(mysql_error());
+$rset = $pdo->query($qset) or die(mysql_error());
 $aset = mysql_fetch_array($rset);
 
 function CategorySelect($c) {
 
 	$q1 = "select * from dd_categories order by CategoryName";
-	$r1 = mysql_query($q1) or die(mysql_error());
+	$r1 = $pdo->query($q1) or die(mysql_error());
 
-	if(mysql_num_rows($r1) > '0')
+	if($stmt->rowCount($r1) > '0')
 	{
 		$SelectCategory = "\n\n<select name=SelectCategory>\n\t<option value=\"\"></option>\n\t";
 
@@ -37,7 +37,7 @@ function CategoryTree($c) {
 
 	//get the categories
 	$q1 = "select * from dd_categories order by CategoryName ";
-	$r1 = mysql_query($q1) or die(mysql_error());
+	$r1 = $pdo->query($q1) or die(mysql_error());
 	while($a1 = mysql_fetch_array($r1))
 	{
 	$tree .= "<tr>\n\t<td><a class=CategoryName href=\"categories.php?CategoryID=$a1[CategoryID]\"><B>$a1[CategoryName] </B></a></td>\n</tr>\n";
@@ -46,7 +46,7 @@ function CategoryTree($c) {
 		{
 			//get the products
 			$q2 = "select * from dd_catalog where ItemCategory = '$a1[CategoryID]'";
-			$r2 = mysql_query($q2) or die(mysql_error());
+			$r2 = $pdo->query($q2) or die(mysql_error());
 
 			while($a2 = mysql_fetch_array($r2))
 			{
@@ -70,9 +70,9 @@ function show_banners(){
 	global $dir;
 
 	$q1 = "select * from dd_banners order by rand() limit 0,1";
-	$r1 = mysql_query($q1) or die(mysql_error());
+	$r1 = $pdo->query($q1) or die(mysql_error());
 
-	if(mysql_num_rows($r1) == '1')
+	if($stmt->rowCount($r1) == '1')
 	{
 		$a1 = mysql_fetch_array($r1);
 
