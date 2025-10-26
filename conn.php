@@ -1,37 +1,25 @@
-<?
+<?php
+// Graceful DB connection for Render (works even if env vars are missing)
+$host = getenv('DB_HOST');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
+$name = getenv('DB_NAME');
 
-//enter your MySQL database host name, often it is not necessary to edit this line
-$db_host = "localhost";
+if (!$host || !$user || !$name) {
+  // No DB configured yet; allow pages to load without DB.
+  $pdo = null;
+  return;
+}
 
-//enter your MySQL database username
-$db_username = "db_username";
+$dsn = "mysql:host={$host};dbname={$name};charset=utf8mb4";
 
-//enter your MySQL database password
-$db_password = "db_password";
-
-//enter your MySQL database name
-$db_name = "db_name";
-
-//Script URL
-$site_url = "http://www.mywebsite.com";
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-//////////////////				DO NOT EDIT BELOW THIS LINE		 //////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-
-//conect to db
-$conn = mysql_connect($db_host, $db_username, $db_password) or die(mysql_error());
-$db = mysql_select_db($db_name, $conn) or die(mysql_error());
-	
-//start session
-session_start();
-
-//get the time
-$t = time();
-
-
-?>
+try {
+  $pdo = new PDO($dsn, $user, $pass, [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+  ]);
+} catch (PDOException $e) {
+  http_response_code(500);
+  echo "Database connection failed: " . htmlspecialchars($e->getMessage());
+  exit;
+}
