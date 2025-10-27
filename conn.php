@@ -1,25 +1,30 @@
 <?php
-// Graceful DB connection for Render (works even if env vars are missing)
-$host = getenv('DB_HOST');
-$user = getenv('DB_USER');
-$pass = getenv('DB_PASS');
-$name = getenv('DB_NAME');
+$pgUrl = getenv('DATABASE_URL');
 
-if (!$host || !$user || !$name) {
-  // No DB configured yet; allow pages to load without DB.
-  $pdo = null;
-  return;
+if ($pgUrl) {
+  $parts = parse_url($pgUrl);
+  $host = $parts['host'] ?? 'localhost';
+  $port = $parts['port'] ?? 5432;
+  $user = $parts['user'] ?? '';
+  $pass = $parts['pass'] ?? '';
+  $name = ltrim($parts['path'] ?? '/postgres', '/');
+  $ssl  = (strpos($pgUrl, 'sslmode=') !== false) ? 'require' : '';
+} else {
+  $host = getenv('DB_HOST') ?: 'localhost';
+  $port = getenv('DB_PORT') ?: '5432';
+  $user = getenv('DB_USER') ?: '';
+  $pass = getenv('DB_PASS') ?: '';
+  $name = getenv('DB_NAME') ?: '';
+  $ssl  = getenv('DB_SSLMODE') ?: 'require';
 }
 
-$dsn = "mysql:host={$host};dbname={$name};charset=utf8mb4";
-
 try {
+  $dsn = "pgsql:host=$host;port=$port;dbname=$name";
   $pdo = new PDO($dsn, $user, $pass, [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
   ]);
-} catch (PDOException $e) {
-  http_response_code(500);
-  echo "Database connection failed: " . htmlspecialchars($e->getMessage());
-  exit;
+} catch (Throwable $e) {
+  error_log("DB connect failed: " . $e->getMessage());
+  $pdo = null;
 }
