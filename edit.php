@@ -1,90 +1,32 @@
 <?php
-error_reporting(E_ALL); ini_set('display_errors', 1);
-require_once __DIR__ . '/includes.php';
-@include __DIR__ . '/templates/HeaderTemplate.php';
-
-$need  = getenv('ADMIN_TOKEN') ?: '';
-$token = $_GET['token'] ?? '';
-if ($need === '' || $token !== $need) {
-  http_response_code(403);
-  echo '<p class="muted">Forbidden. Add <code>?token=YOURTOKEN</code> to the URL.</p>';
-  @include __DIR__ . '/templates/FooterTemplate.php'; exit;
-}
+declare(strict_types=1);
+require __DIR__ . '/conn.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($id <= 0) { echo '<p class="muted">Invalid id.</p>'; @include __DIR__ . '/templates/FooterTemplate.php'; exit; }
-
-$st = $pdo->prepare("SELECT itemid,itemname,itemdesc,itemprice,itemthumb,active
-                     FROM dd_catalog WHERE itemid=:id");
-$st->execute([':id'=>$id]);
-$row = $st->fetch(PDO::FETCH_ASSOC);
-if (!$row) { echo '<p class="muted">Item not found.</p>'; @include __DIR__ . '/templates/FooterTemplate.php'; exit; }
-
-$errors = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $name  = trim($_POST['itemname'] ?? '');
-  $desc  = trim($_POST['itemdesc'] ?? '');
-  $price = trim($_POST['itemprice'] ?? '0');
-  $thumb = trim($_POST['itemthumb'] ?? '');
-  $active = isset($_POST['active']) ? 1 : 0;
-
-  if ($name === '') { $errors[] = 'Name is required.'; }
-  if ($price === '' || !is_numeric($price) || $price < 0) { $errors[] = 'Price must be a non-negative number.'; }
-
-  if (!$errors) {
-    try {
-      $u = $pdo->prepare("UPDATE dd_catalog
-                          SET itemname=:n,itemdesc=:d,itemprice=:p,itemthumb=:t,active=:a
-                          WHERE itemid=:id");
-      $u->execute([
-        ':n'=>$name, ':d'=>$desc, ':p'=>(float)$price, ':t'=>$thumb, ':a'=>(int)$active, ':id'=>$id
-      ]);
-      header('Location: /view_item.php?id='.$id.'&token='.$token);
-      exit;
-    } catch (Throwable $e) {
-      $errors[] = 'DB error: '.$e->getMessage();
-    }
-  }
-} else {
-  // seed form from db
-  $_POST = $row;
-}
+$stmt = $pdo->prepare('SELECT itemid,itemname,itemdesc,itemprice,itemthumb,active FROM dd_catalog WHERE itemid=:id');
+$stmt->execute([':id'=>$id]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+if(!$row){ http_response_code(404); exit('Not found'); }
 ?>
-<h2>Edit Item #<?= $id ?></h2>
+<!doctype html>
+<meta charset="utf-8">
+<title>Edit <?= htmlspecialchars($row['itemname']) ?> – Attorney Directory</title>
+<h1>Edit: <?= htmlspecialchars($row['itemname']) ?></h1>
 
-<?php if ($errors): ?>
-  <div class="card" style="border-left:4px solid #dc2626;background:#fff1f2">
-    <p><strong>There were problems:</strong></p>
-    <ul><?php foreach($errors as $e): ?><li><?= htmlspecialchars($e) ?></li><?php endforeach; ?></ul>
-  </div>
-<?php endif; ?>
-
-<form method="post" action="/edit.php?id=<?= $id ?>&token=<?= htmlspecialchars($token) ?>" class="card">
-  <label>Name *</label>
-  <input type="text" name="itemname" required value="<?= htmlspecialchars($_POST['itemname'] ?? '') ?>">
-
-  <label>Description</label>
-  <textarea name="itemdesc" rows="6"><?= htmlspecialchars($_POST['itemdesc'] ?? '') ?></textarea>
-
-  <div class="row">
-    <div>
-      <label>Price (USD) *</label>
-      <input type="number" min="0" step="0.01" name="itemprice" value="<?= htmlspecialchars($_POST['itemprice'] ?? '0.00') ?>" required>
-    </div>
-    <div>
-      <label>Thumbnail URL</label>
-      <input type="url" name="itemthumb" value="<?= htmlspecialchars($_POST['itemthumb'] ?? '') ?>">
-    </div>
-  </div>
-
-  <label class="muted">
-    <input type="checkbox" name="active" <?= (int)($_POST['active'] ?? 0)===1?'checked':''; ?>> Active
-  </label>
-
+<form method="post" action="/save_item.php" class="stack">
+  <input type="hidden" name="id" value="<?= (int)$row['itemid'] ?>">
+  <p><label>Name<br>
+    <input name="itemname" value="<?= htmlspecialchars($row['itemname']) ?>" required></label></p>
+  <p><label>Description<br>
+    <textarea name="itemdesc" rows="6"><?= htmlspecialchars($row['itemdesc'] ?? '') ?></textarea></label></p>
+  <p><label>Price ($)<br>
+    <input name="itemprice" type="number" step="0.01" value="<?= htmlspecialchars((string)$row['itemprice']) ?>"></label></p>
+  <p><label>Image URL<br>
+    <input name="itemthumb" type="url" value="<?= htmlspecialchars($row['itemthumb'] ?? '') ?>"></label></p>
+  <p><label><input type="checkbox" name="active" <?= !empty($row['active'])?'checked':''; ?>> Active</label></p>
   <p>
-    <button class="btn" type="submit">Save Changes</button>
-    <a class="btn secondary" href="/view_item.php?id=<?= $id ?>&token=<?= htmlspecialchars($token) ?>">Cancel</a>
+    <button class="btn" type="submit">Save</button>
+    <a class="btn" href="/view_item.php?id=<?= (int)$row['itemid'] ?>">Cancel</a>
   </p>
 </form>
-
-<?php @include __DIR__ . '/templates/FooterTemplate.php';
+<p><a href="/list.php">← Back to list</a></p>
