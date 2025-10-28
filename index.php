@@ -38,6 +38,6 @@ try {
   <p class="muted">No items yet. <a href="/list.php">View all</a></p>
 <?php endif; ?>
 
-<?php @include __DIR__ . '/templates/FooterTemplate.php';
+<p class="mt-4"><a class="btn" href="/add.php">&#x2795; Add new item</a></p>
+<?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
 
-<p><a href="/add.php">➕ Add new item</a></p>
