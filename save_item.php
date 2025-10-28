@@ -19,12 +19,13 @@ $sql = "INSERT INTO dd_catalog (itemname,itemdesc,itemprice,itemthumb,active)
         VALUES (:name,:desc,:price,:thumb,:active)
         RETURNING itemid";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([
-  ':name'  => $itemname,
-  ':desc'  => $itemdesc,
-  ':price' => $itemprice,
-  ':thumb' => $itemthumb,
-  ':active'=> $active,
+stmt->execute([
+    'id'        => $itemid,
+    'itemname'  => $_POST['itemname'] ?? '',
+    'itemdesc'  => $_POST['itemdesc'] ?? '',
+    'itemprice' => (float)($_POST['itemprice'] ?? 0),
+    'itemthumb' => $_POST['itemthumb'] ?? '',
+    'active'    => (empty($_POST['active']) ? 0 : 1),
 ]);
 $itemid = (int)$stmt->fetchColumn();
 
