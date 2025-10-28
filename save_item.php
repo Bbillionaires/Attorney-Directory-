@@ -18,6 +18,8 @@ try {
             VALUES (:name,:desc,:price,:thumb,:active)
             RETURNING itemid";
     $stmt = $pdo->prepare($sql);
+    // DEBUG
+    // var_dump($sql, ["id"=>$itemid, "itemname"=>$itemname, "itemdesc"=>$itemdesc, "itemprice"=>$itemprice, "itemthumb"=>$itemthumb, "active"=>$active]);
     $stmt->execute($fields);
     $id = (int)$stmt->fetchColumn();
   } else {
