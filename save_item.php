@@ -2,42 +2,54 @@
 declare(strict_types=1);
 require __DIR__ . '/conn.php';
 
-function p($k,$d=null){ return $_POST[$k] ?? $d; }
+// Normalize inputs
+$itemid     = isset($_POST['itemid']) && $_POST['itemid'] !== '' ? (int)$_POST['itemid'] : null;
+$itemname   = trim((string)($_POST['itemname'] ?? ''));
+$itemdesc   = trim((string)($_POST['itemdesc'] ?? ''));
+$itemthumb  = trim((string)($_POST['itemthumb'] ?? ''));
+$active     = !empty($_POST['active']) ? 1 : 0;
 
-$name  = trim((string) p('itemname',''));
-$desc  = trim((string) p('itemdesc',''));
-$price = (float) preg_replace('/[^0-9.]/', '', (string) p('itemprice','0'));
-$thumb = trim((string) p('itemthumb',''));
-$active = isset($_POST['active']) ? 1 : 0;
-$id    = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
+// Price: allow "$199.00", "199", "199.5"
+$rawPrice = (string)($_POST['itemprice'] ?? '0');
+$rawPrice = preg_replace('/[^\d\.\-]/', '', $rawPrice) ?? '0';
+$itemprice = (float)$rawPrice;
 
-if ($name === '') { http_response_code(422); exit('Name is required'); }
-
-if ($id) {
-  $stmt = $pdo->prepare('UPDATE dd_catalog
-                          SET itemname=:n, itemdesc=:d, itemprice=:p, itemthumb=:t, active=:a
-                          WHERE itemid=:id');
-  $stmt->execute([
-    ':n' => $name,
-    ':d' => $desc,
-    ':p' => $price,
-    ':t' => $thumb,
-    ':a' => $active,
-    ':id' => $id
-  ]);
-} else {
-  $stmt = $pdo->prepare('INSERT INTO dd_catalog (itemname,itemdesc,itemprice,itemthumb,active)
-                         VALUES (:n,:d,:p,:t,:a)
-                         RETURNING itemid');
-  $stmt->execute([
-    ':n' => $name,
-    ':d' => $desc,
-    ':p' => $price,
-    ':t' => $thumb,
-    ':a' => $active
-  ]);
-  $id = (int)$stmt->fetchColumn();
+if ($itemname === '') {
+  http_response_code(422);
+  echo "Name is required.";
+  exit;
 }
 
-header('Location: /view_item.php?id=' . $id);
-exit;
+if ($itemid === null) {
+  // CREATE
+  $sql = "INSERT INTO dd_catalog (itemname, itemdesc, itemprice, itemthumb, active)
+          VALUES (:name, :desc, :price, :thumb, :active)
+          RETURNING itemid";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute([
+    ':name'  => $itemname,
+    ':desc'  => $itemdesc,
+    ':price' => $itemprice,
+    ':thumb' => $itemthumb,
+    ':active'=> $active,
+  ]);
+  $newId = (int)$stmt->fetchColumn();
+  header("Location: /view_item.php?id=".$newId);
+  exit;
+} else {
+  // UPDATE
+  $sql = "UPDATE dd_catalog
+          SET itemname=:name, itemdesc=:desc, itemprice=:price, itemthumb=:thumb, active=:active
+          WHERE itemid=:id";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute([
+    ':name'  => $itemname,
+    ':desc'  => $itemdesc,
+    ':price' => $itemprice,
+    ':thumb' => $itemthumb,
+    ':active'=> $active,
+    ':id'    => $itemid,
+  ]);
+  header("Location: /view_item.php?id=".$itemid);
+  exit;
+}
