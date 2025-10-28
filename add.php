@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <section class="card">
   <h2>Add Item</h2>
   <?php if ($err): ?><p style="color:#b00020"><?= htmlspecialchars($err) ?></p><?php endif; ?>
-  <form method="post" action="/add.php">
+  <form method="post" action="/save_item.php">
     <p>
       <label>Name<br>
         <input name="itemname" required style="width:100%" maxlength="255">
