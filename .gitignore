@@ -1,0 +1,8 @@
+
+# Local dev artifacts
+mariadb-data/
+var/lib/mysql/
+run/
+tmp/
+*.log
+.DS_Store
