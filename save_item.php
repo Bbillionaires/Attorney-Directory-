@@ -13,7 +13,7 @@ $id = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
 
 try {
   if ($id === null) {
-    // INSERT: no :itemid here; DB assigns it. Return the new id.
+    // INSERT: no :id here; DB assigns it. Return the new id.
     $sql = "INSERT INTO dd_catalog (itemname,itemdesc,itemprice,itemthumb,active)
             VALUES (:name,:desc,:price,:thumb,:active)
             RETURNING itemid";
@@ -21,7 +21,7 @@ try {
     $stmt->execute($fields);
     $id = (int)$stmt->fetchColumn();
   } else {
-    // UPDATE: uses WHERE itemid = :id and binds :id (not :itemid)
+    // UPDATE: uses WHERE itemid = :id and binds :id (not :id)
     $sql = "UPDATE dd_catalog
               SET itemname=:name,
                   itemdesc=:desc,
