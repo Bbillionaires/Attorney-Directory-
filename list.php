@@ -1,29 +1,36 @@
 <?php
-// minimal read-only list to verify output in browser
-$u = parse_url(getenv('DATABASE_URL') ?: getenv('PGURL'));
-$host = $u['host']; $port = $u['port'] ?? 5432;
-$db   = ltrim($u['path'], '/'); $user = $u['user']; $pass = $u['pass'];
-$dsn = "pgsql:host=$host;port=$port;dbname=$db;sslmode=require";
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+require_once __DIR__ . '/includes.php'; // must set $pdo
+
+$rows = [];
 try {
-  $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
-  $sql = "SELECT itemid,itemname,itemdesc,itemprice,COALESCE(itemthumb,'') AS itemthumb
-          FROM dd_catalog WHERE COALESCE(active,TRUE)=TRUE
-          ORDER BY itemid LIMIT 50";
+  $sql = "
+    SELECT itemid, itemname, COALESCE(itemprice,0) AS itemprice
+    FROM dd_catalog
+    WHERE COALESCE(active,1) = 1
+    ORDER BY itemid DESC
+    LIMIT 50
+  ";
   $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-} catch(Throwable $e) {
-  die("DB error: ".$e->getMessage());
+} catch (Throwable $e) {
+  echo 'DB error: ' . htmlspecialchars($e->getMessage());
 }
-?><!doctype html><meta name=viewport content="width=device-width, initial-scale=1">
-<title>Items</title><h1>Items</h1>
-<?php if (!$rows): ?>
-<p>No items found.</p>
-<?php else: ?>
-<ul>
-<?php foreach($rows as $r): ?>
-  <li>
-    <strong><?=htmlspecialchars($r['itemname'])?></strong>
-    — $<?=number_format((float)$r['itemprice'],2)?>
-  </li>
-<?php endforeach; ?>
-</ul>
-<?php endif; ?>
+
+@include __DIR__ . '/templates/HeaderTemplate.php';
+?>
+<main>
+  <h2>Attorney Directory Listing</h2>
+  <?php if (!$rows): ?>
+    <p>No items yet.</p>
+  <?php else: ?>
+    <ul>
+      <?php foreach ($rows as $r): ?>
+        <li>#<?= (int)$r['itemid'] ?> —
+            <?= htmlspecialchars($r['itemname']) ?> —
+            $<?= number_format((float)$r['itemprice'], 2) ?></li>
+      <?php endforeach; ?>
+    </ul>
+  <?php endif; ?>
+</main>
+<?php @include __DIR__ . '/templates/FooterTemplate.php'; ?>
