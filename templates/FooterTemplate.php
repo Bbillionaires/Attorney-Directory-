@@ -1,1 +1,6 @@
-<footer><p>© 2025 Attorney Directory</p></footer>
+</main>
+<footer class="site-footer">
+  <small>© <?= date('Y') ?> Attorney Directory</small>
+</footer>
+</body>
+</html>
