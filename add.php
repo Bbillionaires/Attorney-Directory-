@@ -3,10 +3,7 @@ error_reporting(E_ALL); ini_set('display_errors', 1);
 require_once __DIR__ . '/includes.php';
 @include __DIR__ . '/templates/HeaderTemplate.php';
 
-/** ---- tiny auth ----
- * You must pass ?token=... that matches the ADMIN_TOKEN environment variable.
- * Example: /add.php?token=YOURTOKEN
- */
+/** Simple auth using token */
 $need = getenv('ADMIN_TOKEN') ?: '';
 $token = $_GET['token'] ?? '';
 if ($need === '' || $token !== $need) {
@@ -17,8 +14,6 @@ if ($need === '' || $token !== $need) {
 }
 
 $errors = [];
-$okId = null;
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $name  = trim($_POST['itemname'] ?? '');
   $desc  = trim($_POST['itemdesc'] ?? '');
