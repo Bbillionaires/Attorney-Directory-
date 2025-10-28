@@ -15,7 +15,7 @@ if ($fields['itemid']) {
   $sql = "UPDATE dd_catalog
             SET itemname=:itemname, itemdesc=:itemdesc, itemprice=:itemprice,
                 itemthumb=:itemthumb, active=:active
-          WHERE itemid=:itemid";
+          WHERE itemid=:id";
   $stmt = $pdo->prepare($sql);
   $stmt->execute($fields);
   $id = (int)$fields['itemid'];
