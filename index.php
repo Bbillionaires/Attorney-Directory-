@@ -40,4 +40,6 @@ try {
 
 <p class="mt-4"><a class="btn" href="/add.php">&#x2795; Add new item</a></p>
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
-
+<?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
+</body>
+</html>
