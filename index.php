@@ -41,6 +41,7 @@ try {
 
 <p class="mt-4"><a class="btn" href="/add.php">&#x2795; Add new item</a></p>
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
+  <p class="mt-4"><a class="btn secondary" href="/public_list.php">Public Directory View</a></p>
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
 </body>
 </html>
