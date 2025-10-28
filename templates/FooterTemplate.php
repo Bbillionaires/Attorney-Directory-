@@ -1,6 +1,4 @@
-</main>
-<footer class="site-footer">
-  <small>© <?= date('Y') ?> Attorney Directory</small>
-</footer>
+  </main>
+  <footer>© <?php echo date('Y'); ?> Attorney Directory</footer>
 </body>
 </html>

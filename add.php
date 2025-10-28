@@ -1,3 +1,4 @@
+<?php include __DIR__ . "/templates/HeaderTemplate.php"; ?>
 <?php
 require_once "includes.php";
 ?>
@@ -52,3 +53,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </footer>
 </body>
 </html>
+
+<?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
