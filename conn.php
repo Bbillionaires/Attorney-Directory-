@@ -1,30 +1,12 @@
 <?php
-$pgUrl = getenv('DATABASE_URL');
+declare(strict_types=1);
 
-if ($pgUrl) {
-  $parts = parse_url($pgUrl);
-  $host = $parts['host'] ?? 'localhost';
-  $port = $parts['port'] ?? 5432;
-  $user = $parts['user'] ?? '';
-  $pass = $parts['pass'] ?? '';
-  $name = ltrim($parts['path'] ?? '/postgres', '/');
-  $ssl  = (strpos($pgUrl, 'sslmode=') !== false) ? 'require' : '';
-} else {
-  $host = getenv('DB_HOST') ?: 'localhost';
-  $port = getenv('DB_PORT') ?: '5432';
-  $user = getenv('DB_USER') ?: '';
-  $pass = getenv('DB_PASS') ?: '';
-  $name = getenv('DB_NAME') ?: '';
-  $ssl  = getenv('DB_SSLMODE') ?: 'require';
-}
+$dsn = 'pgsql:host=dpg-d3vl0oer433s73cvgcq0-a.oregon-postgres.render.com;port=5432;dbname=attorneydb;sslmode=require';
+$user = 'attorneydirectory';
+$pass = 'EOEVxdVxunGCo7OsJxr0wFNizAiSamEZ';
 
-try {
-  $dsn = "pgsql:host=$host;port=$port;dbname=$name";
-  $pdo = new PDO($dsn, $user, $pass, [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-  ]);
-} catch (Throwable $e) {
-  error_log("DB connect failed: " . $e->getMessage());
-  $pdo = null;
-}
+$pdo = new PDO($dsn, $user, $pass, [
+  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+  PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+  PDO::ATTR_EMULATE_PREPARES => false,
+]);
