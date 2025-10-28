@@ -1,33 +1,32 @@
 <?php
 declare(strict_types=1);
-require __DIR__.'/conn.php';
+require __DIR__ . '/conn.php';
 
-function post(string $k, $default=null){ return $_POST[$k] ?? $default; }
+$fields = [
+  'itemid'    => $_POST['itemid']   ?? null,      // hidden when editing (optional)
+  'itemname'  => trim($_POST['itemname'] ?? ''),
+  'itemdesc'  => trim($_POST['itemdesc'] ?? ''),
+  'itemprice' => (float)($_POST['itemprice'] ?? 0),
+  'itemthumb' => trim($_POST['itemthumb'] ?? ''),
+  'active'    => isset($_POST['active']) ? 1 : 0,  // force integer 1/0
+];
 
-$itemname  = trim((string)post('itemname',''));
-$itemdesc  = trim((string)post('itemdesc',''));
-$itemprice = (float)post('itemprice','0');
-$itemthumb = trim((string)post('itemthumb',''));
-$active    = !empty($_POST['active']) ? 1 : 0;
-
-if ($itemname === '') {
-  http_response_code(400);
-  echo "Name is required."; exit;
+if ($fields['itemid']) {
+  $sql = "UPDATE dd_catalog
+            SET itemname=:itemname, itemdesc=:itemdesc, itemprice=:itemprice,
+                itemthumb=:itemthumb, active=:active
+          WHERE itemid=:itemid";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute($fields);
+  $id = (int)$fields['itemid'];
+} else {
+  $sql = "INSERT INTO dd_catalog (itemname, itemdesc, itemprice, itemthumb, active)
+          VALUES (:itemname, :itemdesc, :itemprice, :itemthumb, :active)
+          RETURNING itemid";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute($fields);
+  $id = (int)$stmt->fetchColumn();
 }
 
-$sql = "INSERT INTO dd_catalog (itemname,itemdesc,itemprice,itemthumb,active)
-        VALUES (:name,:desc,:price,:thumb,:active)
-        RETURNING itemid";
-$stmt = $pdo->prepare($sql);
-stmt->execute([
-    'id'        => $itemid,
-    'itemname'  => $_POST['itemname'] ?? '',
-    'itemdesc'  => $_POST['itemdesc'] ?? '',
-    'itemprice' => (float)($_POST['itemprice'] ?? 0),
-    'itemthumb' => $_POST['itemthumb'] ?? '',
-    'active'    => (empty($_POST['active']) ? 0 : 1),
-]);
-$itemid = (int)$stmt->fetchColumn();
-
-header("Location: /view_item.php?id=".$itemid);
+header("Location: /view_item.php?id=".$id);
 exit;
