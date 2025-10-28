@@ -6,9 +6,9 @@ function p($k,$d=null){ return $_POST[$k] ?? $d; }
 
 $name  = trim((string) p('itemname',''));
 $desc  = trim((string) p('itemdesc',''));
-$price = (float) str_replace([',','$',' '], '', (string) p('itemprice','0'));
+$price = (float) preg_replace('/[^0-9.]/', '', (string) p('itemprice','0'));
 $thumb = trim((string) p('itemthumb',''));
-$active = !empty($_POST['active']);
+$active = isset($_POST['active']) ? 1 : 0;
 $id    = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
 
 if ($name === '') { http_response_code(422); exit('Name is required'); }
@@ -17,11 +17,25 @@ if ($id) {
   $stmt = $pdo->prepare('UPDATE dd_catalog
                           SET itemname=:n, itemdesc=:d, itemprice=:p, itemthumb=:t, active=:a
                           WHERE itemid=:id');
-  $stmt->execute([':n'=>$name,':d'=>$desc,':p'=>$price,':t'=>$thumb,':a'=>$active,':id'=>$id]);
+  $stmt->execute([
+    ':n' => $name,
+    ':d' => $desc,
+    ':p' => $price,
+    ':t' => $thumb,
+    ':a' => $active,
+    ':id' => $id
+  ]);
 } else {
   $stmt = $pdo->prepare('INSERT INTO dd_catalog (itemname,itemdesc,itemprice,itemthumb,active)
-                         VALUES (:n,:d,:p,:t,:a) RETURNING itemid');
-  $stmt->execute([':n'=>$name,':d'=>$desc,':p'=>$price,':t'=>$thumb,':a'=>$active]);
+                         VALUES (:n,:d,:p,:t,:a)
+                         RETURNING itemid');
+  $stmt->execute([
+    ':n' => $name,
+    ':d' => $desc,
+    ':p' => $price,
+    ':t' => $thumb,
+    ':a' => $active
+  ]);
   $id = (int)$stmt->fetchColumn();
 }
 
