@@ -1,0 +1,19 @@
+                                                                    Table "public.dd_catalog"
+    Column    |          Type          | Collation | Nullable |                  Default                   | Storage  | Compression | Stats target | Description 
+--------------+------------------------+-----------+----------+--------------------------------------------+----------+-------------+--------------+-------------
+ itemid       | integer                |           | not null | nextval('dd_catalog_itemid_seq'::regclass) | plain    |             |              | 
+ itemname     | character varying(255) |           | not null |                                            | extended |             |              | 
+ itemdesc     | text                   |           |          |                                            | extended |             |              | 
+ itemprice    | numeric(10,2)          |           | not null | 0.00                                       | main     |             |              | 
+ itemthumb    | character varying(255) |           |          |                                            | extended |             |              | 
+ itemfile     | character varying(255) |           |          |                                            | extended |             |              | 
+ catid        | integer                |           | not null | 0                                          | plain    |             |              | 
+ notavailable | smallint               |           | not null | 0                                          | plain    |             |              | 
+ itemcategory | integer                |           |          |                                            | plain    |             |              | 
+ active       | integer                |           |          | 1                                          | plain    |             |              | 
+Indexes:
+    "dd_catalog_pkey" PRIMARY KEY, btree (itemid)
+Referenced by:
+    TABLE "dd_orders_content" CONSTRAINT "fk_item" FOREIGN KEY (item_id) REFERENCES dd_catalog(itemid)
+Access method: heap
+
