@@ -39,3 +39,5 @@ try {
 <?php endif; ?>
 
 <?php @include __DIR__ . '/templates/FooterTemplate.php';
+
+<p><a href="/add.php">➕ Add new item</a></p>
