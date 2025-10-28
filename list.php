@@ -27,6 +27,9 @@ $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <h2>Attorney Directory Listing</h2>
+<?php if(isset($_GET['token']) && getenv('ADMIN_TOKEN') && $_GET['token']===getenv('ADMIN_TOKEN')): ?>
+<p><a class="btn" href="/add.php?token=<?= urlencode($_GET['token']) ?>">➕ Add new</a></p>
+<?php endif; ?>
 
 <form class="searchbar" method="get" action="/list.php">
   <input type="text" name="q" placeholder="Search name or description…" value="<?= htmlspecialchars($q) ?>">
