@@ -1,35 +1,41 @@
 <?php
 error_reporting(E_ALL); ini_set('display_errors', 1);
-echo "MARKER: INDEX TOP<br>";
-require_once __DIR__ . '/includes.php'; // must define $pdo (PDO)
-
-try {
-  $sql = "SELECT itemid, itemname, COALESCE(itemprice,0) AS itemprice
-          FROM dd_catalog
-          WHERE COALESCE(active,1)=1
-          ORDER BY itemid DESC
-          LIMIT 50";
-  $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-} catch (Throwable $e) {
-  die("DB ERR: ".htmlspecialchars($e->getMessage()));
-}
-
+require_once __DIR__ . '/includes.php';
 @include __DIR__ . '/templates/HeaderTemplate.php';
-echo "<p>MARKER: AFTER HEADER</p>";
+
+$featured = [];
+try {
+  $stmt = $pdo->query("SELECT itemid,itemname,itemdesc,itemprice,itemthumb
+                       FROM dd_catalog
+                       WHERE COALESCE(active,1)=1
+                       ORDER BY itemid DESC
+                       LIMIT 1");
+  $featured = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+} catch (Throwable $e) {
+  echo '<p class="muted">DB error: '.htmlspecialchars($e->getMessage()).'</p>';
+}
 ?>
-<main>
-  <h2>Attorney Directory Listing</h2>
-  <?php if (!$rows): ?>
-    <p>MARKER: NO ROWS</p>
-  <?php else: ?>
-    <ul>
-      <?php foreach ($rows as $r): ?>
-        <li>#<?= (int)$r['itemid'] ?> — <?= htmlspecialchars($r['itemname']) ?> — $<?= number_format((float)$r['itemprice'],2) ?></li>
-      <?php endforeach; ?>
-    </ul>
-  <?php endif; ?>
-</main>
-<?php
-echo "<p>MARKER: BEFORE FOOTER</p>";
-@include __DIR__ . '/templates/FooterTemplate.php';
-echo "<p>MARKER: INDEX BOTTOM</p>";
+<?php if ($featured): ?>
+<section class="card">
+  <div class="row">
+    <div>
+      <?php if (!empty($featured['itemthumb'])): ?>
+        <img src="<?= htmlspecialchars($featured['itemthumb']) ?>" style="max-width:100%;border-radius:6px">
+      <?php endif; ?>
+    </div>
+    <div>
+      <h2><?= htmlspecialchars($featured['itemname']) ?></h2>
+      <p class="muted"><?= nl2br(htmlspecialchars($featured['itemdesc'] ?? '')) ?></p>
+      <p class="price"><span class="badge">$<?= number_format((float)$featured['itemprice'],2) ?></span></p>
+      <p>
+        <a class="btn" href="/view_item.php?id=<?= (int)$featured['itemid'] ?>">View</a>
+        <a class="btn secondary" href="/list.php">View all</a>
+      </p>
+    </div>
+  </div>
+</section>
+<?php else: ?>
+  <p class="muted">No items yet. <a href="/list.php">View all</a></p>
+<?php endif; ?>
+
+<?php @include __DIR__ . '/templates/FooterTemplate.php';
