@@ -59,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <a class="btn secondary" href="/list.php" style="margin-left:8px">Cancel</a>
     </p>
   </form>
+    <p><label><input type="checkbox" name="active" value="1" <?php echo empty($row["active"]) ? "" : "checked"; ?>> Active</label></p>
 </section>
 
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
