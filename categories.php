@@ -69,7 +69,7 @@ if($stmt->rowCount($r1) > '0')
 			$col = "#D7D7D7";
 		}
 
-		$result_rows .= "<tr bgcolor=\"$col\">\n\t<td cellpadding=4><a href=\"view_item.php?ItemID=$a1[ItemID]\" class=BlackLink>$a1[ItemName]</a></td>\n\t\n</tr>\n\n";
+		$result_rows .= "<tr bgcolor=\"$col\">\t<td cellpadding=4><a href=\"view_item.php?ItemID=$a1[ItemID]\" class=BlackLink>$a1[ItemName]</a></td>\t</tr>";
 	}
 	
 
@@ -93,11 +93,11 @@ if($stmt->rowCount($r1) > '0')
 
 				if($PageStart == $Start)
 				{
-					$links[] = " <span class=RedLink>$i2</span>\n\t ";
+					$links[] = " <span class=RedLink>$i2</span>\t ";
 				}
 				elseif($PageStart < $rows)
 				{
-					$links[] = " <a class=BlackLink href=\"search.php?Start=$PageStart&what=$_GET[what]&CategoryID=$_GET[CategoryID]&ord1=$_GET[ord1]\">$i2</a>\n\t ";	
+					$links[] = " <a class=BlackLink href=\"search.php?Start=$PageStart&what=$_GET[what]&CategoryID=$_GET[CategoryID]&ord1=$_GET[ord1]\">$i2</a>\t ";	
 				}
 			}
 
@@ -107,7 +107,7 @@ if($stmt->rowCount($r1) > '0')
 
 			$NextPrev .=  "| </td>";
 
-			$NextPrev .= "</tr></table><br>\n";
+			$NextPrev .= "</tr></table><br>";
 
 	}
 

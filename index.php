@@ -29,7 +29,7 @@ try {
       <p class="muted"><?= nl2br(htmlspecialchars($featured['itemdesc'] ?? '')) ?></p>
       <p class="price"><span class="badge">$<?= number_format((float)$featured['itemprice'],2) ?></span></p>
       <p>
-        <a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/view_item.php?id=<?= (int)$featured['itemid'] ?>">View</a>
+        <a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/view_item.php?id=<?= (int)$featured['itemid'] ?>" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-3 py-1.5 hover:bg-emerald-700">View</a>
         <a class="inline-flex items-center gap-2 rounded-lg bg-white text-emerald-700 border border-emerald-600 px-4 py-2 hover:bg-emerald-50" href="/list.php">View all</a>
       </p>
     </div>

@@ -119,15 +119,15 @@ $debugger=0;
 // Post back the reconstructed instant payment notification
 
 		$socket = @fsockopen($domain,80,$errno,$errstr,30);
-		$header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
-		$header.= "User-Agent: PHP/".phpversion()."\r\n";
+		$header = "POST /cgi-bin/webscr HTTP/1.0\r";
+		$header.= "User-Agent: PHP/".phpversion()."\r";
 		$header.= "Referer: ".$_SERVER['HTTP_HOST'].
-		$_SERVER['PHP_SELF'].@$_SERVER['QUERY_STRING']."\r\n";
-		$header.= "Server: ".$_SERVER['SERVER_SOFTWARE']."\r\n";
-		$header.= "Host: ".$domain.":80\r\n";
-		$header.= "Content-Type: application/x-www-form-urlencoded\r\n";
-		$header.= "Content-Length: ".strlen($postipn)."\r\n";
-		$header.= "Accept: */*\r\n\r\n";
+		$_SERVER['PHP_SELF'].@$_SERVER['QUERY_STRING']."\r";
+		$header.= "Server: ".$_SERVER['SERVER_SOFTWARE']."\r";
+		$header.= "Host: ".$domain.":80\r";
+		$header.= "Content-Type: application/x-www-form-urlencoded\r";
+		$header.= "Content-Length: ".strlen($postipn)."\r";
+		$header.= "Accept: */*\r\r";
 
 //* Note: "Connection: Close" is not required using HTTP/1.0
 
@@ -170,7 +170,7 @@ function file_get_contents($ipnget) {
 
 	else
 	{
-		@fputs ($socket,$header.$postipn."\r\n\r\n"); // Required on some environments
+		@fputs ($socket,$header.$postipn."\r\r"); // Required on some environments
 	while (!feof($socket))
 	{
 		$response = fgets ($socket,1024); }}
@@ -219,7 +219,7 @@ function file_get_contents($ipnget) {
 					$q5 = "select ContactEmail from dd_settings";
 					$rr = $pdo->query($q5) or die(mysql_error());
 					$ce = mysql_fetch_row($rr);
-					mail($e[0],"Download links from $_SERVER[HTTP_HOST]!",$download_links,"Content-Type: text/html\nFrom: $ce[0]\n\n");
+					mail($e[0],"Download links from $_SERVER[HTTP_HOST]!",$download_links,"Content-Type: text/htmlFrom: $ce[0]");
 				}
 			}
 		}
@@ -298,66 +298,66 @@ function debugInfo()
 		$ipnv = count($_PAYPAL)+1;
 
 	@flush();
-	@header('Cache-control: private'."\r\n");
-	@header('Content-Type: text/plain'."\r\n");
-	@header('Content-Disposition: inline; filename=debug.txt'."\r\n");
-	@header('Content-transfer-encoding: ascii'."\r\n");
-	@header('Pragma: no-cache'."\r\n");
-	@header('Expires: 0'."\r\n\r\n");
-	echo '#########################################################'."\r\n";
-	echo '#    Copyright © EliteWeaver UK All rights reserved.    #'."\r\n";
-	echo '#########################################################'."\r\n";
-	echo '#              END USER LICENCE AGREEMENT               #'."\r\n";
-	echo '# Redistribution and  use in source and/or binary forms #'."\r\n";
-	echo '# with or without  modification, are permitted provided #'."\r\n";
-	echo '# that the above copyright notice is  reproduced in the #'."\r\n";
-	echo '# script, documentation and/or any other materials that #'."\r\n";
-	echo '# may  have been provided in the original distribution. #'."\r\n";
-	echo '#########################################################'."\r\n";
-	echo '# <-- PayPal IPN Variable Output & Status Debugger! --> #'."\r\n";
-	echo '#########################################################'."\r\n\r\n";
+	@header('Cache-control: private'."\r");
+	@header('Content-Type: text/plain'."\r");
+	@header('Content-Disposition: inline; filename=debug.txt'."\r");
+	@header('Content-transfer-encoding: ascii'."\r");
+	@header('Pragma: no-cache'."\r");
+	@header('Expires: 0'."\r\r");
+	echo '#########################################################'."\r";
+	echo '#    Copyright © EliteWeaver UK All rights reserved.    #'."\r";
+	echo '#########################################################'."\r";
+	echo '#              END USER LICENCE AGREEMENT               #'."\r";
+	echo '# Redistribution and  use in source and/or binary forms #'."\r";
+	echo '# with or without  modification, are permitted provided #'."\r";
+	echo '# that the above copyright notice is  reproduced in the #'."\r";
+	echo '# script, documentation and/or any other materials that #'."\r";
+	echo '# may  have been provided in the original distribution. #'."\r";
+	echo '#########################################################'."\r";
+	echo '# <-- PayPal IPN Variable Output & Status Debugger! --> #'."\r";
+	echo '#########################################################'."\r\r";
 	if (phpversion() >= '4.3.0' && $socket)
 	{
-	echo 'Socket Status: '."\r\n\r\n";
+	echo 'Socket Status: '."\r\r";
 	print_r (socket_get_status($socket));
-	echo "\r\n\r\n"; }
-	echo 'PayPal IPN: '."\r\n\r\n";
+	echo "\r\r"; }
+	echo 'PayPal IPN: '."\r\r";
 	print_r($_PAYPAL);
-	echo "\r\n\r\n".'Validation String: '."\r\n\r\n".wordwrap($postipn, 64, "\r\n", 1);
-	echo "\r\n\r\n\r\n".'Validation Info: '."\r\n";
-	echo "\r\n\t".'PayPal IPN String Length Incoming => '.$ipnc."\r\n";
-	echo "\t".'PayPal IPN String Length Outgoing => '.strlen($postipn)."\r\n";
+	echo "\r\r".'Validation String: '."\r\r".wordwrap($postipn, 64, "\r", 1);
+	echo "\r\r\r".'Validation Info: '."\r";
+	echo "\r\t".'PayPal IPN String Length Incoming => '.$ipnc."\r";
+	echo "\t".'PayPal IPN String Length Outgoing => '.strlen($postipn)."\r";
 	echo "\t".'PayPal IPN Variable Count Incoming => ';
 	print_r(count($_PAYPAL));
-	echo "\r\n\t".'PayPal IPN Variable Count Outgoing => '.$ipnv."\r\n";
+	echo "\r\t".'PayPal IPN Variable Count Outgoing => '.$ipnv."\r";
 	if ($postmode == 1)
 	{
-	echo "\r\n\t".'IPN Validation Mode => Live -> PayPal, Inc.'; }
+	echo "\r\t".'IPN Validation Mode => Live -> PayPal, Inc.'; }
 	elseif ($postmode == 2)
 	{
-	echo "\r\n\t".'IPN Validation Mode => Test -> EliteWeaver.'; }
+	echo "\r\t".'IPN Validation Mode => Test -> EliteWeaver.'; }
 	else
 	{
-	echo "\r\n\t".'IPN Validation Mode => Incorrect Mode Set!'; }
-	echo "\r\n\r\n\t\t".'IPN Validate Response => '.$response;
+	echo "\r\t".'IPN Validation Mode => Incorrect Mode Set!'; }
+	echo "\r\r\t\t".'IPN Validate Response => '.$response;
 	if (!$getrq && !$error)
 	{
-	echo "\r\n\t\t".'IPN Validate Method => POST (success)'."\r\n\r\n"; }
+	echo "\r\t\t".'IPN Validate Method => POST (success)'."\r\r"; }
 	elseif ($getrq && !$error)
 	{
-	echo "\r\n\t\t".'IPN Validate Method => GET (success)'."\r\n\r\n"; }
+	echo "\r\t\t".'IPN Validate Method => GET (success)'."\r\r"; }
 	elseif ($bmode)
 	{
-	echo "\r\n\t\t".'IPN Validate Method => NONE (stupid)'."\r\n\r\n"; }
+	echo "\r\t\t".'IPN Validate Method => NONE (stupid)'."\r\r"; }
 	elseif ($error)
 	{
-	echo "\r\n\t\t".'IPN Validate Method => BOTH (failed)'."\r\n\r\n"; }
+	echo "\r\t\t".'IPN Validate Method => BOTH (failed)'."\r\r"; }
 	else
 	{
-	echo "\r\n\t\t".'IPN Validate Method => BOTH (unknown)'."\r\n\r\n"; }
-	echo '#########################################################'."\r\n";
-	echo '#    THIS SCRIPT IS FREEWARE AND IS NOT FOR RE-SALE!    #'."\r\n";
-	echo '#########################################################'."\r\n\r\n";
+	echo "\r\t\t".'IPN Validate Method => BOTH (unknown)'."\r\r"; }
+	echo '#########################################################'."\r";
+	echo '#    THIS SCRIPT IS FREEWARE AND IS NOT FOR RE-SALE!    #'."\r";
+	echo '#########################################################'."\r\r";
 	@flush();
 
 }

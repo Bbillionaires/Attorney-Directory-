@@ -18,7 +18,7 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 <?php if (!$rows): ?>
   <p>No items found. <a class="text-emerald-700 hover:underline" href="/add.php">Add one</a>.</p>
 <?php else: ?>
-  <ul>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
   <?php foreach ($rows as $r): ?>
     <li class="py-2">
       <a class="text-emerald-700 hover:underline" href="/view_item.php?id=<?= (int)$r['itemid'] ?>">
@@ -26,7 +26,7 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
       </a>
       — $<?= number_format((float)$r['itemprice'],2) ?>
       <?= !empty($r['active']) ? '' : '(inactive)' ?>
-    </li>
+    </div>
   <?php endforeach; ?>
-  </ul>
+  </div>
 <?php endif; ?>

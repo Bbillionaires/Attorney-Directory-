@@ -20,7 +20,7 @@ while($a1 = mysql_fetch_array($r1))
 		$col = "white";
 	}
 
-	$rows .= "<tr bgcolor=\"$col\">\n\t<td class=BlackLink>$a1[ItemName]</td>\n<td align=right>$aset[currency_sign] $a1[ItemPrice]</td>\t\n\t<td align=center>$a1[ItemQty]</td>\n\t<td align=right>$aset[currency_sign] $a1[ItemTotal]</td>\n</tr>\n\n";
+	$rows .= "<tr bgcolor=\"$col\">\t<td class=BlackLink>$a1[ItemName]</td><td align=right>$aset[currency_sign] $a1[ItemPrice]</td>\t\t<td align=center>$a1[ItemQty]</td>\t<td align=right>$aset[currency_sign] $a1[ItemTotal]</td></tr>";
 
 	$order_total = $order_total + $a1[ItemTotal];
 }
