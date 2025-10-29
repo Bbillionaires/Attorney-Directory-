@@ -42,6 +42,5 @@ try {
 <p class="mt-4"><a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/add.php">&#x2795; Add new item</a></p>
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
   <p class="mt-4"><a class="inline-flex items-center gap-2 rounded-lg bg-white text-emerald-700 border border-emerald-600 px-4 py-2 hover:bg-emerald-50" href="/public_list.php">Public Directory View</a></p>
-<?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
 </body>
 </html>

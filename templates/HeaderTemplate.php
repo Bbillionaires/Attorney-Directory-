@@ -31,5 +31,6 @@
       </nav>
     </div>
   </div>
+</div>
 </header>
   <main class="container">
