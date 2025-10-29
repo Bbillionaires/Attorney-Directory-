@@ -13,6 +13,7 @@
 
   <!-- Tailwind (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/styles.css">
   <script>
     tailwind.config = {
       theme: {
@@ -40,9 +41,9 @@
                        radial-gradient(900px 240px at 80% -10%, rgba(59,130,246,.25), transparent 45%);}
     /* Make any UL that contains items behave like a responsive card grid */
     main ul{display:grid; grid-template-columns:repeat(1,minmax(0,1fr)); gap:16px;}
-    @media(min-width:640px){ main ul{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    @media(min-width:640px){ main ul{grid-template-columns:repeat(2,minmax(0,1fr));}} grid-flow-row-dense
     @media(min-width:1024px){ main ul{grid-template-columns:repeat(3,minmax(0,1fr));}}
-    main li{list-style:none; border-radius:16px; background:rgba(255,255,255,.08); padding:18px; 
+    main li{list-style:none; border-radius:16px; background:rgba(255,255,255,.08); padding:18px;  grid-flow-row-dense
             border:1px solid rgba(255,255,255,.12); transition:transform .2s, box-shadow .2s;}
     main li:hover{transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.25);}
     /* Price badge */
@@ -56,6 +57,7 @@
     /* Clean up any accidental literal  on pages */
     body :is(p,small,div,span){ white-space:pre-wrap; }
   </style>
+  <link rel="stylesheet" href="/assets/styles.css"/>
 </head>
 <body class="font-sans">
   <!-- Header -->
