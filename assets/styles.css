@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+body {
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(200% 150% at 50% 10%, #0b1220 0%, #0f172a 100%);
+  color: #e2e8f0;
+}
+.card {
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+}
+.btn-primary {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  border: none; color: white;
+  padding: .6rem 1rem; border-radius: 12px;
+  font-weight: 600;
+}
+.btn-primary:hover { background: linear-gradient(135deg,#2563eb,#1e40af); }
+.form-control {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  border-radius: 8px;
+  padding: .6rem .8rem;
+}
+.nav-glass {
+  background: rgba(10,20,35,0.8);
+  backdrop-filter: blur(12px);
+}
