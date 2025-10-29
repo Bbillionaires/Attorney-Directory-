@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <script src="https://cdn.tailwindcss.com"></script>
   <meta charset="utf-8">
   <title>Attorney Directory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
