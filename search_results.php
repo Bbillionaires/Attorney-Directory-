@@ -62,7 +62,7 @@ if($stmt->rowCount($r1) > '0')
 			$col = "white";
 		}
 
-		$result_rows .= "<tr bgcolor=\"$col\">\n\t<td><a href=\"view_item.php?ItemID=$a1[ItemID]&CategoryID=$a1[ItemCategory]&SubcategoryID=$a1[ItemSubcategory]\" class=BlackLink>$a1[ItemName]</a></td>\n\t\n\t\n</tr>\n\n";
+		$result_rows .= "<tr bgcolor=\"$col\">\t<td><a href=\"view_item.php?ItemID=$a1[ItemID]&CategoryID=$a1[ItemCategory]&SubcategoryID=$a1[ItemSubcategory]\" class=BlackLink>$a1[ItemName]</a></td>\t\t</tr>";
 	}
 	
 
@@ -86,11 +86,11 @@ if($stmt->rowCount($r1) > '0')
 
 				if($PageStart == $Start)
 				{
-					$links[] = " <span class=RedLink>$i2</span>\n\t ";
+					$links[] = " <span class=RedLink>$i2</span>\t ";
 				}
 				elseif($PageStart < $rows)
 				{
-					$links[] = " <a class=BlackLink href=\"search.php?Start=$PageStart&searchterm=$_GET[searchterm]&CategoryID=$_GET[CategoryID]&SubcategoryID=$_GET[SubcategoryID]&ord1=$_GET[ord1]\">$i2</a>\n\t ";	
+					$links[] = " <a class=BlackLink href=\"search.php?Start=$PageStart&searchterm=$_GET[searchterm]&CategoryID=$_GET[CategoryID]&SubcategoryID=$_GET[SubcategoryID]&ord1=$_GET[ord1]\">$i2</a>\t ";	
 				}
 			}
 
@@ -100,7 +100,7 @@ if($stmt->rowCount($r1) > '0')
 
 			$NextPrev .=  "| </td>";
 
-			$NextPrev .= "</tr></table><br>\n";
+			$NextPrev .= "</tr></table><br>";
 
 	}
 

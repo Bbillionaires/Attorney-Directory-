@@ -32,7 +32,7 @@
 					$q5 = "select ContactEmail from dd_settings";
 					$rr = $pdo->query($q5) or die(mysql_error());
 					$ce = mysql_fetch_row($rr);
-					mail($e[0],"Download links from $_SERVER[HTTP_HOST]!",$download_links,"Content-Type: text/html\nFrom: $ce[0]\n\n");
+					mail($e[0],"Download links from $_SERVER[HTTP_HOST]!",$download_links,"Content-Type: text/htmlFrom: $ce[0]");
 				}
 			}
 	}

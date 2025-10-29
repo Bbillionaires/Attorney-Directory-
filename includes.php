@@ -11,7 +11,7 @@ try {
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
   ]);
-  echo "✅ Database connection successful\n";
+  echo "✅ Database connection successful";
 } catch (Throwable $e) {
   die('❌ DB connect failed: '.$e->getMessage());
 }
