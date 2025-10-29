@@ -1,18 +1,24 @@
 <?php
-$u = parse_url(getenv('DATABASE_URL') ?: '');
-if (!$u) die('DATABASE_URL missing');
-$dsn = sprintf(
-  'pgsql:host=%s;port=%s;dbname=%s;sslmode=require',
-  $u['host'], $u['port'] ?? 5432, ltrim($u['path'] ?? '/', '/')
-);
+declare(strict_types=1);
 
-try {
-  $pdo = new PDO($dsn, $u['user'], $u['pass'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-  ]);
-<?php /* removed noisy DB banner */ ?>
-} catch (Throwable $e) {
-  die('❌ DB connect failed: '.$e->getMessage());
+// Safe HTML
+function h(?string $s): string {
+    return htmlspecialchars($s ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
-?>
+
+// Price formatting
+function money(float $n): string {
+    return number_format($n, 2);
+}
+
+// Newlines to <br>, safely
+function n2br(?string $s): string {
+    return nl2br(h($s ?? ''));
+}
+
+// Checkbox/boolean to 0/1
+function is_checked($v): int {
+    if ($v === null) return 0;
+    $v = strtolower(trim((string)$v));
+    return in_array($v, ['1','true','on','yes'], true) ? 1 : 0;
+}
