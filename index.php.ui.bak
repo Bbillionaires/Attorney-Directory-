@@ -29,8 +29,8 @@ try {
       <p class="muted"><?= nl2br(htmlspecialchars($featured['itemdesc'] ?? '')) ?></p>
       <p class="price"><span class="badge">$<?= number_format((float)$featured['itemprice'],2) ?></span></p>
       <p>
-        <a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/view_item.php?id=<?= (int)$featured['itemid'] ?>">View</a>
-        <a class="inline-flex items-center gap-2 rounded-lg bg-white text-emerald-700 border border-emerald-600 px-4 py-2 hover:bg-emerald-50" href="/list.php">View all</a>
+        <a class="btn" href="/view_item.php?id=<?= (int)$featured['itemid'] ?>">View</a>
+        <a class="btn secondary" href="/list.php">View all</a>
       </p>
     </div>
   </div>
@@ -39,9 +39,9 @@ try {
   <p class="muted">No items yet. <a href="/list.php">View all</a></p>
 <?php endif; ?>
 
-<p class="mt-4"><a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/add.php">&#x2795; Add new item</a></p>
+<p class="mt-4"><a class="btn" href="/add.php">&#x2795; Add new item</a></p>
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
-  <p class="mt-4"><a class="inline-flex items-center gap-2 rounded-lg bg-white text-emerald-700 border border-emerald-600 px-4 py-2 hover:bg-emerald-50" href="/public_list.php">Public Directory View</a></p>
+  <p class="mt-4"><a class="btn secondary" href="/public_list.php">Public Directory View</a></p>
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
 </body>
 </html>

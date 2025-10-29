@@ -19,17 +19,15 @@
     footer{margin:32px 0 24px;text-align:center;color:#777}
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-  <header class="bg-slate-800 text-white shadow">
-<div class="max-w-6xl mx-auto px-4">
+<body>
+  <header>
     <div class="container">
       <span class="brand">Attorney Directory</span>
       <nav style="float:right">
-        <a class="px-3 py-2 hover:text-emerald-300" href="/">Home</a>
-        <a class="px-3 py-2 hover:text-emerald-300" href="/list.php">All Items</a>
-        <a class="px-3 py-2 hover:text-emerald-300" href="/add.php">Add new</a>
+        <a href="/">Home</a>
+        <a href="/list.php">All Items</a>
+        <a href="/add.php">Add new</a>
       </nav>
     </div>
-  </div>
-</header>
+  </header>
   <main class="container">

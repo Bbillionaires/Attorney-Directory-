@@ -9,19 +9,19 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 <!doctype html>
 <meta charset="utf-8">
 <title>Attorney Directory</title>
-<h1>Attorney Directory</h1>
+<h1 class="text-2xl font-semibold mb-4">Attorney Directory</h1>
 <p>
-  <a class="btn" href="/add.php">+ New item</a>
-  <a class="btn" href="/list.php">Active only</a>
-  <a class="btn" href="/list.php?show=all">Show all</a>
+  <a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/add.php">+ New item</a>
+  <a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/list.php">Active only</a>
+  <a class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 active:bg-emerald-800" href="/list.php?show=all">Show all</a>
 </p>
 <?php if (!$rows): ?>
-  <p>No items found. <a href="/add.php">Add one</a>.</p>
+  <p>No items found. <a class="text-emerald-700 hover:underline" href="/add.php">Add one</a>.</p>
 <?php else: ?>
   <ul>
   <?php foreach ($rows as $r): ?>
-    <li>
-      <a href="/view_item.php?id=<?= (int)$r['itemid'] ?>">
+    <li class="py-2">
+      <a class="text-emerald-700 hover:underline" href="/view_item.php?id=<?= (int)$r['itemid'] ?>">
         <?= htmlspecialchars($r['itemname']) ?>
       </a>
       — $<?= number_format((float)$r['itemprice'],2) ?>
