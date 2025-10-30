@@ -2,10 +2,13 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-$socket = getenv('HOME') . '/mysql.sock';
-$dsn    = "mysql:unix_socket=$socket;dbname=attorneydb;charset=utf8mb4";
-$user   = 'root';
-$pass   = '';
+$host = getenv('DB_HOST');   // e.g. your MySQL host
+$db   = getenv('DB_NAME');   // e.g. attorneydb
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
+$charset = 'utf8mb4';
+
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 try {
   $pdo = new PDO($dsn, $user, $pass, [
@@ -15,4 +18,3 @@ try {
 } catch (PDOException $e) {
   die('DB connect failed: ' . $e->getMessage());
 }
-?>
