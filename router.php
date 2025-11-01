@@ -1,17 +1,23 @@
 <?php
-$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
+// Minimal, safe router for PHP built-in server on Render.
+// Logs each request and serves a static home to avoid DB on "/".
+$u = $_SERVER['REQUEST_URI'] ?? '';
+error_log("ROUTER hit: " . $u);
 
-/* Serve existing files directly */
-$full = __DIR__ . $uri;
-if ($uri !== '/' && file_exists($full) && !is_dir($full)) {
-  return false; // let PHP's server serve the asset
+// Let the dev server serve files that physically exist (assets, php files)
+$path = parse_url($u, PHP_URL_PATH);
+$full = __DIR__ . $path;
+if ($path !== '/' && $path && file_exists($full)) {
+  return false; // hand off to built-in server
 }
 
-/* Known lightweight routes (no DB) */
-if ($uri === '/healthz.php') {
-  require __DIR__ . '/healthz.php';
+// Static landing page while we stabilize DB:
+if ($path === '/' || $path === '/index.php') {
+  require __DIR__ . '/index_static.php';
   exit;
 }
 
-/* TEMP: serve static index to avoid DB issues on / */
-require __DIR__ . '/index_static.php';
+// Fallback: if a .php was requested that doesn't exist, 404 cleanly
+http_response_code(404);
+header('Content-Type: text/plain');
+echo "Not found: {$path}\n";

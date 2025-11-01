@@ -1,3 +1,3 @@
 <?php
 header('Content-Type: text/plain');
-echo "ok\n";
+echo "OK\n";
