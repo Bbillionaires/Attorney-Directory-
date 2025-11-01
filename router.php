@@ -1,23 +1,31 @@
 <?php
-// Minimal, safe router for PHP built-in server on Render.
-// Logs each request and serves a static home to avoid DB on "/".
-$u = $_SERVER['REQUEST_URI'] ?? '';
-error_log("ROUTER hit: " . $u);
+// Minimal, explicit router for PHP built-in server on Render
 
-// Let the dev server serve files that physically exist (assets, php files)
-$path = parse_url($u, PHP_URL_PATH);
-$full = __DIR__ . $path;
-if ($path !== '/' && $path && file_exists($full)) {
-  return false; // hand off to built-in server
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+error_log("ROUTER hit: " . $uri);
+
+// 1) Health check stays simple
+if ($uri === '/healthz.php') {
+  require __DIR__ . '/healthz.php';
+  return true;
 }
 
-// Static landing page while we stabilize DB:
-if ($path === '/' || $path === '/index.php') {
-  require __DIR__ . '/index_static.php';
-  exit;
+// 2) Home page: always serve LIVE index.php
+if ($uri === '/' || $uri === '/index.php') {
+  define('FROM_ROUTER', true);
+  define('ROUTER_INDEX', 'live');
+  require __DIR__ . '/index.php';
+  return true;
 }
 
-// Fallback: if a .php was requested that doesn't exist, 404 cleanly
-http_response_code(404);
-header('Content-Type: text/plain');
-echo "Not found: {$path}\n";
+// 3) If the request maps to a real file (css/js/img/php), let PHP serve it
+$path = __DIR__ . $uri;
+if (is_file($path)) {
+  return false; // let the server handle it
+}
+
+// 4) Fallback: SPA-style — send everything else to LIVE index.php
+define('FROM_ROUTER', true);
+define('ROUTER_INDEX', 'fallback-live');
+require __DIR__ . '/index.php';
+return true;
