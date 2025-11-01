@@ -13,7 +13,7 @@ if ($path !== '/' && $path && file_exists($full)) {
 
 // Static landing page while we stabilize DB:
 if ($path === '/' || $path === '/index.php') {
-  require __DIR__ . '/index_static.php';
+  require __DIR__ . '/index.php';
   exit;
 }
 
