@@ -1,7 +1,6 @@
-#!/usr/bin/env sh
-set -eux
-: "${PORT:=8080}"
+#!/usr/bin/env bash
+set -euo pipefail
+PORT="${PORT:-10000}"
 echo "PORT=$PORT"
-echo "BUILD_ID=$(cat /app/build-id.txt || echo unknown)"
 php -v
-exec php -d display_errors=1 -d error_reporting=32767 -S 0.0.0.0:${PORT} -t /app /app/router.php
+exec php -d display_errors=1 -d error_reporting=32767 -S 0.0.0.0:"$PORT" -t /app /app/router.php

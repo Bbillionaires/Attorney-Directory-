@@ -1,39 +1,25 @@
 <?php
-// Show errors in logs
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-$host = getenv('DB_HOST') ?: '';
-$port = getenv('DB_PORT') ?: '5432';
-$db   = getenv('DB_NAME') ?: '';
-$user = getenv('DB_USER') ?: '';
-$pass = getenv('DB_PASS') ?: '';
-$sslmode = getenv('DB_SSLMODE') ?: 'require'; // Render Postgres usually needs SSL
-
-// Fallback: if DATABASE_URL is present, parse it
-if (!$host && ($url = getenv('DATABASE_URL'))) {
-  $parts = parse_url($url);
-  $host  = $parts['host'] ?? $host;
-  $port  = $parts['port'] ?? $port;
-  $user  = $parts['user'] ?? $user;
-  $pass  = $parts['pass'] ?? $pass;
-  $db    = ltrim($parts['path'] ?? '', '/');
-  // Detect sslmode= in query if present
-  if (!empty($parts['query'])) {
-    parse_str($parts['query'], $q);
-    if (!empty($q['sslmode'])) $sslmode = $q['sslmode'];
-  }
-}
-
-$dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode={$sslmode}";
-
+$pdo = null;
 try {
+  $url = getenv('DATABASE_URL');
+  if (!$url) { throw new RuntimeException('Missing DATABASE_URL'); }
+  $url = preg_replace('#^postgres(ql)?://#','pgsql://',$url);
+  $p = parse_url($url);
+  if (!$p) { throw new RuntimeException('Bad DATABASE_URL'); }
+  $user = $p['user'] ?? null;
+  $pass = $p['pass'] ?? null;
+  $host = $p['host'] ?? null;
+  $port = $p['port'] ?? 5432;
+  $db   = ltrim($p['path'] ?? '', '/');
+  if (!$user || !$pass || !$host || !$db) {
+    throw new RuntimeException('Incomplete DATABASE_URL');
+  }
+  $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode=require";
   $pdo = new PDO($dsn, $user, $pass, [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
+    PDO::ATTR_EMULATE_PREPARES => false,
   ]);
 } catch (Throwable $e) {
   $GLOBALS['DB_ERROR'] = $e->getMessage();
-  $pdo = null;
 }
