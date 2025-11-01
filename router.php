@@ -1,6 +1,17 @@
 <?php
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
-if ($path === '/' || $path === '') { require __DIR__ . '/index.php'; return; }
-$file = __DIR__ . $path;
-if (is_file($file)) { return false; }
-http_response_code(404); echo "Not found: $path";
+$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
+
+/* Serve existing files directly */
+$full = __DIR__ . $uri;
+if ($uri !== '/' && file_exists($full) && !is_dir($full)) {
+  return false; // let PHP's server serve the asset
+}
+
+/* Known lightweight routes (no DB) */
+if ($uri === '/healthz.php') {
+  require __DIR__ . '/healthz.php';
+  exit;
+}
+
+/* TEMP: serve static index to avoid DB issues on / */
+require __DIR__ . '/index_static.php';
