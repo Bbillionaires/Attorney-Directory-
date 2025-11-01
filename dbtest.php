@@ -1,17 +1,18 @@
 <?php
-$dsn = sprintf(
-    'pgsql:host=%s;port=%s;dbname=%s;sslmode=require',
-    getenv('DB_HOST'),
-    getenv('DB_PORT') ?: 5432,
-    getenv('DB_NAME')
-);
-try {
-    $pdo = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASS'), [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-    echo '✅ Database connected successfully';
-} catch (Throwable $e) {
-    echo '❌ Database connection error: ' . $e->getMessage();
+require __DIR__ . '/conn.php';
+header('Content-Type: text/plain');
+
+if (!$pdo) {
+  http_response_code(503);
+  echo "DB_ERROR: " . ($GLOBALS['DB_ERROR'] ?? 'unknown') . "\n";
+  exit;
 }
-?>
+
+try {
+  $v = $pdo->query('SELECT version() AS v')->fetch()['v'] ?? 'unknown';
+  echo "OK: connected\n";
+  echo "version: $v\n";
+} catch (Throwable $e) {
+  http_response_code(500);
+  echo "QUERY_ERROR: " . $e->getMessage() . "\n";
+}
