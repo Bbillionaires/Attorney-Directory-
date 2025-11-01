@@ -14,4 +14,4 @@ if ($uri === '/healthz.php') {
 }
 
 /* TEMP: serve static index to avoid DB issues on / */
-require __DIR__ . '/index.php';
+require __DIR__ . '/index_static.php';
