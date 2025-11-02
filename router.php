@@ -1,31 +1,36 @@
 <?php
-// Minimal, explicit router for PHP built-in server on Render
+// super-verbose router for PHP built-in server
+$uri  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
+$qs   = $_SERVER['QUERY_STRING'] ?? '';
+$when = gmdate('c');
+error_log("ROUTER hit: {$uri}?{$qs} at {$when}");
 
-$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-error_log("ROUTER hit: " . $uri);
-
-// 1) Health check stays simple
-if ($uri === '/healthz.php') {
-  require __DIR__ . '/healthz.php';
-  return true;
+// Always serve live index for "/" (and /index and /index.php)
+if ($uri === '/' || $uri === '/index' || $uri === '/index.php') {
+    require __DIR__ . '/index.php';
+    exit;
 }
 
-// 2) Home page: always serve LIVE index.php
-if ($uri === '/' || $uri === '/index.php') {
-  define('FROM_ROUTER', true);
-  define('ROUTER_INDEX', 'live');
-  require __DIR__ . '/index.php';
-  return true;
+// if the request matches a real file (css/js/png/etc), let the server serve it
+$real = __DIR__ . $uri;
+if (is_file($real)) {
+    return false;
 }
 
-// 3) If the request maps to a real file (css/js/img/php), let PHP serve it
-$path = __DIR__ . $uri;
-if (is_file($path)) {
-  return false; // let the server handle it
+// health endpoint
+if ($uri === '/healthz.php' || $uri === '/healthz') {
+    header('Content-Type: text/plain');
+    echo "ok\n";
+    exit;
 }
 
-// 4) Fallback: SPA-style — send everything else to LIVE index.php
-define('FROM_ROUTER', true);
-define('ROUTER_INDEX', 'fallback-live');
-require __DIR__ . '/index.php';
-return true;
+// db test passthrough
+if ($uri === '/dbtest.php' || $uri === '/dbtest') {
+    require __DIR__ . '/dbtest.php';
+    exit;
+}
+
+// Fallback: 404 with details
+http_response_code(404);
+header('Content-Type: text/plain');
+echo "404 from router. URI=$uri\n";
