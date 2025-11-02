@@ -1,29 +1,14 @@
 <?php
-$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-error_log("ROUTER hit: {$uri}");
+$docroot = __DIR__ . '/Legalform';
+chdir($docroot);
 
-if ($uri === '/' || $uri === '/index' || $uri === '/index.php') {
-    error_log("ROUTER action: include index.php");
-    require __DIR__ . '/index.php';
-    exit;
+$uri  = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+$path = realpath($docroot . $uri);
+
+// Let PHP dev server serve actual files
+if ($path && str_starts_with($path, $docroot) && is_file($path)) {
+  return false;
 }
 
-$real = __DIR__ . $uri;
-if (is_file($real)) {
-    error_log("ROUTER action: serve static file $real");
-    return false; // let PHP dev server serve the static asset
-}
-
-if ($uri === '/healthz' || $uri === '/healthz.php') {
-    header('Content-Type: text/plain'); echo "ok\n"; exit;
-}
-
-if ($uri === '/dbtest' || $uri === '/dbtest.php') {
-    error_log("ROUTER action: include dbtest.php");
-    require __DIR__ . '/dbtest.php';
-    exit;
-}
-
-http_response_code(404);
-header('Content-Type: text/plain');
-echo "404 from router. URI=$uri\n";
+// Everything else goes to your app’s index
+require $docroot . '/index.php';
