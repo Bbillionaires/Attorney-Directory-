@@ -1,10 +1,15 @@
-<?php require __DIR__ . "/conn.php"; require __DIR__ . "/lib/db.php"; ?>
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once __DIR__ . '/conn.php';
 require_once __DIR__ . '/includes.php';
+require_once __DIR__ . '/templates/HeaderTemplate.php';
+?>
+<?php require __DIR__ . "/conn.php"; require __DIR__ . "/lib/db.php"; ?>
 <?php
 error_reporting(E_ALL); ini_set('display_errors', 1);
-require_once __DIR__ . '/includes.php';
-require_once __DIR__ . '/templates/HeaderTemplate.php';
+@include __DIR__ . '/templates/HeaderTemplate.php';
 
 $featured = [];
 try {
@@ -47,25 +52,4 @@ try {
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
 </body>
 </html>
-
-<?php
-// --- safety fallback for homepage queries ---
-if (!isset($pdo) || !($pdo instanceof PDO)) {
-    $db_msg = $GLOBALS['DB_ERROR'] ?? 'database not connected';
-    echo '<div style="color:#ffcc00;padding:8px 12px;">DB warning: ' . htmlspecialchars($db_msg) . '</div>';
-} else {
-    try {
-        $stmt = $pdo->query("
-            SELECT itemid, itemname, itemdesc, itemprice, itemthumb
-            FROM dd_catalog
-            WHERE COALESCE(active,1)=1
-            ORDER BY itemid DESC
-            LIMIT 12
-        ");
-        $featured = $stmt->fetchAll();
-    } catch (Throwable $e) {
-        echo '<div style="color:#ff8080;padding:8px 12px;">DB error: ' . htmlspecialchars($e->getMessage()) . '</div>';
-        $featured = [];
-    }
-}
-?>
+<?php require_once __DIR__ . '/templates/FooterTemplate.php'; ?>
