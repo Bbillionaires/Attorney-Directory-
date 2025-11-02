@@ -1,10 +1,11 @@
 <?php
-$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$full = __DIR__ . $uri;
-if (is_file($full)) { return false; } // let built-in server serve actual files
+$uri  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$file = __DIR__ . $uri;
 
-if ($uri === '/healthz.php') { require __DIR__.'/healthz.php'; return; }
-if ($uri === '/dbtest.php')  { require __DIR__.'/dbtest.php';  return; }
-if ($uri === '/which.php')   { require __DIR__.'/which.php';   return; }
+# Serve existing files (css, js, php test pages, etc.) directly
+if ($uri !== '/' && is_file($file)) {
+  return false;
+}
 
-require __DIR__.'/index.php';
+# Otherwise serve the app home
+require __DIR__ . '/index.php';
