@@ -1,15 +1,17 @@
 <?php
-$uri  = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 error_log("ROUTER hit: {$uri}");
 
 if ($uri === '/' || $uri === '/index' || $uri === '/index.php') {
+    error_log("ROUTER action: include index.php");
     require __DIR__ . '/index.php';
     exit;
 }
 
 $real = __DIR__ . $uri;
 if (is_file($real)) {
-    return false; // serve static assets
+    error_log("ROUTER action: serve static file $real");
+    return false; // let PHP dev server serve the static asset
 }
 
 if ($uri === '/healthz' || $uri === '/healthz.php') {
@@ -17,7 +19,9 @@ if ($uri === '/healthz' || $uri === '/healthz.php') {
 }
 
 if ($uri === '/dbtest' || $uri === '/dbtest.php') {
-    require __DIR__ . '/dbtest.php'; exit;
+    error_log("ROUTER action: include dbtest.php");
+    require __DIR__ . '/dbtest.php';
+    exit;
 }
 
 http_response_code(404);

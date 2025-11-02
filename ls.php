@@ -1,3 +1,4 @@
 <?php
 header('Content-Type: text/plain');
-foreach (scandir(__DIR__) as $f) { echo $f . "\n"; }
+$items = scandir(__DIR__);
+foreach ($items as $i) echo $i,"\n";
