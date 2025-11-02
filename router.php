@@ -1,19 +1,15 @@
 <?php
-$docroot = __DIR__ . '/Legalform';
-if (!is_dir($docroot) || !is_file($docroot.'/index.php')) {
-  http_response_code(500);
-  echo "Router docroot missing: $docroot\n";
-  exit;
-}
-chdir($docroot);
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
+error_log("ROUTER hit: $uri");
 
-$uri  = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-$path = realpath($docroot . $uri);
+/* Let built-in server serve real files (assets/css/js/images) */
+$full = __DIR__ . $uri;
+if ($uri !== '/' && file_exists($full)) { return false; }
 
-/* Let built-in server serve existing static files */
-if ($path && str_starts_with($path, $docroot) && is_file($path)) {
-  return false;
-}
+/* Health & debug shortcuts */
+if ($uri === '/healthz' || $uri === '/healthz.php') { require __DIR__ . '/healthz.php'; exit; }
+if ($uri === '/dbtest.php') { require __DIR__ . '/dbtest.php'; exit; }
+if ($uri === '/which.php')  { require __DIR__ . '/which.php';  exit; }
 
-/* Everything else goes to your app */
-require $docroot . '/index.php';
+/* Default: your real site */
+require __DIR__ . '/index.php';
