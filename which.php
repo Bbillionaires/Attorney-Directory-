@@ -1,7 +1,7 @@
 <?php
-header('Content-Type: text/plain');
-echo "PWD: " . getcwd() . "\n";
-echo "PHP SAPI: " . php_sapi_name() . "\n";
-echo "Index exists? " . (file_exists(__DIR__ . '/index.php') ? "yes" : "no") . "\n";
-echo "\nFiles here:\n";
-foreach (scandir(__DIR__) as $f) { echo " - $f\n"; }
+echo "BRANCH=" . trim(shell_exec('git rev-parse --abbrev-ref HEAD')) . "\n";
+echo "BUILD_ID=" . (is_file(__DIR__ . '/build-id.txt') ? trim(file_get_contents(__DIR__ . '/build-id.txt')) : 'none') . "\n";
+echo "ROUTER=" . __FILE__ . "\n";
+echo "INDEX_CALLS=";
+echo (strpos(file_get_contents(__DIR__ . '/router.php'), "require __DIR__ . '/index.php';") !== false) ? 'index.php' : 'index_static.php';
+echo "\n";
