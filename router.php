@@ -1,15 +1,16 @@
 <?php
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
-error_log("ROUTER hit: $uri");
-
-/* Let built-in server serve real files (assets/css/js/images) */
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $full = __DIR__ . $uri;
-if ($uri !== '/' && file_exists($full)) { return false; }
 
-/* Health & debug shortcuts */
-if ($uri === '/healthz' || $uri === '/healthz.php') { require __DIR__ . '/healthz.php'; exit; }
-if ($uri === '/dbtest.php') { require __DIR__ . '/dbtest.php'; exit; }
-if ($uri === '/which.php')  { require __DIR__ . '/which.php';  exit; }
+// 1) If the request maps to a real file, let PHP's dev server serve it.
+if (is_file($full)) {
+  return false;
+}
 
-/* Default: your real site */
+// 2) Explicit small routes
+if ($uri === '/healthz.php') { require __DIR__ . '/healthz.php'; return; }
+if ($uri === '/dbtest.php')  { require __DIR__ . '/dbtest.php';  return; }
+if ($uri === '/which.php')   { require __DIR__ . '/which.php';   return; }
+
+// 3) Otherwise, serve the app
 require __DIR__ . '/index.php';

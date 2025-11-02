@@ -1,26 +1,31 @@
 <?php
-// Robust PostgreSQL connection that supports Render's DATABASE_URL.
-// Leaves $pdo defined (PDO or null) and sets $GLOBALS['DB_ERROR'] on failure.
+// PostgreSQL connector compatible with Render's DATABASE_URL.
+// Ensures $pdo exists; sets $GLOBALS['DB_ERROR'] on failure.
 
 $pdo = null;
 
 function build_pg_dsn_from_env(): array {
-    $envUrl = getenv('DATABASE_URL'); // e.g. postgresql://user:pass@host:5432/db?sslmode=require
+    $envUrl = getenv('DATABASE_URL'); // e.g. postgres://user:pass@host:5432/db?sslmode=require
     if ($envUrl) {
-        // parse_url works for postgres:// and postgresql://
         $parts = parse_url($envUrl);
         $user  = isset($parts['user']) ? urldecode($parts['user']) : '';
         $pass  = isset($parts['pass']) ? urldecode($parts['pass']) : '';
         $host  = $parts['host'] ?? '127.0.0.1';
         $port  = $parts['port'] ?? '5432';
-        $name  = ltrim($parts['path'] ?? '/postgres', '/');
+        $name  = ltrim($parts['path'] ?? '/postgres','/');
+
         parse_str($parts['query'] ?? '', $qs);
-        $ssl   = $qs['sslmode'] ?? 'require';
-        $dsn   = "pgsql:host={$host};port={$port};dbname={$name};sslmode={$ssl}";
+        $ssl = strtolower((string)($qs['sslmode'] ?? 'require'));
+        // strip weird chars & whitelist acceptable values
+        $ssl = preg_replace('/[^a-z-]/', '', $ssl);
+        $allowed = ['disable','allow','prefer','require','verify-ca','verify-full'];
+        if (!in_array($ssl, $allowed, true)) { $ssl = 'require'; }
+
+        $dsn = "pgsql:host={$host};port={$port};dbname={$name};sslmode={$ssl}";
         return [$dsn, $user, $pass];
     }
 
-    // Legacy fallbacks (only used if DATABASE_URL is missing)
+    // Legacy fallback envs if DATABASE_URL not present
     $host = getenv('DB_HOST') ?: '127.0.0.1';
     $port = getenv('DB_PORT') ?: '5432';
     $name = getenv('DB_NAME') ?: 'postgres';
@@ -39,5 +44,5 @@ try {
     ]);
 } catch (Throwable $e) {
     $GLOBALS['DB_ERROR'] = $e->getMessage();
-    $pdo = null; // ensure the symbol exists
+    $pdo = null;
 }
