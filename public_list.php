@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-require __DIR__.'/conn.php';
 $stmt = $pdo->query("SELECT itemid,itemname,itemprice,itemthumb FROM dd_catalog WHERE COALESCE(active,1)=1 ORDER BY itemid DESC");
 $rows = $stmt->fetchAll();
 ?>

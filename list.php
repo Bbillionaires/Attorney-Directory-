@@ -1,5 +1,4 @@
 <?php
-require __DIR__ . '/conn.php';
 $showAll = (($_GET['show'] ?? '') === 'all');
 $sql = $showAll
   ? 'SELECT itemid,itemname,itemprice,active FROM dd_catalog ORDER BY itemid DESC'
