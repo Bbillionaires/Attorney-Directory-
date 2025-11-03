@@ -74,3 +74,4 @@ if ($pdo) {
 <?php endif; ?>
 
 <?php @include __DIR__ . '/templates/FooterTemplate.php'; ?>
+<?php /* DEPLOY_MARKER 2025-11-03T03:49:26Z */ ?>

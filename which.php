@@ -1,4 +1,4 @@
-<?php
-header('Content-Type: text/plain');
-$build = @file_get_contents(__DIR__ . '/build-id.txt') ?: 'unknown';
-echo "OK from which.php\nBUILD_ID: {$build}\n";
+<?php header('Content-Type: text/plain');
+echo "WHICH OK\n";
+echo "BUILD_SHA=" . trim(`git rev-parse --short HEAD`) . "\n";
+echo "BUILD_TIME=" . gmdate('c') . "\n";
