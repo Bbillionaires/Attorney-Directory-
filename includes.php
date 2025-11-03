@@ -1,9 +1,11 @@
 <?php
-declare(strict_types=1);
-require_once __DIR__ . '/conn.php';
+error_reporting(E_ALL); ini_set('display_errors', 1);
 
-if (!function_exists('pdo')) {
-  function pdo(): ?PDO {
-    return ($GLOBALS['pdo'] ?? null) instanceof PDO ? $GLOBALS['pdo'] : null;
-  }
+if (!isset($GLOBALS['__CONN_LOADED__'])) {
+  require_once __DIR__ . '/conn.php';   // defines $pdo
+  $GLOBALS['__CONN_LOADED__'] = true;
+}
+
+function pdo_or_null() {
+  return isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO ? $GLOBALS['pdo'] : null;
 }
