@@ -1,52 +1,76 @@
 <?php
-error_reporting(E_ALL); ini_set('display_errors', '1');
 require_once __DIR__ . '/includes.php';
 @include __DIR__ . '/templates/HeaderTemplate.php';
 
-$pdo = pdo();
-$featured = [];
-$dbMsg = '';
+$pdo = pdo_or_null();
+$items = [];
+$error = null;
 
-if ($pdo instanceof PDO) {
+if ($pdo) {
   try {
     $stmt = $pdo->query("
       SELECT itemid, itemname, itemdesc, itemprice, itemthumb
       FROM dd_catalog
       WHERE COALESCE(active,1)=1
       ORDER BY itemid DESC
-      LIMIT 12
+      LIMIT 24
     ");
-    $featured = $stmt->fetchAll();
+    $items = $stmt->fetchAll();
   } catch (Throwable $e) {
-    $dbMsg = 'DB error: ' . $e->getMessage();
+    $error = $e->getMessage();
   }
 } else {
-  $dbMsg = 'DB not connected' . (!empty($GLOBALS['DB_ERROR']) ? (': '.$GLOBALS['DB_ERROR']) : '');
+  $error = 'Database not connected.';
 }
 ?>
-<div class="container mx-auto px-4 py-8">
-  <div class="rounded-2xl bg-slate-800/40 p-8 mb-8">
-    <h1 class="text-3xl font-semibold text-white">Professional Legal Templates</h1>
-    <p class="text-slate-300 mt-2">Browse, compare, and purchase agreements. Clean UI, simple checkout.</p>
+
+<section class="mb-10">
+  <div class="rounded-2xl bg-gradient-to-br from-slate-800/70 to-slate-900/70 p-8 ring-1 ring-slate-800">
+    <h1 class="text-3xl md:text-4xl font-bold mb-3">Professional Legal Templates</h1>
+    <p class="text-slate-300">Browse, compare, and purchase agreements. Clean UI, simple checkout.</p>
   </div>
+</section>
 
-  <?php if ($dbMsg): ?>
-    <div style="color:#fda4af; margin-bottom:1rem;"><?= htmlspecialchars($dbMsg) ?></div>
-  <?php endif; ?>
+<?php if ($error): ?>
+  <div class="mb-6 rounded-lg border border-rose-700/40 bg-rose-900/20 p-4 text-rose-200">
+    <strong>DB error:</strong> <?= htmlspecialchars($error) ?>
+  </div>
+<?php endif; ?>
 
-  <?php if (!$featured): ?>
-    <div>No items yet. <a href="/public_list.php">View all</a></div>
-  <?php else: ?>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <?php foreach ($featured as $row): ?>
-        <a class="block rounded-xl p-4 border border-slate-700 hover:bg-slate-800/40"
-           href="/view_item.php?id=<?= (int)$row['itemid'] ?>">
-          <div class="text-lg font-medium text-white"><?= htmlspecialchars($row['itemname']) ?></div>
-          <div class="text-slate-300 text-sm mt-1"><?= htmlspecialchars($row['itemdesc']) ?></div>
-          <div class="text-sky-300 font-semibold mt-2">$<?= number_format((float)$row['itemprice'], 2) ?></div>
-        </a>
-      <?php endforeach; ?>
-    </div>
-  <?php endif; ?>
-</div>
+<?php if (!$items): ?>
+  <p class="text-slate-300">No items yet. <a class="text-sky-300 hover:underline" href="/public_list.php">View all</a></p>
+<?php else: ?>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <?php foreach ($items as $it): ?>
+      <a href="/view_item.php?id=<?= urlencode($it['itemid']) ?>"
+         class="group block rounded-2xl border border-slate-800 bg-slate-900/40 p-5 hover:border-sky-700/60 hover:bg-slate-900/60">
+        <div class="flex items-start gap-4">
+          <div class="h-16 w-16 flex-none rounded-lg bg-slate-800 ring-1 ring-slate-700/60 overflow-hidden">
+            <?php if (!empty($it['itemthumb'])): ?>
+              <img src="<?= htmlspecialchars($it['itemthumb']) ?>" alt="" class="h-full w-full object-cover">
+            <?php else: ?>
+              <div class="h-full w-full grid place-items-center text-slate-400">📄</div>
+            <?php endif; ?>
+          </div>
+          <div class="min-w-0">
+            <h3 class="truncate text-lg font-semibold group-hover:text-sky-300">
+              <?= htmlspecialchars($it['itemname']) ?>
+            </h3>
+            <?php if (isset($it['itemprice'])): ?>
+              <div class="mt-1 text-sky-300 font-semibold">
+                $<?= number_format((float)$it['itemprice'], 2) ?>
+              </div>
+            <?php endif; ?>
+            <?php if (!empty($it['itemdesc'])): ?>
+              <p class="mt-1 line-clamp-2 text-sm text-slate-300">
+                <?= htmlspecialchars($it['itemdesc']) ?>
+              </p>
+            <?php endif; ?>
+          </div>
+        </div>
+      </a>
+    <?php endforeach; ?>
+  </div>
+<?php endif; ?>
+
 <?php @include __DIR__ . '/templates/FooterTemplate.php'; ?>
