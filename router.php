@@ -1,30 +1,42 @@
 <?php
-// Minimal router for PHP dev server on Render
-$uri  = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$root = __DIR__;
-$path = realpath($root . $uri);
+error_log("ROUTER hit: " . ($_SERVER['REQUEST_URI'] ?? ''));
 
-// If a real file exists (css, js, images, etc.), let the server serve it.
-if ($uri !== '/' && $path && str_starts_with($path, $root) && is_file($path)) {
-  return false; // serve static file directly
+// Let PHP dev server serve actual existing files (css/js/img/php)
+if (php_sapi_name() === 'cli-server') {
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $file = __DIR__ . $path;
+    if ($path !== '/' && file_exists($file) && is_file($file)) {
+        return false;
+    }
 }
 
-// Known endpoints
-switch ($uri) {
-  case '/':
-    require $root . '/index.php'; break;
+$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 
-  // diagnostics (optional)
-  case '/which.php':
-  case '/dbtest.php':
-  case '/healthz.php':
-    require $root . $uri; break;
-
-  default:
-    // Allow direct .php access if the file exists
-    if (preg_match('/\.php$/', $uri) && $path && is_file($path)) {
-      require $path; break;
-    }
-    http_response_code(404);
-    echo "Not Found";
+// Pretty routes
+switch ($path) {
+    case '':
+    case '/':
+        require __DIR__ . '/index.php';
+        break;
+    case '/items':
+        require __DIR__ . '/list.php';
+        break;
+    case '/add':
+        require __DIR__ . '/add.php';
+        break;
+    case '/public':
+        require __DIR__ . '/public_list.php';
+        break;
+    case '/healthz':
+        require __DIR__ . '/healthz.php';
+        break;
+    default:
+        // Fallback: allow direct .php files if they exist (back-compat)
+        $candidate = __DIR__ . $path;
+        if (preg_match('~^/[\w\-/]+\.php$~', $path) && file_exists($candidate)) {
+            require $candidate;
+            break;
+        }
+        http_response_code(404);
+        echo "Not Found";
 }

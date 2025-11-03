@@ -1,7 +1,9 @@
 .git
 .gitignore
-Dockerfile
-README.md
 node_modules
-vendor
-*.log
+npm-debug.log
+.DS_Store
+backups
+Attorney-Directory-backup.tar.gz
+*.zip
+*.tar.gz
