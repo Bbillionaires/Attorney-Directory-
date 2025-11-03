@@ -1,5 +1,4 @@
 <?php include __DIR__ . '/templates/HeaderTemplate.php'; ?>
-<?php require __DIR__ . '/conn.php'; require __DIR__ . '/lib/db.php'; ?>
 
 <?php
 $err = '';

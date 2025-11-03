@@ -1,12 +1,8 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-require_once __DIR__ . '/includes.php';
-require_once __DIR__ . '/templates/HeaderTemplate.php';
-?>
+<?php require __DIR__ . "/conn.php"; require __DIR__ . "/lib/db.php"; ?>
+require_once __DIR__ '/conn.php';
 <?php
 error_reporting(E_ALL); ini_set('display_errors', 1);
+require_once __DIR__ . '/includes.php';
 @include __DIR__ . '/templates/HeaderTemplate.php';
 
 $featured = [];
@@ -50,4 +46,3 @@ try {
 <?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
 </body>
 </html>
-<?php require_once __DIR__ . '/templates/FooterTemplate.php'; ?>

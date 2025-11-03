@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-require __DIR__ . '/conn.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $stmt = $pdo->prepare('SELECT itemid,itemname,itemdesc,itemprice,itemthumb,active FROM dd_catalog WHERE itemid=:id');
