@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/includes.php'; ?>
+<?php @include __DIR__ . "/templates/HeaderTemplate.php"; ?>
 <?
 //get the link
 $q1 = "select * from dd_links";
@@ -16,3 +18,5 @@ while($a1 = mysql_fetch_array($r1))
 <?
 }
 ?>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>

@@ -3,11 +3,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once __DIR__ . '/includes.php';
-require_once __DIR__ . '/templates/HeaderTemplate.php';
 ?>
 <?php
 error_reporting(E_ALL); ini_set('display_errors', 1);
-@include __DIR__ . '/templates/HeaderTemplate.php';
 
 $featured = [];
 try {
@@ -45,9 +43,8 @@ try {
 <?php endif; ?>
 
 <p class="mt-4"><a class="btn" href="/add.php">&#x2795; Add new item</a></p>
-<?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
   <p class="mt-4"><a class="btn secondary" href="/public_list.php">Public Directory View</a></p>
-<?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
 </body>
 </html>
-<?php require_once __DIR__ . '/templates/FooterTemplate.php'; ?>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>

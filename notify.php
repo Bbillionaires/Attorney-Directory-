@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/includes.php'; ?>
+<?php @include __DIR__ . "/templates/HeaderTemplate.php"; ?>
 <?php
 
 #########################################################
@@ -194,7 +196,6 @@ function file_get_contents($ipnget) {
 	{
 		if(variableAudit('payment_status','Completed'))
 		{
-			include_once("conn.php");
 			$q1 = "update dd_orders_info set order_paid = 'y' where OrderID = '$custom'  ";
 			$pdo->query($q1) or die(mysql_error());
 			
@@ -382,3 +383,5 @@ function debugInfo()
 #########################################################
 
 ?>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>
