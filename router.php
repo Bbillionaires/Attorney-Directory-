@@ -1,45 +1,60 @@
 <?php
-// Minimal router for PHP built-in server on Render
+// Robust router for PHP built-in server on Render
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $docroot = __DIR__;
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$uri = rtrim($uri, '/');  // normalize: '/items/' -> '/items'
 
-// Let the PHP dev server serve real files (CSS/JS/images/fonts) directly.
+// Let PHP serve static files directly
 if (preg_match('#\.(?:css|js|mjs|map|png|jpg|jpeg|gif|svg|ico|webp|woff2?|ttf|eot)$#i', $uri)) {
   return false;
 }
 
-// Route table: clean URLs → real PHP files
-$routes = [
-  ''            => '/index.php',
-  '/'           => '/index.php',
-  '/index.php'  => '/index.php',
-
-  '/items'      => '/list.php',
-  '/items/'     => '/list.php',
-
-  '/add'        => '/add.php',
-  '/add/'       => '/add.php',
-
-  '/public'     => '/public_list.php',
-  '/public/'    => '/public_list.php',
-
-  '/healthz'    => '/healthz.php',
-  '/healthz.php'=> '/healthz.php',
-];
-
-// If a route matches and file exists, serve it.
-if (isset($routes[$uri]) && is_file($docroot . $routes[$uri])) {
-  require $docroot . $routes[$uri];
+// Quick debug route (safe to leave)
+if ($uri === '/_router') {
+  header('Content-Type: text/plain');
+  echo "ROUTER OK\nURI: ", ($_SERVER['REQUEST_URI'] ?? ''), "\n";
   exit;
 }
 
-// If a direct file was requested and exists, serve it.
+// 1) Direct file hit? serve it.
 if (is_file($docroot . $uri)) {
   require $docroot . $uri;
+  exit;
+}
+// Also allow '/foo' -> '/foo.php' if file exists
+if (is_file($docroot . $uri . '.php')) {
+  require $docroot . $uri . '.php';
+  exit;
+}
+
+// 2) Pretty routes → actual PHP files (prefix matches allowed)
+$map = [
+  '/items'  => '/list.php',
+  '/add'    => '/add.php',
+  '/public' => '/public_list.php',
+  '/'       => '/index.php',   // normalized '/' became '' → handle below
+  ''        => '/index.php',
+];
+
+// If the URI equals or starts with a known key, serve mapped file
+foreach ($map as $base => $file) {
+  if ($uri === $base || ($base && str_starts_with($uri, $base.'/'))) {
+    $target = $docroot . $file;
+    if (is_file($target)) {
+      require $target;
+      exit;
+    }
+  }
+}
+
+// Final fallback to homepage
+if (is_file($docroot . '/index.php')) {
+  require $docroot . '/index.php';
   exit;
 }
 
 // 404
 http_response_code(404);
-echo "Not Found";
+header('Content-Type: text/plain');
+echo "Not Found\n";
