@@ -1,4 +1,5 @@
 <?php if (defined('FOOTER_RENDERED')) return; define('FOOTER_RENDERED', true); ?>
+<?php if (defined('FOOTER_RENDERED')) return; define('FOOTER_RENDERED', true); ?>
 <?php // FooterTemplate.php ?>
   </main>
 

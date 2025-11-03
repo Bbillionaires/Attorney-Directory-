@@ -1,4 +1,5 @@
 <?php if (defined('HEADER_RENDERED')) return; define('HEADER_RENDERED', true); ?>
+<?php if (defined('HEADER_RENDERED')) return; define('HEADER_RENDERED', true); ?>
 <?php
 // HeaderTemplate.php — modern shell (Tailwind CDN + Inter + Lucide)
 ?><!doctype html>
