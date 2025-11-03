@@ -17,7 +17,7 @@
       </div>
       <nav class="flex items-center gap-6 text-sm">
         <a class="hover:text-sky-300" href="/">Home</a>
-        <a class="hover:text-sky-300" href="/public_list.php">All Items</a>
+        <a class="hover:text-sky-300" href="/items">All Items</a>
         <a class="rounded-lg bg-sky-500 px-3 py-1.5 text-slate-900 font-semibold hover:bg-sky-400" href="/add.php">Add new</a>
       </nav>
     </div>
