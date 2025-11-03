@@ -1,57 +1,45 @@
 <?php
-// Simple router for PHP dev server on Render
+// Minimal router for PHP built-in server on Render
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = rtrim($uri, '/');
-if ($path === '') $path = '/';
+$docroot = __DIR__;
 
-// 1) If it's a real file (css/js/img), serve it
-$full = __DIR__ . $uri;
-if ($uri !== '/' && is_file($full)) {
+// Let the PHP dev server serve real files (CSS/JS/images/fonts) directly.
+if (preg_match('#\.(?:css|js|mjs|map|png|jpg|jpeg|gif|svg|ico|webp|woff2?|ttf|eot)$#i', $uri)) {
   return false;
 }
 
-// 2) Special utility endpoints (kept for debugging)
-if ($path === '/healthz.php' || $path === '/which.php' || $path === '/dbtest.php') {
-  require __DIR__ . $path;
+// Route table: clean URLs → real PHP files
+$routes = [
+  ''            => '/index.php',
+  '/'           => '/index.php',
+  '/index.php'  => '/index.php',
+
+  '/items'      => '/list.php',
+  '/items/'     => '/list.php',
+
+  '/add'        => '/add.php',
+  '/add/'       => '/add.php',
+
+  '/public'     => '/public_list.php',
+  '/public/'    => '/public_list.php',
+
+  '/healthz'    => '/healthz.php',
+  '/healthz.php'=> '/healthz.php',
+];
+
+// If a route matches and file exists, serve it.
+if (isset($routes[$uri]) && is_file($docroot . $routes[$uri])) {
+  require $docroot . $routes[$uri];
   exit;
 }
 
-// 3) Pretty routes
-switch ($path) {
-  case '/':
-    require __DIR__ . '/index.php';
-    break;
-
-  case '/items':
-    $_GET['all'] = '1';
-    require __DIR__ . '/list.php';
-    break;
-
-  case '/add':
-    require __DIR__ . '/add.php';
-    break;
-
-  case '/public':
-    require __DIR__ . '/public_list.php';
-    break;
-
-  default:
-    // /item/123 → view_item.php?id=123
-    if (preg_match('#^/item/(\d+)$#', $path, $m)) {
-      $_GET['id'] = $m[1];
-      require __DIR__ . '/view_item.php';
-      break;
-    }
-
-    // Fallback: try a direct php file if it exists (e.g., /categories.php)
-    $maybe = __DIR__ . $path;
-    if (is_file($maybe) && str_ends_with($maybe, '.php')) {
-      require $maybe;
-      break;
-    }
-
-    http_response_code(404);
-    echo "<h1>404 Not Found</h1>";
-    echo "<p>No route for <code>" . htmlspecialchars($path) . "</code></p>";
+// If a direct file was requested and exists, serve it.
+if (is_file($docroot . $uri)) {
+  require $docroot . $uri;
+  exit;
 }
+
+// 404
+http_response_code(404);
+echo "Not Found";
