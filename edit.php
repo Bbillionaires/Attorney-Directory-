@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/includes.php'; ?>
+<?php @include __DIR__ . "/templates/HeaderTemplate.php"; ?>
 <?php
 declare(strict_types=1);
 
@@ -29,3 +31,5 @@ if(!$row){ http_response_code(404); exit('Not found'); }
   </p>
 </form>
 <p><a href="/list.php">← Back to list</a></p>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>

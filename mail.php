@@ -1,5 +1,4 @@
 <?
-require_once("conn.php");
 require_once("includes.php");
 
 if(isset($_POST[smail]))
@@ -26,3 +25,5 @@ if(isset($_POST[smail]))
 //header("location:mail_thankyou.php.php");
 //exit();
 ?>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>

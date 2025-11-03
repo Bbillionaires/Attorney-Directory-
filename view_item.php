@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/includes.php'; ?>
+<?php @include __DIR__ . "/templates/HeaderTemplate.php"; ?>
 <?php
 declare(strict_types=1);
 
@@ -6,10 +8,8 @@ $stmt = $pdo->prepare("SELECT * FROM dd_catalog WHERE itemid=:id");
 $stmt->execute([':id'=>$id]);
 $row = $stmt->fetch();
 
-include __DIR__.'/templates/HeaderTemplate.php';
 if (!$row) {
   echo '<p class="muted">Item not found.</p>';
-  include __DIR__.'/templates/FooterTemplate.php'; exit;
 }
 ?>
 <h2><?= htmlspecialchars($row['itemname']) ?></h2>
@@ -23,3 +23,5 @@ if (!$row) {
   <a class="inline-flex items-center gap-2 rounded-lg bg-white text-emerald-700 border border-emerald-600 px-4 py-2 hover:bg-emerald-50" href="/list.php">Admin List</a>
   <a class="inline-flex items-center gap-2 rounded-lg bg-white text-emerald-700 border border-emerald-600 px-4 py-2 hover:bg-emerald-50" href="/public_list.php">Public Directory</a>
 </p>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>

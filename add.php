@@ -1,4 +1,5 @@
-<?php include __DIR__ . '/templates/HeaderTemplate.php'; ?>
+<?php require_once __DIR__ . '/includes.php'; ?>
+<?php @include __DIR__ . "/templates/HeaderTemplate.php"; ?>
 
 <?php
 $err = '';
@@ -61,4 +62,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <p><label class="block font-medium text-sm mb-1"><input class="form-control" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" type="checkbox" name="active" value="1" <?php echo empty($row["active"]) ? "" : "checked"; ?>> Active</label></p>
 </section>
 
-<?php include __DIR__ . '/templates/FooterTemplate.php'; ?>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>

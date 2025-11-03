@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/includes.php'; ?>
+<?php @include __DIR__ . "/templates/HeaderTemplate.php"; ?>
 <?php
 $showAll = (($_GET['show'] ?? '') === 'all');
 $sql = $showAll
@@ -29,3 +31,5 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
   <?php endforeach; ?>
   </div>
 <?php endif; ?>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>

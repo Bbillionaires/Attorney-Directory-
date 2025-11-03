@@ -1,6 +1,5 @@
 <?
 
-require_once("conn.php");
 require_once("includes.php");
 
 //get the cart content
@@ -86,10 +85,10 @@ if(isset($_POST[submit_out]) || isset($_POST[submit_out_x]))
 	}
 }
 
-	require_once("templates/HeaderTemplate.php");
 	include_once("templates/CheckoutTemplate.php");
 
-include_once("templates/FooterTemplate.php");
 
 
 ?>
+
+<?php @include __DIR__ . "/templates/FooterTemplate.php"; ?>
