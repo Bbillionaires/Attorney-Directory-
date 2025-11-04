@@ -1,25 +1,48 @@
 <?php
-// Shared layout + admin helpers
 
+// Start session for admin login, etc.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Admin token comes from environment (Render > Environment > ADMIN_TOKEN)
-$ADMIN_TOKEN = getenv('ADMIN_TOKEN') ?: 'my-super-secret-123';
+// Make sure we have the DB connection (only once)
+require_once __DIR__ . '/conn.php';
 
-function admin_logged_in(): bool {
+/**
+ * Return the global PDO or null if not connected.
+ */
+if (!function_exists('pdo_or_null')) {
+    function pdo_or_null(): ?PDO
+    {
+        return $GLOBALS['pdo'] ?? null;
+    }
+}
+
+/**
+ * Simple admin check using a session flag.
+ */
+function is_admin(): bool
+{
     return !empty($_SESSION['is_admin']);
 }
 
-function require_admin(): void {
-    if (!admin_logged_in()) {
+/**
+ * Require admin for protected pages.
+ * Redirects to /admin if not logged in.
+ */
+function require_admin(): void
+{
+    if (!is_admin()) {
         header('Location: /admin');
         exit;
     }
 }
 
-function render_header(string $title = 'Attorney Directory'): void {
+/**
+ * Common page header + nav.
+ */
+function render_header(string $title = 'Attorney Directory', string $active = ''): void
+{
     ?>
 <!doctype html>
 <html lang="en">
@@ -31,37 +54,47 @@ function render_header(string $title = 'Attorney Directory'): void {
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="bg-slate-950 text-slate-100">
-  <nav class="bg-slate-900 border-b border-slate-800">
-    <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
-      <a href="/" class="flex items-center gap-2 text-slate-100 font-semibold">
-        <span class="text-xl">⚖️</span>
-        <span>Attorney Directory</span>
+<header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur">
+  <div class="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
+    <a href="/" class="text-lg font-semibold tracking-tight">
+      <span class="text-sky-400">Attorney</span> Directory
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/items"
+         class="<?= $active === 'items' ? 'text-sky-400 font-medium' : 'text-slate-300 hover:text-white' ?>">
+        All Items
       </a>
-      <div class="flex items-center gap-4 text-sm">
-        <a href="/" class="hover:text-emerald-400">Home</a>
-
-        <?php if (admin_logged_in()): ?>
-          <a href="/items" class="hover:text-emerald-400">All Items</a>
-          <a href="/add" class="hover:text-emerald-400">Add new</a>
-          <a href="/admin/logout" class="text-slate-400 hover:text-red-400">Log out</a>
-        <?php else: ?>
-          <a href="/public" class="hover:text-emerald-400">Public Directory</a>
-          <a href="/admin" class="text-slate-400 hover:text-emerald-400">Admin</a>
-        <?php endif; ?>
-      </div>
-    </div>
-  </nav>
-
-  <main class="max-w-5xl mx-auto px-4 py-8">
+      <a href="/add"
+         class="<?= $active === 'add' ? 'text-sky-400 font-medium' : 'text-slate-300 hover:text-white' ?>">
+        Add new
+      </a>
+      <a href="/public"
+         class="<?= $active === 'public' ? 'text-sky-400 font-medium' : 'text-slate-300 hover:text-white' ?>">
+        Public Directory
+      </a>
+    </nav>
+  </div>
+</header>
+<main class="mx-auto max-w-5xl px-4 py-8 space-y-8">
 <?php
 }
 
-function render_footer(): void {
+/**
+ * Common footer.
+ */
+function render_footer(): void
+{
     ?>
-  </main>
-  <footer class="border-t border-slate-800 py-6 mt-8 text-center text-xs text-slate-500">
-    &copy; <?= date('Y') ?> Attorney Directory. All rights reserved.
-  </footer>
+</main>
+<footer class="border-t border-slate-800 bg-slate-900/70 mt-12">
+  <div class="mx-auto max-w-5xl px-4 py-6 text-xs text-slate-400 flex items-center justify-between">
+    <p>&copy; <?= date('Y') ?> Attorney Directory. All rights reserved.</p>
+    <p class="space-x-3">
+      <a href="/" class="hover:text-sky-400">Home</a>
+      <a href="/public" class="hover:text-sky-400">Public Directory</a>
+    </p>
+  </div>
+</footer>
 </body>
 </html>
 <?php
