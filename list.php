@@ -1,7 +1,6 @@
 <?php
 require __DIR__ . '/conn.php';          // $pdo
 require __DIR__ . '/includes.php';
-require_admin();
 require_admin();      // shared header/nav/etc.
 
 $rows = [];

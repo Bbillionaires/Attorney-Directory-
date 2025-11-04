@@ -1,7 +1,6 @@
 <?php
 require __DIR__ . '/conn.php';          // defines $pdo
 require __DIR__ . '/includes.php';
-require_admin();
 require_admin();      // common include (nav, etc.)
 
 $errors = [];
