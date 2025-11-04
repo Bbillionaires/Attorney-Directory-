@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':t' => $thumb ?: null,
         ':a' => $active,
       ]);
-      header('Location: /items');
+      header('Location: /public');
       exit;
     } catch (Throwable $e) {
       $errors[] = 'DB error: ' . $e->getMessage();
