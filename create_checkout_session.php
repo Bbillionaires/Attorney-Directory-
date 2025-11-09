@@ -1,0 +1,50 @@
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+$stripeSecretKey = getenv('STRIPE_SECRET_KEY');
+if (!$stripeSecretKey) {
+    http_response_code(500);
+    echo "Missing STRIPE_SECRET_KEY\n";
+    exit;
+}
+
+\Stripe\Stripe::setApiKey($stripeSecretKey);
+
+// template_id comes from the query string
+$templateId = $_GET['template_id'] ?? 'money-agreement-v1';
+
+// Map template IDs to prices (in cents)
+$prices = [
+    'money-agreement-v1' => 1000, // $10.00
+    'nda-template-v1'    =>   50, // $0.50 (Stripe can't do $0 in live mode)
+];
+
+$amountCents = $prices[$templateId] ?? 1000;
+
+try {
+    $session = \Stripe\Checkout\Session::create([
+        'mode' => 'payment',
+        'line_items' => [[
+            'price_data' => [
+                'currency' => 'usd',
+                'product_data' => [
+                    'name' => 'Attorney Template: ' . $templateId,
+                ],
+                'unit_amount' => $amountCents,
+            ],
+            'quantity' => 1,
+        ]],
+        'metadata' => [
+            'template_id' => $templateId,
+        ],
+        'success_url' => 'http://127.0.0.1:8081/payment_success.php?session_id={CHECKOUT_SESSION_ID}',
+        'cancel_url'  => 'http://127.0.0.1:8081/payment_cancel.php',
+    ]);
+
+    header('Location: ' . $session->url, true, 303);
+    exit;
+} catch (Throwable $e) {
+    http_response_code(500);
+    echo "Error creating checkout session: " . $e->getMessage();
+    exit;
+}
