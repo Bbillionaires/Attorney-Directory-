@@ -1,0 +1,29 @@
+<?php
+$templates = [
+    ['id' => 'money-agreement-v1', 'name' => 'Money Agreement', 'price_cents' => 1000],
+    ['id' => 'nda-basic-v1',       'name' => 'NDA (Basic)',     'price_cents' => 500],
+];
+?>
+<!doctype html>
+<html>
+  <body>
+    <h1>Template Checkout Demo</h1>
+    <?php foreach ($templates as $t): ?>
+      <div>
+        <?php echo htmlspecialchars($t['name']); ?>
+        - $<?php echo number_format($t['price_cents'] / 100, 2); ?>
+        <a href="/create_checkout_session.php?template_id=<?php echo urlencode($t['id']); ?>">
+          Pay with Stripe
+        </a>
+      </div>
+    <?php endforeach; ?>
+  </body>
+</html>
+<a href="/create_checkout_session.php?template_id=money-agreement-v1">
+  💳 Pay with Stripe – Money Agreement
+</a>
+
+<a href="/create_checkout_session.php?template_id=nda-template-v1">
+  💳 Pay with Stripe – NDA Template
+</a>
+

@@ -1,0 +1,51 @@
+<?php
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/db.php';
+
+\$payload = @file_get_contents('php://input');
+\$sig_header = \$_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
+\$endpoint_secret = getenv('STRIPE_WEBHOOK_SECRET');
+
+if (!\$endpoint_secret) {
+    http_response_code(500);
+    echo "Missing STRIPE_WEBHOOK_SECRET\n";
+    exit;
+}
+
+try {
+    \$event = \\Stripe\\Webhook::constructEvent(\$payload, \$sig_header, \$endpoint_secret);
+} catch (\\UnexpectedValueException \$e) {
+    http_response_code(400);
+    echo 'Invalid payload';
+    exit;
+} catch (\\Stripe\\Exception\\SignatureVerificationException \$e) {
+    http_response_code(400);
+    echo 'Invalid signature';
+    exit;
+}
+
+if (\$event->type === 'checkout.session.completed') {
+    \$session = \$event->data->object;
+    \$session_id = \$session->id ?? null;
+    \$payment_intent = \$session->payment_intent ?? null;
+    \$amount_total = \$session->amount_total ?? null;
+    \$currency = \$session->currency ?? null;
+    \$customer_email = \$session->customer_details->email ?? null;
+    \$metadata = json_encode(\$session->metadata ?? new stdClass());
+
+    \$pdo = getPDO();
+    \$stmt = \$pdo->prepare('INSERT INTO payments (stripe_session_id, stripe_payment_intent_id, template_id, amount_cents, currency, status, customer_email, metadata) VALUES (:session_id, :pi, :template_id, :amount, :currency, :status, :email, :metadata) ON CONFLICT (stripe_session_id) DO NOTHING');
+    \$stmt->execute([
+        ':session_id' => \$session_id,
+        ':pi' => \$payment_intent,
+        ':template_id' => \$session->metadata->template_id ?? null,
+        ':amount' => \$amount_total,
+        ':currency' => \$currency,
+        ':status' => \$session->payment_status ?? (\$session->status ?? 'unknown'),
+        ':email' => \$customer_email,
+        ':metadata' => \$metadata,
+    ]);
+}
+
+http_response_code(200);
+echo json_encode(['received' => true]);
