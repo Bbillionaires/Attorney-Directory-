@@ -1,31 +1,45 @@
 <?php
-// Single paid template (uses Stripe)
-$paidTemplate = [
-    'id'          => 'money-agreement-v1',
-    'name'        => 'Money Agreement',
-    'price_cents' => 1000, // $10.00
+$templates = [
+    ['id' => 'money-agreement-v1', 'name' => 'Money Agreement', 'price_cents' => 1000],
+    ['id' => 'nda-template-v1',    'name' => 'NDA Template',    'price_cents' => 50],
 ];
 ?>
 <!doctype html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <title>Template Checkout Demo</title>
+    <style>
+      body { font-family: system-ui, -apple-system, sans-serif; margin: 40px; }
+      .item { margin-bottom: 12px; }
+      a.btn {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 4px;
+        background: #635bff;
+        color: #fff;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      a.btn:hover { background: #5046ff; }
+    </style>
+  </head>
   <body>
     <h1>Template Checkout Demo</h1>
 
-    <h2>Paid Template (via Stripe)</h2>
-    <div>
-      <?= htmlspecialchars($paidTemplate['name']) ?>
-      - $<?= number_format($paidTemplate['price_cents'] / 100, 2) ?>
-      <a href="/create_checkout_session.php?template_id=<?= urlencode($paidTemplate['id']) ?>">
-        💳 Pay with Stripe – Money Agreement
-      </a>
-    </div>
+    <?php foreach ($templates as $t): ?>
+      <div class="item">
+        <strong><?= htmlspecialchars($t['name']) ?></strong>
+        — $<?= number_format($t['price_cents'] / 100, 2) ?>
+        <a class="btn"
+           href="/create_checkout_session.php?template_id=<?= urlencode($t['id']) ?>">
+          💳 Pay with Stripe
+        </a>
+      </div>
+    <?php endforeach; ?>
 
-    <hr>
-
-    <h2>Free Template (no Stripe)</h2>
-    <p>This NDA template is completely free and does NOT use Stripe.</p>
-    <a href="/free_nda.php">
-      📄 Download NDA Template
-    </a>
+    <p>
+      Admin: <a href="/admin_panel.php">Go to admin panel</a>
+    </p>
   </body>
 </html>

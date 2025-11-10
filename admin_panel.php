@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Attorney Directory Admin</title>
   <style>
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; margin: 40px; }
+    body { font-family: system-ui, -apple-system, sans-serif; margin: 40px; }
     h1 { margin-bottom: 16px; }
     ul { list-style: none; padding: 0; }
     li { margin-bottom: 8px; }
