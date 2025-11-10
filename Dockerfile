@@ -9,5 +9,8 @@ RUN apt-get update \
 WORKDIR /app
 COPY . /app
 
-# IMPORTANT: listen on port 10000 (Render exposes this)
-CMD ["php","-S","0.0.0.0:10000","router.php"]
+# Expose is optional but nice for docs
+EXPOSE 10000
+
+# IMPORTANT: this is the only command we want
+CMD ["php", "-S", "0.0.0.0:10000", "router.php"]
