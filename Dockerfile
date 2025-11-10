@@ -9,5 +9,5 @@ RUN apt-get update \
 WORKDIR /app
 COPY . /app
 
-# IMPORTANT: run PHP's built-in server on port 10000 (what Render expects)
+# IMPORTANT: listen on port 10000 (Render exposes this)
 CMD ["php","-S","0.0.0.0:10000","router.php"]
