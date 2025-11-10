@@ -2,12 +2,12 @@
 require_once __DIR__ . '/includes.php';
 @include __DIR__ . '/templates/HeaderTemplate.php';
 
+$pdo = pdo_or_null();
 $items = [];
 $error = null;
 
-try {
-    // Uses getPDO() from db.php, which we already verified with db_health.php
-    $pdo = getPDO();
+if ($pdo) {
+  try {
     $stmt = $pdo->query("
       SELECT itemid, itemname, itemdesc, itemprice, itemthumb
       FROM dd_catalog
@@ -16,8 +16,11 @@ try {
       LIMIT 24
     ");
     $items = $stmt->fetchAll();
-} catch (Throwable $e) {
+  } catch (Throwable $e) {
     $error = $e->getMessage();
+  }
+} else {
+  $error = 'Database not connected.';
 }
 ?>
 
@@ -35,10 +38,7 @@ try {
 <?php endif; ?>
 
 <?php if (!$items): ?>
-  <p class="text-slate-300">
-    No items yet.
-    <a class="text-sky-300 hover:underline" href="/public_list.php">View all</a>
-  </p>
+  <p class="text-slate-300">No items yet. <a class="text-sky-300 hover:underline" href="/public_list.php">View all</a></p>
 <?php else: ?>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <?php foreach ($items as $it): ?>

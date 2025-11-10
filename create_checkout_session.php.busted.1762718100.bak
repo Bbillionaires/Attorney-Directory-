@@ -10,21 +10,16 @@ if (!$stripeSecretKey) {
 
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 
-// Which template?
+// template_id comes from the query string
 $templateId = $_GET['template_id'] ?? 'money-agreement-v1';
 
-// Price list (in cents)
+// Map template IDs to prices (in cents)
 $prices = [
     'money-agreement-v1' => 1000, // $10.00
-    'nda-template-v1'    => 50,   // $0.50 (min charge is 50 cents)
+    'nda-template-v1'    =>   50, // $0.50 (Stripe can't do $0 in live mode)
 ];
 
 $amountCents = $prices[$templateId] ?? 1000;
-
-// Safety: Stripe does not allow less than 50 cents
-if ($amountCents < 50) {
-    $amountCents = 50;
-}
 
 try {
     $session = \Stripe\Checkout\Session::create([
@@ -33,7 +28,7 @@ try {
             'price_data' => [
                 'currency' => 'usd',
                 'product_data' => [
-                    'name' => 'Legal template: ' . $templateId,
+                    'name' => 'Attorney Template: ' . $templateId,
                 ],
                 'unit_amount' => $amountCents,
             ],
@@ -43,13 +38,13 @@ try {
             'template_id' => $templateId,
         ],
         'success_url' => 'http://127.0.0.1:8081/payment_success.php?session_id={CHECKOUT_SESSION_ID}',
-        'cancel_url'  => 'http://127.0.0.1:8081/template_checkout_demo.php',
+        'cancel_url'  => 'http://127.0.0.1:8081/payment_cancel.php',
     ]);
 
     header('Location: ' . $session->url, true, 303);
     exit;
 } catch (Throwable $e) {
     http_response_code(500);
-    echo "Error creating checkout session: " . $e->getMessage() . "\n";
+    echo "Error creating checkout session: " . $e->getMessage();
     exit;
 }
