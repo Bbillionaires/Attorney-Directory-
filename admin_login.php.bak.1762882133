@@ -1,0 +1,44 @@
+<?php
+require __DIR__ . '/includes.php';
+
+if (is_admin_logged_in()) {
+    redirect('/admin_panel.php');
+}
+
+$error = null;
+
+if (is_post()) {
+    $password = $_POST['password'] ?? '';
+    if (attempt_admin_login($password)) {
+        $next = $_GET['next'] ?? '/admin_panel.php';
+        redirect($next);
+    } else {
+        $error = 'Invalid password';
+    }
+}
+
+$pageTitle = 'Admin Login';
+@include __DIR__ . '/templates/HeaderTemplate.php';
+?>
+<main class="mx-auto max-w-xl px-4 py-10">
+  <h1 class="text-3xl font-bold mb-6">Admin Login</h1>
+
+  <?php if ($error): ?>
+    <div class="mb-4 rounded-lg border border-rose-700/40 bg-rose-900/20 p-3 text-rose-200">
+      <?= h($error) ?>
+    </div>
+  <?php endif; ?>
+
+  <form method="post" class="space-y-4">
+    <div>
+      <label class="block text-sm mb-1" for="password">Admin password</label>
+      <input id="password" name="password" type="password"
+             class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2"
+             required>
+    </div>
+    <button class="rounded-lg bg-sky-500 px-4 py-2 font-semibold text-slate-900 hover:bg-sky-400">
+      Log in
+    </button>
+  </form>
+</main>
+<?php @include __DIR__ . '/templates/FooterTemplate.php'; ?>

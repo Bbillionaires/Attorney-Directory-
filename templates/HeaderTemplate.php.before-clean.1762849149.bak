@@ -1,15 +1,10 @@
-<?php
-require_once __DIR__ . '/../includes.php';
-if (!isset($pageTitle)) {
-    $pageTitle = 'Attorney Directory';
-}
-?>
+<?php /* Header */ ?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title><?= h($pageTitle) ?></title>
+  <title>Attorney Directory</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/styles.css" />
 </head>
@@ -23,11 +18,15 @@ if (!isset($pageTitle)) {
       <nav class="flex items-center gap-6 text-sm">
         <a class="hover:text-sky-300" href="/">Home</a>
         <a class="hover:text-sky-300" href="/items">All Items</a>
-        <a class="hover:text-sky-300" href="/admin_login.php">Admin</a>
-        <a class="rounded-lg bg-sky-500 px-3 py-1.5 text-slate-900 font-semibold hover:bg-sky-400" href="/add.php">
-          Add new
-        </a>
+        <a class="rounded-lg bg-sky-500 px-3 py-1.5 text-slate-900 font-semibold hover:bg-sky-400" href="/add.php">Add new</a>
       </nav>
+<nav class="flex items-center gap-6 text-sm">
+  <a class="hover:text-sky-300" href="/">Home</a>
+  <a class="hover:text-sky-300" href="/items">All Items</a>
+  <a class="hover:text-sky-300" href="/template_checkout_demo.php">Checkout demo</a>
+  <a class="hover:text-sky-300" href="/admin_panel.php">Admin</a>
+  <a class="rounded-lg bg-sky-500 px-3 py-1.5 text-slate-900 font-semibold hover:bg-sky-400" href="/add.php">Add new</a>
+</nav>
     </div>
   </header>
   <main class="mx-auto max-w-6xl px-4 py-8">

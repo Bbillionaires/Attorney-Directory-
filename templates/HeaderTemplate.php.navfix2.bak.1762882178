@@ -23,6 +23,7 @@ if (!isset($pageTitle)) {
       <nav class="flex items-center gap-6 text-sm">
         <a class="hover:text-sky-300" href="/">Home</a>
         <a class="hover:text-sky-300" href="/items">All Items</a>
+        <a class="hover:text-sky-300" href="/template_checkout_demo.php">Checkout demo</a>
         <a class="hover:text-sky-300" href="/admin_login.php">Admin</a>
         <a class="rounded-lg bg-sky-500 px-3 py-1.5 text-slate-900 font-semibold hover:bg-sky-400" href="/add.php">
           Add new

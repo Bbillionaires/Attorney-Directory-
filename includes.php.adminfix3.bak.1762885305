@@ -30,7 +30,7 @@ function pdo_or_null(): ?PDO {
 
 /**
  * ADMIN AUTH
- * Demo password. Change this string if you want a different password.
+ * Change ADMIN_PASSWORD_PLAIN if you want a different password.
  */
 const ADMIN_PASSWORD_PLAIN = 'changeme-admin';
 

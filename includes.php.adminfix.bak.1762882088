@@ -30,9 +30,17 @@ function pdo_or_null(): ?PDO {
 
 /**
  * ADMIN AUTH
- * Demo password. Change this string if you want a different password.
+ * Password comes from env var ADMIN_PASSWORD.
+ * (Set this on Render and in dev.env)
  */
-const ADMIN_PASSWORD_PLAIN = 'changeme-admin';
+function admin_password_expected(): string {
+    $env = getenv('ADMIN_PASSWORD');
+    if ($env !== false && $env !== '') {
+        return $env;
+    }
+    // fallback ONLY for local dev if env not set
+    return 'changeme-admin';
+}
 
 function is_admin_logged_in(): bool {
     return !empty($_SESSION['is_admin']);
@@ -48,7 +56,8 @@ function require_admin(): void {
 }
 
 function attempt_admin_login(string $password): bool {
-    if (hash_equals(ADMIN_PASSWORD_PLAIN, $password)) {
+    $expected = admin_password_expected();
+    if (hash_equals($expected, $password)) {
         $_SESSION['is_admin'] = true;
         return true;
     }
