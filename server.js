@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 
 const publicRoutes = require('./src/routes/public');
 const adminRoutes = require('./src/routes/admin');
+const { adminAuth } = require('./src/adminAuth');
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/healthz', (req, res) => res.json({ ok: true }));
 
 app.use('/', publicRoutes);
-app.use('/admin', adminRoutes);
+app.use('/admin', adminAuth, adminRoutes);
 
 app.use((req, res) => res.status(404).render('404'));
 
