@@ -1,20 +1,20 @@
 {
-  "name": "attorney-directory-",
-  "version": "1.0.0",
-  "description": "Legal forms and real attorneys",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "name": "attorney-directory",
+  "version": "2.0.0",
+  "description": "Attorney directory web app",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "migrate": "node scripts/migrate.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.16"
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "method-override": "^3.0.0",
+    "pg": "^8.13.1"
   }
 }

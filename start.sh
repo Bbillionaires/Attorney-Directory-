@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-PORT="${PORT:-10000}"
-echo "PORT=$PORT"
-php -v
-exec php -d display_errors=1 -d error_reporting=32767 -S 0.0.0.0:"$PORT" -t /app /app/router.php

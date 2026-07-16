@@ -1,0 +1,39 @@
+<%- include('partials/head') %>
+
+<h1>Find an Attorney</h1>
+
+<form method="get" action="/" class="row">
+  <div>
+    <label for="q">Search</label>
+    <input type="text" id="q" name="q" value="<%= query.q %>" placeholder="Name or description">
+  </div>
+  <div>
+    <label for="category">Practice area</label>
+    <select id="category" name="category">
+      <option value="">All practice areas</option>
+      <% categories.forEach(function (c) { %>
+        <option value="<%= c.id %>" <%= String(query.category) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div style="align-self:end">
+    <button class="btn" type="submit">Search</button>
+    <a class="btn secondary" href="/">Reset</a>
+  </div>
+</form>
+
+<% if (!listings.length) { %>
+  <p class="muted">No attorneys found matching your search.</p>
+<% } else { %>
+  <div class="list">
+    <% listings.forEach(function (l) { %>
+      <div class="card">
+        <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
+        <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
+        <p class="small"><%= l.description %></p>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

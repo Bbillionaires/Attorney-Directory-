@@ -1,0 +1,56 @@
+<%- include('../partials/head') %>
+
+<p><a href="/admin">&larr; Back to admin</a></p>
+
+<h1><%= isEdit ? 'Edit listing' : 'New listing' %></h1>
+
+<form method="post" action="<%= formAction %>">
+  <% if (isEdit) { %><input type="hidden" name="_method" value="PUT"><% } %>
+
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" value="<%= listing.name %>" required>
+
+  <label for="category_id">Practice area</label>
+  <select id="category_id" name="category_id">
+    <option value="">None</option>
+    <% categories.forEach(function (c) { %>
+      <option value="<%= c.id %>" <%= String(listing.category_id) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+    <% }) %>
+  </select>
+
+  <label for="description">Description</label>
+  <textarea id="description" name="description" rows="4"><%= listing.description %></textarea>
+
+  <div class="row">
+    <div>
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" value="<%= listing.phone %>">
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="<%= listing.email %>">
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="website">Website</label>
+      <input type="url" id="website" name="website" value="<%= listing.website %>">
+    </div>
+    <div>
+      <label for="address">Address</label>
+      <input type="text" id="address" name="address" value="<%= listing.address %>">
+    </div>
+  </div>
+
+  <p>
+    <label style="display:inline-flex;align-items:center;gap:.4rem;width:auto">
+      <input type="checkbox" name="active" value="1" <%= listing.active ? 'checked' : '' %> style="width:auto">
+      Active (visible in the public directory)
+    </label>
+  </p>
+
+  <p><button class="btn" type="submit"><%= isEdit ? 'Save changes' : 'Create listing' %></button></p>
+</form>
+
+<%- include('../partials/foot') %>

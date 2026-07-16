@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+
+<h1>Admin</h1>
+<p><a class="btn" href="/admin/new">+ New listing</a></p>
+
+<% if (!listings.length) { %>
+  <p class="muted">No listings yet.</p>
+<% } else { %>
+  <div class="list">
+    <% listings.forEach(function (l) { %>
+      <div class="card">
+        <h3><%= l.name %> <% if (!l.active) { %><span class="badge">Inactive</span><% } %></h3>
+        <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
+        <p class="small"><%= l.description %></p>
+        <p>
+          <a class="btn secondary" href="/admin/<%= l.id %>/edit">Edit</a>
+          <form action="/admin/<%= l.id %>/toggle-active?_method=PUT" method="post" style="display:inline">
+            <button class="btn secondary" type="submit"><%= l.active ? 'Deactivate' : 'Activate' %></button>
+          </form>
+          <form action="/admin/<%= l.id %>?_method=DELETE" method="post" style="display:inline" onsubmit="return confirm('Delete this listing?');">
+            <button class="btn danger" type="submit">Delete</button>
+          </form>
+        </p>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>
