@@ -2,8 +2,12 @@
 
 <p><a href="/admin">&larr; Back to admin</a></p>
 
-<h1><%= isEdit ? 'Edit listing' : 'New listing' %></h1>
+<div class="hero">
+  <h1><%= isEdit ? 'Edit listing' : 'New listing' %></h1>
+  <div class="rule"></div>
+</div>
 
+<div class="search-panel">
 <form method="post" action="<%= formAction %>">
   <% if (isEdit) { %><input type="hidden" name="_method" value="PUT"><% } %>
 
@@ -44,13 +48,14 @@
   </div>
 
   <p>
-    <label style="display:inline-flex;align-items:center;gap:.4rem;width:auto">
-      <input type="checkbox" name="active" value="1" <%= listing.active ? 'checked' : '' %> style="width:auto">
+    <label style="display:inline-flex;align-items:center;gap:.5rem;width:auto;margin:0">
+      <input type="checkbox" name="active" value="1" <%= listing.active ? 'checked' : '' %> style="width:auto;accent-color:var(--gold)">
       Active (visible in the public directory)
     </label>
   </p>
 
   <p><button class="btn" type="submit"><%= isEdit ? 'Save changes' : 'Create listing' %></button></p>
 </form>
+</div>
 
 <%- include('../partials/foot') %>

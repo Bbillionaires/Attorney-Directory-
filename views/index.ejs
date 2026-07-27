@@ -1,36 +1,44 @@
 <%- include('partials/head') %>
 
-<h1>Find an Attorney</h1>
+<div class="hero">
+  <h1>Find an Attorney</h1>
+  <div class="rule"></div>
+  <p class="lead">Browse trusted legal professionals by practice area, or search by name and description.</p>
+</div>
 
-<form method="get" action="/" class="row">
-  <div>
-    <label for="q">Search</label>
-    <input type="text" id="q" name="q" value="<%= query.q %>" placeholder="Name or description">
-  </div>
-  <div>
-    <label for="category">Practice area</label>
-    <select id="category" name="category">
-      <option value="">All practice areas</option>
-      <% categories.forEach(function (c) { %>
-        <option value="<%= c.id %>" <%= String(query.category) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
-      <% }) %>
-    </select>
-  </div>
-  <div style="align-self:end">
-    <button class="btn" type="submit">Search</button>
-    <a class="btn secondary" href="/">Reset</a>
-  </div>
-</form>
+<div class="search-panel">
+  <form method="get" action="/">
+    <div class="row">
+      <div>
+        <label for="q">Search</label>
+        <input type="text" id="q" name="q" value="<%= query.q %>" placeholder="Name or description">
+      </div>
+      <div>
+        <label for="category">Practice area</label>
+        <select id="category" name="category">
+          <option value="">All practice areas</option>
+          <% categories.forEach(function (c) { %>
+            <option value="<%= c.id %>" <%= String(query.category) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <p style="margin-top:1rem">
+      <button class="btn" type="submit">Search</button>
+      <a class="btn secondary" href="/">Reset</a>
+    </p>
+  </form>
+</div>
 
 <% if (!listings.length) { %>
-  <p class="muted">No attorneys found matching your search.</p>
+  <div class="empty">No attorneys found matching your search. <a href="/">Reset filters</a>.</div>
 <% } else { %>
   <div class="list">
     <% listings.forEach(function (l) { %>
       <div class="card">
-        <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
         <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
-        <p class="small"><%= l.description %></p>
+        <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
+        <p class="small muted"><%= l.description %></p>
       </div>
     <% }) %>
   </div>

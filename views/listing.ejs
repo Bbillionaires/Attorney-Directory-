@@ -2,17 +2,17 @@
 
 <p><a href="/">&larr; Back to directory</a></p>
 
-<h1><%= listing.name %></h1>
 <% if (listing.category_name) { %><span class="badge"><%= listing.category_name %></span><% } %>
 <% if (!listing.active) { %><span class="badge">Inactive</span><% } %>
+<h1><%= listing.name %></h1>
 
-<p><%= listing.description %></p>
+<p class="muted"><%= listing.description %></p>
 
-<ul>
-  <% if (listing.phone) { %><li><strong>Phone:</strong> <%= listing.phone %></li><% } %>
-  <% if (listing.email) { %><li><strong>Email:</strong> <a href="mailto:<%= listing.email %>"><%= listing.email %></a></li><% } %>
-  <% if (listing.website) { %><li><strong>Website:</strong> <a href="<%= listing.website %>" target="_blank" rel="noopener noreferrer"><%= listing.website %></a></li><% } %>
-  <% if (listing.address) { %><li><strong>Address:</strong> <%= listing.address %></li><% } %>
+<ul class="details">
+  <% if (listing.phone) { %><li><strong>Phone</strong> <%= listing.phone %></li><% } %>
+  <% if (listing.email) { %><li><strong>Email</strong> <a href="mailto:<%= listing.email %>"><%= listing.email %></a></li><% } %>
+  <% if (listing.website) { %><li><strong>Website</strong> <a href="<%= listing.website %>" target="_blank" rel="noopener noreferrer"><%= listing.website %></a></li><% } %>
+  <% if (listing.address) { %><li><strong>Address</strong> <%= listing.address %></li><% } %>
 </ul>
 
 <%- include('partials/foot') %>

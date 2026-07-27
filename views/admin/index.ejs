@@ -1,17 +1,22 @@
 <%- include('../partials/head') %>
 
-<h1>Admin</h1>
+<div class="hero">
+  <h1>Admin</h1>
+  <div class="rule"></div>
+</div>
+
 <p><a class="btn" href="/admin/new">+ New listing</a></p>
 
 <% if (!listings.length) { %>
-  <p class="muted">No listings yet.</p>
+  <div class="empty">No listings yet. <a href="/admin/new">Add your first one</a>.</div>
 <% } else { %>
   <div class="list">
     <% listings.forEach(function (l) { %>
       <div class="card">
-        <h3><%= l.name %> <% if (!l.active) { %><span class="badge">Inactive</span><% } %></h3>
         <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
-        <p class="small"><%= l.description %></p>
+        <% if (!l.active) { %><span class="badge">Inactive</span><% } %>
+        <h3><%= l.name %></h3>
+        <p class="small muted"><%= l.description %></p>
         <p>
           <a class="btn secondary" href="/admin/<%= l.id %>/edit">Edit</a>
           <form action="/admin/<%= l.id %>/toggle-active?_method=PUT" method="post" style="display:inline">
