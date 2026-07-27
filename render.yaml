@@ -1,5 +1,0 @@
-services:
-  - type: web
-    name: attorney-directory
-    env: docker
-    autoDeploy: true
