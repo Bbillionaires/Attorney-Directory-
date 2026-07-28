@@ -1,0 +1,66 @@
+<%- include('../partials/head') %>
+
+<div class="hero">
+  <h1>My profile</h1>
+  <div class="rule"></div>
+  <p class="lead">This is what clients see when they find you in the directory.</p>
+</div>
+
+<div class="search-panel">
+  <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+  <form method="post" action="/attorney/profile">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <label for="name">Display name / firm name</label>
+    <input type="text" id="name" name="name" value="<%= listing.name %>" required>
+
+    <label for="category_id">Practice area</label>
+    <select id="category_id" name="category_id">
+      <option value="">None</option>
+      <% categories.forEach(function (c) { %>
+        <option value="<%= c.id %>" <%= String(listing.category_id) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+      <% }) %>
+    </select>
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4"><%= listing.description %></textarea>
+
+    <div class="row">
+      <div>
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" name="phone" value="<%= listing.phone %>">
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= listing.email %>">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="website">Website</label>
+        <input type="url" id="website" name="website" value="<%= listing.website %>">
+      </div>
+      <div>
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" value="<%= listing.address %>">
+      </div>
+    </div>
+
+    <label for="question_price_dollars">Price to answer a question ($, 0 = disabled)</label>
+    <input type="number" id="question_price_dollars" name="question_price_dollars" min="0" step="0.01"
+           value="<%= ((listing.question_price_cents || 0) / 100).toFixed(2) %>">
+
+    <p>
+      <label style="display:inline-flex;align-items:center;gap:.5rem;width:auto;margin:0">
+        <input type="checkbox" name="active" value="1" <%= listing.active ? 'checked' : '' %> style="width:auto;accent-color:var(--gold)">
+        Active (visible in the public directory)
+      </label>
+    </p>
+
+    <p><button class="btn" type="submit">Save profile</button></p>
+  </form>
+</div>
+
+<%- include('../partials/foot') %>

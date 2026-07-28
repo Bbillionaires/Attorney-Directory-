@@ -37,6 +37,7 @@
     <% listings.forEach(function (l) { %>
       <div class="card">
         <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
+        <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
         <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
         <p class="small muted"><%= l.description %></p>
       </div>

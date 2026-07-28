@@ -5,7 +5,11 @@
   <div class="rule"></div>
 </div>
 
-<p><a class="btn" href="/admin/new">+ New listing</a></p>
+<p>
+  <a class="btn" href="/admin/new">+ New listing</a>
+  <a class="btn secondary" href="/admin/case-verifications">Case Verifications</a>
+  <a class="btn secondary" href="/admin/leads">Leads</a>
+</p>
 
 <% if (!listings.length) { %>
   <div class="empty">No listings yet. <a href="/admin/new">Add your first one</a>.</div>
@@ -15,12 +19,17 @@
       <div class="card">
         <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
         <% if (!l.active) { %><span class="badge">Inactive</span><% } %>
+        <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
         <h3><%= l.name %></h3>
+        <% if (l.bar_number) { %><p class="small muted">Bar #<%= l.bar_number %></p><% } %>
         <p class="small muted"><%= l.description %></p>
         <p>
           <a class="btn secondary" href="/admin/<%= l.id %>/edit">Edit</a>
           <form action="/admin/<%= l.id %>/toggle-active?_method=PUT" method="post" style="display:inline">
             <button class="btn secondary" type="submit"><%= l.active ? 'Deactivate' : 'Activate' %></button>
+          </form>
+          <form action="/admin/<%= l.id %>/toggle-verified?_method=PUT" method="post" style="display:inline">
+            <button class="btn secondary" type="submit"><%= l.is_verified ? 'Unverify' : 'Mark verified' %></button>
           </form>
           <form action="/admin/<%= l.id %>?_method=DELETE" method="post" style="display:inline" onsubmit="return confirm('Delete this listing?');">
             <button class="btn danger" type="submit">Delete</button>

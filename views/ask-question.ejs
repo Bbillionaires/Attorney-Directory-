@@ -1,0 +1,22 @@
+<%- include('partials/head') %>
+
+<p><a href="/listing/<%= listing.id %>">&larr; Back to profile</a></p>
+
+<div class="hero">
+  <h1>Ask <%= listing.name %> a question</h1>
+  <div class="rule"></div>
+  <p class="lead">This costs $<%= (listing.question_price_cents / 100).toFixed(2) %>, paid up front. You'll be redirected to a secure checkout after submitting.</p>
+</div>
+
+<div class="search-panel">
+  <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+  <form method="post" action="/listing/<%= listing.id %>/ask">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="question_text">Your question</label>
+    <textarea id="question_text" name="question_text" rows="6" required></textarea>
+    <p><button class="btn" type="submit">Continue to payment ($<%= (listing.question_price_cents / 100).toFixed(2) %>)</button></p>
+  </form>
+</div>
+
+<%- include('partials/foot') %>

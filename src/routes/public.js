@@ -54,7 +54,27 @@ router.get('/listing/:id', async (req, res, next) => {
     if (!listing) {
       return res.status(404).render('404');
     }
-    res.render('listing', { title: listing.name, listing });
+
+    const { rows: contractRows } = await pool.query(
+      'SELECT * FROM contracts WHERE listing_id = $1 AND active = true', [id]
+    );
+    const { rows: reviews } = await pool.query(
+      `SELECT reviews.*, users.email AS reviewer_email FROM reviews
+       JOIN users ON users.id = reviews.user_id
+       WHERE reviews.listing_id = $1 ORDER BY reviews.created_at DESC`,
+      [id]
+    );
+    const averageRating = reviews.length
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : null;
+
+    res.render('listing', {
+      title: listing.name,
+      listing,
+      contract: contractRows[0] || null,
+      reviews,
+      averageRating,
+    });
   } catch (err) {
     next(err);
   }

@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+
+<div class="hero">
+  <h1>Dashboard</h1>
+  <div class="rule"></div>
+</div>
+
+<p>
+  <a class="btn secondary" href="/attorney/profile">Edit profile</a>
+  <a class="btn secondary" href="/attorney/contract"><%= contract ? 'Edit my contract' : '+ List a contract for sale' %></a>
+  <a class="btn secondary" href="/listing/<%= listing.id %>">View public profile</a>
+</p>
+
+<h2 style="margin-top:2rem">Questions</h2>
+<% if (!questions.length) { %>
+  <div class="empty">No paid questions yet.</div>
+<% } else { %>
+  <div class="list">
+    <% questions.forEach(function (q) { %>
+      <div class="card">
+        <span class="badge"><%= q.status === 'answered' ? 'Answered' : 'Awaiting answer' %></span>
+        <h3><a href="/attorney/questions/<%= q.id %>">$<%= (q.price_cents / 100).toFixed(2) %> question</a></h3>
+        <p class="small muted"><%= q.question_text.slice(0, 140) %><%= q.question_text.length > 140 ? '…' : '' %></p>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,41 @@
+<%- include('../partials/head') %>
+
+<div class="hero">
+  <h1>Case Verifications</h1>
+  <div class="rule"></div>
+</div>
+
+<p><a href="/admin">&larr; Back to admin</a></p>
+
+<% if (!caseVerifications.length) { %>
+  <div class="empty">No case verifications submitted yet.</div>
+<% } else { %>
+  <div class="list">
+    <% caseVerifications.forEach(function (cv) { %>
+      <div class="card">
+        <span class="badge"><%= cv.status %></span>
+        <h3><%= cv.listing_name %></h3>
+        <p class="small muted">Submitted by <%= cv.user_email %></p>
+        <ul class="details">
+          <li><strong>Case #</strong> <%= cv.case_number %></li>
+          <li><strong>Date</strong> <%= cv.case_date.toISOString().slice(0, 10) %></li>
+          <li><strong>County</strong> <%= cv.county %></li>
+          <li><strong>Type</strong> <%= cv.case_type %></li>
+        </ul>
+        <p><a class="btn secondary" href="/admin/case-verifications/<%= cv.id %>/document" target="_blank" rel="noopener noreferrer">View ID document</a></p>
+        <% if (cv.status === 'pending') { %>
+          <p>
+            <form action="/admin/case-verifications/<%= cv.id %>/approve?_method=PUT" method="post" style="display:inline">
+              <button class="btn" type="submit">Approve</button>
+            </form>
+            <form action="/admin/case-verifications/<%= cv.id %>/reject?_method=PUT" method="post" style="display:inline">
+              <button class="btn danger" type="submit">Reject</button>
+            </form>
+          </p>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>

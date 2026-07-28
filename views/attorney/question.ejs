@@ -1,0 +1,27 @@
+<%- include('../partials/head') %>
+
+<p><a href="/attorney/dashboard">&larr; Back to dashboard</a></p>
+
+<div class="hero">
+  <h1>$<%= (question.price_cents / 100).toFixed(2) %> question</h1>
+  <div class="rule"></div>
+</div>
+
+<p class="muted">Asked by <%= question.asker_email %></p>
+<p><%= question.question_text %></p>
+
+<% if (question.status === 'answered') { %>
+  <h2>Your answer</h2>
+  <p><%= question.answer_text %></p>
+<% } else { %>
+  <div class="search-panel">
+    <form method="post" action="/attorney/questions/<%= question.id %>/answer">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label for="answer_text">Your answer</label>
+      <textarea id="answer_text" name="answer_text" rows="6" required></textarea>
+      <p><button class="btn" type="submit">Submit answer</button></p>
+    </form>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>

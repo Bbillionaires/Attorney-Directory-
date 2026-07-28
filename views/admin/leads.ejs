@@ -1,0 +1,26 @@
+<%- include('../partials/head') %>
+
+<div class="hero">
+  <h1>Leads</h1>
+  <div class="rule"></div>
+</div>
+
+<p><a href="/admin">&larr; Back to admin</a></p>
+
+<% if (!leads.length) { %>
+  <div class="empty">No leads yet.</div>
+<% } else { %>
+  <div class="list">
+    <% leads.forEach(function (l) { %>
+      <div class="card">
+        <span class="badge"><%= l.type === 'settlement_loan' ? 'Settlement Loan' : 'Litigation Support' %></span>
+        <h3><%= l.name %></h3>
+        <p class="small muted"><%= l.email %><%= l.phone ? ' · ' + l.phone : '' %></p>
+        <% if (l.amount_sought_cents) { %><p class="price">$<%= (l.amount_sought_cents / 100).toFixed(2) %> sought</p><% } %>
+        <p class="small muted"><%= l.case_description %></p>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>

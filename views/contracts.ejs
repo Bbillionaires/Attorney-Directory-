@@ -1,0 +1,28 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Contracts for Sale</h1>
+  <div class="rule"></div>
+  <p class="lead">Signature contract templates, one per attorney, available to purchase and download instantly.</p>
+</div>
+
+<% if (!contracts.length) { %>
+  <div class="empty">No contracts are for sale yet.</div>
+<% } else { %>
+  <div class="list">
+    <% contracts.forEach(function (c) { %>
+      <div class="card">
+        <h3><%= c.title %></h3>
+        <p class="small muted">by <a href="/listing/<%= c.listing_id %>"><%= c.listing_name %></a></p>
+        <p class="small muted"><%= c.description %></p>
+        <p class="price">$<%= (c.price_cents / 100).toFixed(2) %></p>
+        <form method="post" action="/contracts/<%= c.id %>/buy">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="btn" type="submit">Buy</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

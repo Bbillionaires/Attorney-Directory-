@@ -1,0 +1,50 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Lawsuit Settlement Loans</h1>
+  <div class="rule"></div>
+  <p class="lead">Tell us about your case and funding needs, and our team will follow up.</p>
+</div>
+
+<% if (submitted) { %>
+  <div class="empty">Thanks — we received your request and will be in touch.</div>
+<% } else { %>
+  <div class="search-panel">
+    <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+    <form method="post" action="/settlement-loan">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="row">
+        <div>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" value="<%= form.name || '' %>" required>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="<%= form.email || '' %>" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" name="phone" value="<%= form.phone || '' %>">
+        </div>
+        <div>
+          <label for="amount_sought_dollars">Amount sought ($)</label>
+          <input type="number" id="amount_sought_dollars" name="amount_sought_dollars" min="0" step="0.01" value="<%= form.amount_sought_dollars || '' %>">
+        </div>
+      </div>
+
+      <label for="case_description">Tell us about your case</label>
+      <textarea id="case_description" name="case_description" rows="5" required><%= form.case_description || '' %></textarea>
+
+      <p style="margin-top:1rem"><%- include('partials/turnstile') %></p>
+
+      <p><button class="btn" type="submit">Submit</button></p>
+    </form>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

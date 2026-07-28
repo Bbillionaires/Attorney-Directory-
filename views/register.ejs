@@ -1,0 +1,75 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Create an account</h1>
+  <div class="rule"></div>
+</div>
+
+<div class="search-panel">
+  <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+  <form method="post" action="/register">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <label>I am registering as</label>
+    <div class="row">
+      <label style="display:inline-flex;align-items:center;gap:.5rem;width:auto;margin:0">
+        <input type="radio" name="role" value="client" style="width:auto" onchange="document.getElementById('bar-number-field').style.display='none'" <%= form.role !== 'attorney' ? 'checked' : '' %>>
+        A user seeking legal help
+      </label>
+      <label style="display:inline-flex;align-items:center;gap:.5rem;width:auto;margin:0">
+        <input type="radio" name="role" value="attorney" style="width:auto" onchange="document.getElementById('bar-number-field').style.display='block'" <%= form.role === 'attorney' ? 'checked' : '' %>>
+        An attorney
+      </label>
+    </div>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value="<%= form.email || '' %>" required>
+
+    <div class="row">
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" minlength="8" required>
+      </div>
+      <div>
+        <label for="password_confirm">Confirm password</label>
+        <input type="password" id="password_confirm" name="password_confirm" minlength="8" required>
+      </div>
+    </div>
+
+    <div id="bar-number-field" style="display:<%= form.role === 'attorney' ? 'block' : 'none' %>">
+      <label for="bar_number">Bar number</label>
+      <input type="text" id="bar_number" name="bar_number" value="<%= form.bar_number || '' %>">
+    </div>
+
+    <p class="small muted" style="margin-top:1.2rem">Optional — helps others gauge experience. Leave blank if you'd rather not share.</p>
+    <div class="row">
+      <div>
+        <label for="wins">Cases/matters won</label>
+        <input type="number" id="wins" name="wins" min="0" value="<%= form.wins || '' %>">
+      </div>
+      <div>
+        <label for="losses">Cases/matters lost</label>
+        <input type="number" id="losses" name="losses" min="0" value="<%= form.losses || '' %>">
+      </div>
+    </div>
+
+    <p style="margin-top:1rem"><%- include('partials/turnstile') %></p>
+
+    <p><button class="btn" type="submit">Create account</button></p>
+  </form>
+
+  <p class="small muted">Already have an account? <a href="/login">Log in</a>.</p>
+</div>
+
+<script>
+  document.querySelector('#password').form.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (form.password.value !== form.password_confirm.value) {
+      e.preventDefault();
+      alert('Passwords do not match.');
+    }
+  });
+</script>
+
+<%- include('partials/foot') %>

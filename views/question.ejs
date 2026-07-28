@@ -1,0 +1,24 @@
+<%- include('partials/head') %>
+
+<p><a href="/">&larr; Back to directory</a></p>
+
+<div class="hero">
+  <h1>Your question to <%= question.listing_name %></h1>
+  <div class="rule"></div>
+</div>
+
+<span class="badge">
+  <%= question.status === 'pending_payment' ? 'Payment pending' : (question.status === 'answered' ? 'Answered' : 'Awaiting answer') %>
+</span>
+<p><%= question.question_text %></p>
+
+<% if (question.status === 'answered') { %>
+  <h2>Answer</h2>
+  <p><%= question.answer_text %></p>
+<% } else if (question.status === 'paid') { %>
+  <div class="empty">Waiting on the attorney to answer.</div>
+<% } else { %>
+  <div class="empty">Payment wasn't completed for this question.</div>
+<% } %>
+
+<%- include('partials/foot') %>

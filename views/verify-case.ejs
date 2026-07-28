@@ -1,0 +1,51 @@
+<%- include('partials/head') %>
+
+<p><a href="/listing/<%= listing.id %>">&larr; Back to profile</a></p>
+
+<div class="hero">
+  <h1>Verify a case with <%= listing.name %></h1>
+  <div class="rule"></div>
+  <p class="lead">If this attorney handled a real case for you, verify it here so you can leave a review. An admin manually reviews every submission — this usually takes a day or two.</p>
+</div>
+
+<% if (submitted) { %>
+  <div class="empty">Thanks — your case verification was submitted and is pending admin review. We'll let you leave a review once it's approved.</div>
+<% } else { %>
+  <div class="search-panel">
+    <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+    <form method="post" action="/listing/<%= listing.id %>/verify-case" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <label for="case_number">Case number</label>
+      <input type="text" id="case_number" name="case_number" required>
+
+      <div class="row">
+        <div>
+          <label for="case_date">Case date</label>
+          <input type="date" id="case_date" name="case_date" required>
+        </div>
+        <div>
+          <label for="county">County</label>
+          <input type="text" id="county" name="county" required>
+        </div>
+      </div>
+
+      <label for="case_type">Case type</label>
+      <select id="case_type" name="case_type" required>
+        <option value="civil">Civil</option>
+        <option value="criminal">Criminal</option>
+      </select>
+
+      <label for="id_document">Photo ID</label>
+      <input type="file" id="id_document" name="id_document" accept="image/jpeg,image/png,application/pdf" required>
+      <p class="small muted">Used only to confirm your identity for this review. Handled privately by our admin team.</p>
+
+      <p style="margin-top:1rem"><%- include('partials/turnstile') %></p>
+
+      <p><button class="btn" type="submit">Submit for review</button></p>
+    </form>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

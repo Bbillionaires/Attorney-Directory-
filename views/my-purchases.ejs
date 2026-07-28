@@ -1,0 +1,25 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>My purchases</h1>
+  <div class="rule"></div>
+</div>
+
+<% if (!purchases.length) { %>
+  <div class="empty">You haven't purchased any contracts yet. <a href="/contracts">Browse contracts for sale</a>.</div>
+<% } else { %>
+  <div class="list">
+    <% purchases.forEach(function (p) { %>
+      <div class="card">
+        <h3><%= p.title %></h3>
+        <p class="small muted">by <%= p.listing_name %></p>
+        <span class="badge"><%= p.status === 'paid' ? 'Paid' : 'Payment pending' %></span>
+        <% if (p.status === 'paid') { %>
+          <p style="margin-top:.8rem"><a class="btn secondary" href="/contracts/purchases/<%= p.id %>/download">Download</a></p>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

@@ -4,6 +4,7 @@
 
 <% if (listing.category_name) { %><span class="badge"><%= listing.category_name %></span><% } %>
 <% if (!listing.active) { %><span class="badge">Inactive</span><% } %>
+<% if (listing.is_verified) { %><span class="badge">Verified</span><% } %>
 <h1><%= listing.name %></h1>
 
 <p class="muted"><%= listing.description %></p>
@@ -14,5 +15,45 @@
   <% if (listing.website) { %><li><strong>Website</strong> <a href="<%= listing.website %>" target="_blank" rel="noopener noreferrer"><%= listing.website %></a></li><% } %>
   <% if (listing.address) { %><li><strong>Address</strong> <%= listing.address %></li><% } %>
 </ul>
+
+<% var isOwner = currentUser && listing.user_id === currentUser.id; %>
+<% if (currentUser && currentUser.role === 'client' && !isOwner) { %>
+  <p>
+    <% if (listing.question_price_cents > 0) { %>
+      <a class="btn" href="/listing/<%= listing.id %>/ask">Ask a question ($<%= (listing.question_price_cents / 100).toFixed(2) %>)</a>
+    <% } %>
+    <a class="btn secondary" href="/listing/<%= listing.id %>/review">Leave a review</a>
+    <a class="btn secondary" href="/listing/<%= listing.id %>/verify-case">Verify a case</a>
+  </p>
+<% } %>
+
+<% if (contract) { %>
+  <h2 style="margin-top:2rem">Contract for sale</h2>
+  <div class="card" style="max-width:420px">
+    <h3><%= contract.title %></h3>
+    <p class="small muted"><%= contract.description %></p>
+    <p class="price">$<%= (contract.price_cents / 100).toFixed(2) %></p>
+    <% if (currentUser && !isOwner) { %>
+      <form method="post" action="/contracts/<%= contract.id %>/buy">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button class="btn" type="submit">Buy</button>
+      </form>
+    <% } %>
+  </div>
+<% } %>
+
+<h2 style="margin-top:2rem">Reviews<%= averageRating ? ' — ' + averageRating.toFixed(1) + ' / 5' : '' %></h2>
+<% if (!reviews.length) { %>
+  <p class="muted">No reviews yet.</p>
+<% } else { %>
+  <ul class="details">
+    <% reviews.forEach(function (r) { %>
+      <li>
+        <strong><%= r.rating %>/5</strong> — <%= r.reviewer_email %>
+        <% if (r.body) { %><p class="small muted" style="margin:.3rem 0 0"><%= r.body %></p><% } %>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
 
 <%- include('partials/foot') %>

@@ -1,0 +1,41 @@
+<%- include('partials/head') %>
+
+<p><a href="/listing/<%= listing.id %>">&larr; Back to profile</a></p>
+
+<div class="hero">
+  <h1>Review <%= listing.name %></h1>
+  <div class="rule"></div>
+</div>
+
+<% if (!eligible) { %>
+  <div class="empty">
+    You can only review an attorney you've had a paid question answered by, or whose case handling for you has been verified.
+    <p style="margin-top:1rem">
+      <a class="btn secondary" href="/listing/<%= listing.id %>/verify-case">Verify a case</a>
+    </p>
+  </div>
+<% } else { %>
+  <div class="search-panel">
+    <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+    <form method="post" action="/listing/<%= listing.id %>/review">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <label for="rating">Rating</label>
+      <select id="rating" name="rating" required>
+        <option value="5">5 — Excellent</option>
+        <option value="4">4 — Good</option>
+        <option value="3">3 — Average</option>
+        <option value="2">2 — Below average</option>
+        <option value="1">1 — Poor</option>
+      </select>
+
+      <label for="body">Your review</label>
+      <textarea id="body" name="body" rows="5"></textarea>
+
+      <p><button class="btn" type="submit">Submit review</button></p>
+    </form>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>
