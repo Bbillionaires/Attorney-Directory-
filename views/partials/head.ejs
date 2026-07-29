@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= typeof title !== 'undefined' ? title + ' — Attorney Directory' : 'Attorney Directory' %></title>
+  <title><%= typeof title !== 'undefined' ? title + ' — Attorney Menu' : 'Attorney Menu' %></title>
+  <meta name="description" content="Attorney Menu — the only attorney directory you need to get served.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,9 +13,10 @@
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
+  <%- include('scale-bg') %>
   <header>
     <nav class="nav">
-      <a class="brand" href="/"><span class="mark">⚖</span> Attorney Directory</a>
+      <a class="brand" href="/"><span class="mark">⚖</span> Attorney Menu</a>
       <a href="/">Browse</a>
       <a href="/contracts">Contracts for Sale</a>
       <a href="/litigation-support">Litigation Support</a>

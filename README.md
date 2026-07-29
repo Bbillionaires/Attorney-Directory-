@@ -1,6 +1,6 @@
-# Attorney Directory
+# Attorney Menu
 
-A two-sided legal marketplace: attorneys and clients register accounts, attorneys get discoverable profiles, clients can pay to ask an attorney a question, each attorney can sell one signature contract template, and reviews are gated to clients with a verified relationship (a paid/answered question, or an admin-approved case verification). Litigation-support and lawsuit-settlement-loan requests are simple lead-capture forms routed to admin — not real underwriting.
+The only attorney directory you need to get served. A two-sided legal marketplace: attorneys and clients register accounts, attorneys get discoverable profiles, clients can pay to ask an attorney a question, each attorney can sell one signature contract template, and reviews are gated to clients with a verified relationship (a paid/answered question, or an admin-approved case verification). Litigation-support and lawsuit-settlement-loan requests are simple lead-capture forms routed to admin — not real underwriting.
 
 Built with Node.js, Express, EJS templates, and PostgreSQL, with Stripe (payments), Cloudflare Turnstile (anti-spam), and Cloudflare R2 (private file storage for contract files and ID-verification uploads).
 

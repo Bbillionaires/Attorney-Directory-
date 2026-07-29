@@ -30,7 +30,7 @@ function adminAuth(req, res, next) {
     }
   }
 
-  res.set('WWW-Authenticate', 'Basic realm="Attorney Directory Admin"');
+  res.set('WWW-Authenticate', 'Basic realm="Attorney Menu Admin"');
   return res.status(401).send('Authentication required.');
 }
 

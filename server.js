@@ -80,5 +80,5 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Attorney directory listening on port ${port}`);
+  console.log(`Attorney Menu listening on port ${port}`);
 });

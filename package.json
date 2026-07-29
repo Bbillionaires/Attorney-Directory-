@@ -1,7 +1,7 @@
 {
   "name": "attorney-directory",
   "version": "2.0.0",
-  "description": "Attorney directory web app",
+  "description": "Attorney Menu — the only attorney directory you need to get served.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
