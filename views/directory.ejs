@@ -60,10 +60,11 @@
           <div>
             <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
             <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
+            <% if (!l.user_id) { %><span class="badge">Partner Firm</span><% } %>
           </div>
         </div>
         <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
-        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state].filter(Boolean).join(', ') %></p><% } %>
+        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state, l.country !== 'United States' ? l.country : null].filter(Boolean).join(', ') %></p><% } %>
         <p class="small muted"><%= l.description %></p>
       </div>
     <% }) %>

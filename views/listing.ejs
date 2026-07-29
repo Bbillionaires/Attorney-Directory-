@@ -12,6 +12,7 @@
     <% if (listing.category_name) { %><span class="badge"><%= listing.category_name %></span><% } %>
     <% if (!listing.active) { %><span class="badge">Inactive</span><% } %>
     <% if (listing.is_verified) { %><span class="badge">Verified</span><% } %>
+    <% if (!listing.user_id) { %><span class="badge">Partner Firm</span><% } %>
     <h1 style="margin:.2rem 0 0"><%= listing.name %></h1>
   </div>
 </div>
@@ -19,7 +20,7 @@
 <p class="muted"><%= listing.description %></p>
 
 <ul class="details">
-  <% if (listing.city || listing.state) { %><li><strong>Location</strong> <%= [listing.city, listing.state].filter(Boolean).join(', ') %></li><% } %>
+  <% if (listing.city || listing.state) { %><li><strong>Location</strong> <%= [listing.city, listing.state, listing.country !== 'United States' ? listing.country : null].filter(Boolean).join(', ') %></li><% } %>
   <% if (listing.phone) { %><li><strong>Phone</strong> <%= listing.phone %></li><% } %>
   <% if (listing.email) { %><li><strong>Email</strong> <a href="mailto:<%= listing.email %>"><%= listing.email %></a></li><% } %>
   <% if (listing.website) { %><li><strong>Website</strong> <a href="<%= listing.website %>" target="_blank" rel="noopener noreferrer"><%= listing.website %></a></li><% } %>

@@ -5,6 +5,8 @@ const { requireRole } = require('../middleware/auth');
 const { verifyCsrfToken } = require('../middleware/csrf');
 const { upload } = require('../lib/upload');
 const { uploadObject } = require('../lib/r2');
+const { geocodeLocation } = require('../lib/geocode');
+const { COUNTRIES } = require('../config/countries');
 
 const router = express.Router();
 
@@ -23,9 +25,10 @@ router.get('/profile', async (req, res, next) => {
       title: 'My profile',
       listing: listing || {
         name: '', description: '', category_id: '', phone: '', email: '',
-        website: '', address: '', city: '', state: '', active: true, question_price_cents: 0,
+        website: '', address: '', city: '', state: '', country: 'United States', active: true, question_price_cents: 0,
       },
       categories,
+      countries: COUNTRIES,
       error: null,
     });
   } catch (err) {
@@ -40,7 +43,7 @@ router.post('/profile', verifyCsrfToken, async (req, res, next) => {
     if (!name) {
       const { rows: categories } = await pool.query('SELECT * FROM categories ORDER BY name ASC');
       return res.status(400).render('attorney/complete-profile', {
-        title: 'My profile', listing: body, categories, error: 'Name is required.',
+        title: 'My profile', listing: body, categories, countries: COUNTRIES, error: 'Name is required.',
       });
     }
     const fields = {
@@ -53,24 +56,32 @@ router.post('/profile', verifyCsrfToken, async (req, res, next) => {
       address: (body.address || '').trim(),
       city: (body.city || '').trim(),
       state: (body.state || '').trim().toUpperCase(),
+      country: (body.country || '').trim() || 'United States',
       active: body.active === '1',
       question_price_cents: Math.max(0, Math.round(Number(body.question_price_dollars || 0) * 100)) || 0,
     };
 
     const existing = await getOwnListing(req.session.userId);
+    const coords = await geocodeLocation(fields);
+    const latitude = coords ? coords.latitude : (existing ? existing.latitude : null);
+    const longitude = coords ? coords.longitude : (existing ? existing.longitude : null);
+
     if (existing) {
       await pool.query(
         `UPDATE listings SET name=$1, description=$2, category_id=$3, phone=$4, email=$5,
-         website=$6, address=$7, active=$8, question_price_cents=$9, city=$10, state=$11 WHERE id=$12`,
+         website=$6, address=$7, active=$8, question_price_cents=$9, city=$10, state=$11,
+         country=$12, latitude=$13, longitude=$14 WHERE id=$15`,
         [fields.name, fields.description, fields.category_id, fields.phone, fields.email,
-         fields.website, fields.address, fields.active, fields.question_price_cents, fields.city, fields.state, existing.id]
+         fields.website, fields.address, fields.active, fields.question_price_cents, fields.city, fields.state,
+         fields.country, latitude, longitude, existing.id]
       );
     } else {
       await pool.query(
-        `INSERT INTO listings (name, description, category_id, phone, email, website, address, active, question_price_cents, city, state, user_id)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+        `INSERT INTO listings (name, description, category_id, phone, email, website, address, active, question_price_cents, city, state, country, latitude, longitude, user_id)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`,
         [fields.name, fields.description, fields.category_id, fields.phone, fields.email,
-         fields.website, fields.address, fields.active, fields.question_price_cents, fields.city, fields.state, req.session.userId]
+         fields.website, fields.address, fields.active, fields.question_price_cents, fields.city, fields.state,
+         fields.country, latitude, longitude, req.session.userId]
       );
     }
     res.redirect('/attorney/dashboard');

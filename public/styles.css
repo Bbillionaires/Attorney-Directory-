@@ -496,3 +496,49 @@ ul.details strong { color: var(--gold-bright); font-weight: 600; margin-right: .
 }
 .notice-banner.ok { color: var(--ok); border-color: var(--ok); }
 .notice-banner.error { color: var(--danger); border-color: var(--danger); }
+
+/* Worldwide attorney map */
+.map-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  background: var(--black);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.map-img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.map-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  z-index: 2;
+}
+.map-marker-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 162, 75, .28);
+  display: inline-block;
+  transition: transform .15s ease;
+}
+.map-marker:hover .map-marker-dot,
+.map-marker:focus .map-marker-dot {
+  transform: scale(1.7);
+  box-shadow: 0 0 0 5px rgba(201, 162, 75, .4);
+}
+.map-marker.is-verified .map-marker-dot {
+  background: var(--gold-bright);
+  box-shadow: 0 0 0 3px rgba(232, 200, 119, .4);
+}
+.map-legend-dot {
+  position: relative;
+  margin-right: .35rem;
+  vertical-align: middle;
+  box-shadow: none;
+}

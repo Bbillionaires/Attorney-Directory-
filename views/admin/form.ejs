@@ -53,10 +53,18 @@
       <input type="text" id="city" name="city" value="<%= listing.city %>">
     </div>
     <div>
-      <label for="state">State</label>
-      <input type="text" id="state" name="state" value="<%= listing.state %>" maxlength="2" placeholder="e.g. TX" style="text-transform:uppercase">
+      <label for="state">State / Province</label>
+      <input type="text" id="state" name="state" value="<%= listing.state %>" placeholder="e.g. TX">
     </div>
   </div>
+
+  <label for="country">Country</label>
+  <select id="country" name="country">
+    <% countries.forEach(function (c) { %>
+      <option value="<%= c %>" <%= (listing.country || 'United States') === c ? 'selected' : '' %>><%= c %></option>
+    <% }) %>
+  </select>
+  <p class="small muted" style="margin-top:.4rem">City, state/province, and country are used to place this firm on the <a href="/map">world map</a> — no coordinates needed, we look them up automatically.</p>
 
   <p>
     <label style="display:inline-flex;align-items:center;gap:.5rem;width:auto;margin:0">

@@ -23,6 +23,13 @@ ALTER TABLE listings ADD COLUMN IF NOT EXISTS state TEXT NOT NULL DEFAULT '';
 CREATE INDEX IF NOT EXISTS listings_city_idx ON listings (city);
 CREATE INDEX IF NOT EXISTS listings_state_idx ON listings (state);
 
+-- Worldwide location support: country (any attorney, anywhere) plus
+-- server-geocoded coordinates for the global map (see src/lib/geocode.js).
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS country TEXT NOT NULL DEFAULT 'United States';
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS latitude DOUBLE PRECISION;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS longitude DOUBLE PRECISION;
+CREATE INDEX IF NOT EXISTS listings_country_idx ON listings (country);
+
 -- Accounts
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,

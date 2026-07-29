@@ -21,6 +21,7 @@ const intakeRoutes = require('./src/routes/intake');
 const savedListingsRoutes = require('./src/routes/savedListings');
 const newsletterRoutes = require('./src/routes/newsletter');
 const pagesRoutes = require('./src/routes/pages');
+const mapRoutes = require('./src/routes/map');
 const stripeWebhookRoutes = require('./src/routes/stripeWebhook');
 const { adminAuth } = require('./src/adminAuth');
 const { attachCurrentUser } = require('./src/middleware/auth');
@@ -82,6 +83,7 @@ app.use('/', intakeRoutes);
 app.use('/', savedListingsRoutes);
 app.use('/', newsletterRoutes);
 app.use('/', pagesRoutes);
+app.use('/', mapRoutes);
 app.use('/attorney', attorneyRoutes);
 app.use('/admin', adminAuth, adminRoutes);
 

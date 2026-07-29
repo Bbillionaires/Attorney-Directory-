@@ -5,11 +5,13 @@
   <div class="rule"></div>
 </div>
 
+<p class="small muted">Use "Add partner firm" to register an attorney we already have a business relationship with — no account or self-registration required on their end. Their city/state/country places them on the <a href="/map">world map</a> automatically.</p>
 <p>
-  <a class="btn" href="/admin/new">+ New listing</a>
+  <a class="btn" href="/admin/new">+ Add partner firm</a>
   <a class="btn secondary" href="/admin/case-verifications">Case Verifications</a>
   <a class="btn secondary" href="/admin/leads">Leads</a>
   <a class="btn secondary" href="/admin/case-intakes">Case Intakes</a>
+  <a class="btn secondary" href="/map">World Map</a>
 </p>
 
 <% if (!listings.length) { %>
@@ -21,9 +23,10 @@
         <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
         <% if (!l.active) { %><span class="badge">Inactive</span><% } %>
         <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
+        <% if (!l.user_id) { %><span class="badge">Partner Firm</span><% } %>
         <h3><%= l.name %></h3>
         <% if (l.bar_number) { %><p class="small muted">Bar #<%= l.bar_number %></p><% } %>
-        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state].filter(Boolean).join(', ') %></p><% } %>
+        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state, l.country !== 'United States' ? l.country : null].filter(Boolean).join(', ') %><%= l.latitude ? ' · on map' : '' %></p><% } %>
         <p class="small muted"><%= l.description %></p>
         <p>
           <a class="btn secondary" href="/admin/<%= l.id %>/edit">Edit</a>

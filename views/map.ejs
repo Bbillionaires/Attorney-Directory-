@@ -1,0 +1,32 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Attorneys Worldwide</h1>
+  <div class="rule"></div>
+  <p class="lead">Every attorney who registers with us — or that we bring on directly as a partner firm — plotted on the map, wherever they practice.</p>
+</div>
+
+<% if (!markers.length) { %>
+  <div class="empty">No attorneys have a plottable location yet. <a href="/directory">Browse the directory</a> instead.</div>
+<% } else { %>
+  <div class="map-wrap">
+    <img class="map-img" src="/world-map.svg" alt="World map" draggable="false">
+    <% markers.forEach(function (m) { %>
+      <a class="map-marker <%= m.is_verified ? 'is-verified' : '' %>"
+         style="left:<%= m.leftPct.toFixed(3) %>%; top:<%= m.topPct.toFixed(3) %>%"
+         href="/listing/<%= m.id %>"
+         title="<%= m.name %> — <%= [m.city, m.state, m.country].filter(Boolean).join(', ') %>">
+        <span class="map-marker-dot"></span>
+      </a>
+    <% }) %>
+  </div>
+  <p class="small muted" style="margin-top:1rem">
+    <span class="map-marker-dot map-legend-dot"></span> Attorney &nbsp;
+    <span class="map-marker-dot map-legend-dot is-verified"></span> Verified &nbsp;
+    — <%= placed %> of <%= total %> active listings currently have a plottable location.
+  </p>
+<% } %>
+
+<p style="margin-top:1.6rem"><a class="btn secondary" href="/directory">Browse the Full Directory</a></p>
+
+<%- include('partials/foot') %>

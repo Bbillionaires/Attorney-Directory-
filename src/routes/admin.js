@@ -1,6 +1,8 @@
 const express = require('express');
 const { pool } = require('../db');
 const { getSignedDownloadUrl } = require('../lib/r2');
+const { geocodeLocation } = require('../lib/geocode');
+const { COUNTRIES } = require('../config/countries');
 
 const router = express.Router();
 
@@ -14,6 +16,7 @@ const EMPTY_LISTING = {
   address: '',
   city: '',
   state: '',
+  country: 'United States',
   active: true,
 };
 
@@ -37,6 +40,7 @@ function listingFromBody(body) {
     address: (body.address || '').trim(),
     city: (body.city || '').trim(),
     state: (body.state || '').trim().toUpperCase(),
+    country: (body.country || '').trim() || 'United States',
     active: body.active === '1',
   };
 }
@@ -63,6 +67,7 @@ router.get('/new', async (req, res, next) => {
       title: 'New listing',
       listing: EMPTY_LISTING,
       categories,
+      countries: COUNTRIES,
       isEdit: false,
       formAction: '/admin',
     });
@@ -77,10 +82,12 @@ router.post('/', async (req, res, next) => {
     if (!listing.name) {
       return res.status(400).send('Name is required');
     }
+    const coords = await geocodeLocation(listing);
     await pool.query(
-      `INSERT INTO listings (name, description, category_id, phone, email, website, address, city, state, active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address, listing.city, listing.state, listing.active]
+      `INSERT INTO listings (name, description, category_id, phone, email, website, address, city, state, country, latitude, longitude, active)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address,
+       listing.city, listing.state, listing.country, coords ? coords.latitude : null, coords ? coords.longitude : null, listing.active]
     );
     res.redirect('/admin');
   } catch (err) {
@@ -104,6 +111,7 @@ router.get('/:id/edit', async (req, res, next) => {
       title: 'Edit listing',
       listing,
       categories,
+      countries: COUNTRIES,
       isEdit: true,
       formAction: `/admin/${id}`,
     });
@@ -121,11 +129,20 @@ router.put('/:id', async (req, res, next) => {
     if (!listing.name) {
       return res.status(400).send('Name is required');
     }
+    const { rows: existingRows } = await pool.query('SELECT latitude, longitude FROM listings WHERE id = $1', [id]);
+    const existing = existingRows[0];
+    const coords = await geocodeLocation(listing);
+    // A geocode failure (network hiccup, no match) must not erase coordinates a
+    // previous successful geocode already found — fall back to what's on file.
+    const latitude = coords ? coords.latitude : (existing ? existing.latitude : null);
+    const longitude = coords ? coords.longitude : (existing ? existing.longitude : null);
     await pool.query(
       `UPDATE listings
-       SET name = $1, description = $2, category_id = $3, phone = $4, email = $5, website = $6, address = $7, active = $8, city = $9, state = $10
-       WHERE id = $11`,
-      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address, listing.active, listing.city, listing.state, id]
+       SET name = $1, description = $2, category_id = $3, phone = $4, email = $5, website = $6, address = $7, active = $8,
+           city = $9, state = $10, country = $11, latitude = $12, longitude = $13
+       WHERE id = $14`,
+      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address, listing.active,
+       listing.city, listing.state, listing.country, latitude, longitude, id]
     );
     res.redirect('/admin');
   } catch (err) {
