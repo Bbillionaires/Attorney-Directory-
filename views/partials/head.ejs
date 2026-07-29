@@ -17,26 +17,30 @@
   <header>
     <nav class="nav">
       <a class="brand" href="/"><span class="mark">⚖</span> Attorney Menu</a>
-      <a href="/directory">Attorney Directory</a>
-      <a href="/contracts">Contracts for Sale</a>
-      <a href="/litigation-support">Litigation Support</a>
-      <a href="/settlement-loan">Settlement Loans</a>
-      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <% if (currentUser.role === 'attorney') { %>
-          <a href="/attorney/dashboard">Dashboard</a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Menu">&#9776;</label>
+      <div class="nav-links">
+        <a href="/directory">Attorney Directory</a>
+        <a href="/contracts">Contracts for Sale</a>
+        <a href="/litigation-support">Litigation Support</a>
+        <a href="/settlement-loan">Settlement Loans</a>
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <% if (currentUser.role === 'attorney') { %>
+            <a href="/attorney/dashboard">Dashboard</a>
+          <% } else { %>
+            <a href="/my/purchases">My Purchases</a>
+          <% } %>
+          <a href="/account">My Account</a>
+          <form action="/logout" method="post">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <button type="submit" class="nav-logout">Log out</button>
+          </form>
         <% } else { %>
-          <a href="/my/purchases">My Purchases</a>
+          <a href="/login">Log in</a>
+          <a href="/register">Register</a>
         <% } %>
-        <a href="/account">My Account</a>
-        <form action="/logout" method="post" style="display:inline">
-          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-          <button type="submit" style="background:none;border:none;color:var(--muted);cursor:pointer;font:inherit;padding:.4rem .75rem">Log out</button>
-        </form>
-      <% } else { %>
-        <a href="/login">Log in</a>
-        <a href="/register">Register</a>
-      <% } %>
-      <a href="/admin">Admin</a>
+        <a href="/admin">Admin</a>
+      </div>
     </nav>
   </header>
   <main class="container menu-frame">
