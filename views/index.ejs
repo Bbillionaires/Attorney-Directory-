@@ -3,71 +3,208 @@
 <div class="hero">
   <h1>Attorney Menu</h1>
   <div class="rule"></div>
-  <p class="lead">The only attorney directory you need to get served. Browse trusted legal professionals by practice area, or search by name and description.</p>
+  <p class="lead">Legal help, served clearly.<br>Choose the legal service you need. Tell us what happened, review your options, and connect with an attorney who may be able to help.</p>
+  <div class="cta-row">
+    <a class="btn" href="/directory">View the Menu</a>
+    <a class="btn secondary" href="/attorney-match">Help Me Choose</a>
+  </div>
 </div>
 
-<div class="search-panel">
-  <form method="get" action="/">
-    <div class="row">
-      <div>
-        <label for="q">Search</label>
-        <input type="text" id="q" name="q" value="<%= query.q %>" placeholder="Name or description">
-      </div>
-      <div>
-        <label for="category">Practice area</label>
-        <select id="category" name="category">
-          <option value="">All practice areas</option>
-          <% categories.forEach(function (c) { %>
-            <option value="<%= c.id %>" <%= String(query.category) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
-          <% }) %>
-        </select>
-      </div>
-    </div>
-    <div class="row" style="margin-top:1rem">
-      <div>
-        <label for="city">City</label>
-        <input type="text" id="city" name="city" value="<%= query.city %>" placeholder="e.g. Austin">
-      </div>
-      <div>
-        <label for="state">State</label>
-        <select id="state" name="state">
-          <option value="">All states</option>
-          <% states.forEach(function (s) { %>
-            <option value="<%= s %>" <%= query.state === s ? 'selected' : '' %>><%= s %></option>
-          <% }) %>
-        </select>
-      </div>
-    </div>
-    <p style="margin-top:1rem">
-      <button class="btn" type="submit">Search</button>
-      <a class="btn secondary" href="/">Reset</a>
-    </p>
-  </form>
-</div>
-
-<% if (!listings.length) { %>
-  <div class="empty">No attorneys found matching your search. <a href="/">Reset filters</a>.</div>
-<% } else { %>
+<div class="section">
+  <span class="section-kicker">Today's Specials</span>
+  <h2>Featured Legal Services</h2>
   <div class="list">
-    <% listings.forEach(function (l) { %>
+    <% featuredServices.forEach(function (svc) { %>
       <div class="card">
-        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem">
-          <% if (l.avatar_url) { %>
-            <img class="avatar avatar-sm" src="<%= l.avatar_url %>" alt="">
-          <% } else { %>
-            <span class="avatar avatar-sm avatar-placeholder"><%= l.name.charAt(0).toUpperCase() %></span>
-          <% } %>
-          <div>
-            <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
-            <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
-          </div>
-        </div>
-        <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
-        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state].filter(Boolean).join(', ') %></p><% } %>
-        <p class="small muted"><%= l.description %></p>
+        <h3><%= svc.heading %></h3>
+        <p class="muted"><%= svc.intro %></p>
+        <% if (svc.description) { %><p class="small muted"><%= svc.description %></p><% } %>
+        <% if (svc.bullets.length) { %>
+          <p class="small muted" style="margin-top:.9rem">Common selections:</p>
+          <ul class="bullets">
+            <% svc.bullets.forEach(function (b) { %><li><%= b %></li><% }) %>
+          </ul>
+        <% } %>
+        <p><a class="btn" href="<%= svc.category ? '/directory?category=' + svc.category.id : '/directory' %>"><%= svc.ctaLabel %></a></p>
       </div>
     <% }) %>
   </div>
-<% } %>
+</div>
+
+<div class="section">
+  <span class="section-kicker">Appetizers</span>
+  <h2>Start Here</h2>
+  <p class="section-intro">Not sure which type of attorney you need? Begin with one of these quick options.</p>
+  <div class="list">
+    <div class="card">
+      <h3>Quick Case Review</h3>
+      <p class="small muted">Answer a few questions about your situation.</p>
+      <p class="small muted">Preparation time: About 2–5 minutes</p>
+      <p><a class="btn" href="/case-review">Begin Review</a></p>
+    </div>
+    <div class="card">
+      <h3>Attorney Match</h3>
+      <p class="small muted">Receive an attorney recommendation based on your legal issue, location, and service needs.</p>
+      <p><a class="btn" href="/attorney-match">Find My Match</a></p>
+    </div>
+    <div class="card">
+      <h3>Legal Question</h3>
+      <p class="small muted">Describe what happened and identify the type of legal help you may need.</p>
+      <p><a class="btn" href="/legal-question">Ask a Question</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="full-menu">
+  <span class="section-kicker">Main Courses</span>
+  <h2>Browse the Full Legal Menu</h2>
+  <div class="list">
+    <% practiceAreas.forEach(function (area) { %>
+      <div class="card">
+        <h3><%= area.categoryName %></h3>
+        <p class="muted small"><%= area.tagline %></p>
+        <ul class="bullets">
+          <% area.bullets.forEach(function (b) { %><li><%= b %></li><% }) %>
+        </ul>
+        <p><a class="btn" href="<%= area.category ? '/directory?category=' + area.category.id : '/directory' %>"><%= area.ctaLabel %></a></p>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-kicker">Popular Choices</span>
+  <h2>Frequently Requested Legal Services</h2>
+  <ol class="numbered-list">
+    <% popularChoices.forEach(function (choice) { %><li><a href="/directory?q=<%= encodeURIComponent(choice) %>"><%= choice %></a></li><% }) %>
+  </ol>
+  <p><a class="btn secondary" href="/directory">See All Legal Services</a></p>
+</div>
+
+<div class="section">
+  <span class="section-kicker">House Recommendation</span>
+  <h2>Let Us Help You Choose</h2>
+  <p class="section-intro">Not every legal situation fits neatly into one category. Answer a few questions and our intake system will help identify the legal service that may best fit your situation.</p>
+  <p class="small muted">Your recommendation may consider:</p>
+  <ul class="bullets">
+    <li>Type of legal issue</li>
+    <li>Location</li>
+    <li>Urgency</li>
+    <li>Attorney availability</li>
+    <li>Relevant experience</li>
+    <li>Payment or contingency options</li>
+  </ul>
+  <p><a class="btn" href="/attorney-match">Get My Recommendation</a></p>
+</div>
+
+<div class="section">
+  <span class="section-kicker">Sides</span>
+  <h2>Additional Legal Resources</h2>
+  <p class="section-intro">Add useful information to your legal search.</p>
+  <ul class="bullets">
+    <% legalResources.forEach(function (r) { %><li><%= r %></li><% }) %>
+  </ul>
+  <p><a class="btn secondary" href="/resources">Browse Legal Resources</a></p>
+</div>
+
+<div class="section" id="stay-informed">
+  <span class="section-kicker">Drink Menu</span>
+  <h2>Stay Informed</h2>
+  <p class="section-intro">Choose how you would like to receive updates.</p>
+  <% if (typeof newsletterStatus !== 'undefined' && newsletterStatus === 'success') { %>
+    <div class="notice-banner ok">You're subscribed. Thanks for staying informed.</div>
+  <% } else if (typeof newsletterStatus !== 'undefined' && newsletterStatus === 'error') { %>
+    <div class="notice-banner error">Please enter a valid email and complete the security check, then try again.</div>
+  <% } %>
+  <div class="search-panel">
+    <form method="post" action="/newsletter/subscribe">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label for="newsletter_email">Email</label>
+      <input type="email" id="newsletter_email" name="email" required>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="pref_case_updates" name="pref_case_updates" value="1">
+        <label for="pref_case_updates">Case Updates<span class="checkbox-desc">Get updates about your attorney request.</span></label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="pref_legal_alerts" name="pref_legal_alerts" value="1">
+        <label for="pref_legal_alerts">Legal Alerts<span class="checkbox-desc">Receive important legal information and deadline reminders.</span></label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="pref_helpful_guides" name="pref_helpful_guides" value="1">
+        <label for="pref_helpful_guides">Helpful Guides<span class="checkbox-desc">Get educational resources related to your legal matter.</span></label>
+      </div>
+
+      <p style="margin-top:1rem"><%- include('partials/turnstile') %></p>
+      <p><button class="btn" type="submit">Sign Up for Updates</button></p>
+    </form>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-kicker">Desserts</span>
+  <h2>Finish Your Search</h2>
+  <div class="list">
+    <div class="card">
+      <h3>Save an Attorney</h3>
+      <p class="small muted">Create a shortlist of attorneys you may want to contact.</p>
+      <p><a class="btn" href="/account/saved">Save My Choices</a></p>
+    </div>
+    <div class="card">
+      <h3>Request a Consultation</h3>
+      <p class="small muted">Submit your information for review by a participating attorney.</p>
+      <p><a class="btn" href="/attorney-match">Request a Consultation</a></p>
+    </div>
+    <div class="card">
+      <h3>Check My Request</h3>
+      <p class="small muted">Already submitted your information?</p>
+      <p><a class="btn secondary" href="/check-request">View My Status</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="section-kicker">Your Order</span>
+  <h2>Ready to Request Legal Help?</h2>
+  <ol class="step-list">
+    <li>Choose a legal service.</li>
+    <li>Tell us what happened.</li>
+    <li>Review your possible attorney match.</li>
+    <li>Decide whether you want to connect.</li>
+  </ol>
+  <p style="margin-top:1.2rem"><a class="btn" href="/case-review">Start My Legal Request</a></p>
+</div>
+
+<div class="section">
+  <h2>Why Attorney Menu?</h2>
+  <p class="section-intro">Finding legal help can feel complicated. Attorney Menu organizes legal services into one clear, easy-to-use experience so you can understand your options and take the next step with confidence.</p>
+  <ul class="bullets">
+    <li>Easy-to-browse legal categories</li>
+    <li>Guided attorney selection</li>
+    <li>Location-based matching</li>
+    <li>Clear next steps</li>
+    <li>No obligation to hire</li>
+    <li>Private and secure intake process</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="disclaimer">
+    <h3 style="margin-top:0">Important Notice</h3>
+    <p>Attorney Menu is not a law firm and does not provide legal advice. Information provided through this website is for general informational and attorney-matching purposes only.</p>
+    <p>Submitting information does not create an attorney-client relationship. An attorney-client relationship is formed only after you and a participating attorney agree to representation.</p>
+    <p>Attorney availability, acceptance, qualifications, fees, results, and legal services may vary. Past performance does not guarantee future results.</p>
+    <p>For emergencies or urgent legal deadlines, contact a licensed attorney directly or call the appropriate emergency service.</p>
+  </div>
+</div>
+
+<div class="section final-cta">
+  <h2>Legal help should be easier to choose.</h2>
+  <p class="muted">Browse. Select. Connect.</p>
+  <div class="cta-row">
+    <a class="btn" href="/directory">View the Menu</a>
+    <a class="btn secondary" href="/directory">Find an Attorney</a>
+  </div>
+</div>
 
 <%- include('partials/foot') %>

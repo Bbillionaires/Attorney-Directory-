@@ -1,0 +1,73 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Attorney Directory</h1>
+  <div class="rule"></div>
+  <p class="lead">The only attorney directory you need to get served. Browse trusted legal professionals by practice area, or search by name and description.</p>
+</div>
+
+<div class="search-panel">
+  <form method="get" action="/directory">
+    <div class="row">
+      <div>
+        <label for="q">Search</label>
+        <input type="text" id="q" name="q" value="<%= query.q %>" placeholder="Name or description">
+      </div>
+      <div>
+        <label for="category">Practice area</label>
+        <select id="category" name="category">
+          <option value="">All practice areas</option>
+          <% categories.forEach(function (c) { %>
+            <option value="<%= c.id %>" <%= String(query.category) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:1rem">
+      <div>
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" value="<%= query.city %>" placeholder="e.g. Austin">
+      </div>
+      <div>
+        <label for="state">State</label>
+        <select id="state" name="state">
+          <option value="">All states</option>
+          <% states.forEach(function (s) { %>
+            <option value="<%= s %>" <%= query.state === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <p style="margin-top:1rem">
+      <button class="btn" type="submit">Search</button>
+      <a class="btn secondary" href="/directory">Reset</a>
+    </p>
+  </form>
+</div>
+
+<% if (!listings.length) { %>
+  <div class="empty">No attorneys found matching your search. <a href="/directory">Reset filters</a>.</div>
+<% } else { %>
+  <div class="list">
+    <% listings.forEach(function (l) { %>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem">
+          <% if (l.avatar_url) { %>
+            <img class="avatar avatar-sm" src="<%= l.avatar_url %>" alt="">
+          <% } else { %>
+            <span class="avatar avatar-sm avatar-placeholder"><%= l.name.charAt(0).toUpperCase() %></span>
+          <% } %>
+          <div>
+            <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
+            <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
+          </div>
+        </div>
+        <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
+        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state].filter(Boolean).join(', ') %></p><% } %>
+        <p class="small muted"><%= l.description %></p>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

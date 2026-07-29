@@ -1,0 +1,37 @@
+<%- include('../partials/head') %>
+
+<div class="hero">
+  <h1>Case Intakes</h1>
+  <div class="rule"></div>
+</div>
+
+<p><a href="/admin">&larr; Back to admin</a></p>
+
+<% if (!caseIntakes.length) { %>
+  <div class="empty">No case intakes yet.</div>
+<% } else { %>
+  <div class="list">
+    <% caseIntakes.forEach(function (i) { %>
+      <div class="card">
+        <span class="badge"><%= i.source.replace(/_/g, ' ') %></span>
+        <span class="badge"><%= i.status.replace('_', ' ') %></span>
+        <h3><%= i.name %></h3>
+        <p class="small muted"><%= i.email %><%= i.phone ? ' · ' + i.phone : '' %></p>
+        <p class="small muted">Reference <%= i.reference_code %></p>
+        <% if (i.category_name) { %><p class="small muted"><%= i.category_name %></p><% } %>
+        <% if (i.city || i.state) { %><p class="small muted"><%= [i.city, i.state].filter(Boolean).join(', ') %></p><% } %>
+        <p class="small muted"><%= i.description %></p>
+        <form action="/admin/case-intakes/<%= i.id %>/status?_method=PUT" method="post" style="display:flex;gap:.5rem;align-items:center;margin-top:.7rem">
+          <select name="status" style="width:auto">
+            <% ['submitted', 'in_review', 'matched', 'closed'].forEach(function (s) { %>
+              <option value="<%= s %>" <%= i.status === s ? 'selected' : '' %>><%= s.replace('_', ' ') %></option>
+            <% }) %>
+          </select>
+          <button class="btn secondary" type="submit">Update</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>

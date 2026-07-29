@@ -5,15 +5,16 @@ const { pool } = require('../src/db');
 
 const DEFAULT_CATEGORIES = [
   'General Practice',
-  'Real Estate',
-  'Corporate & Business',
+  'Real Estate Law',
+  'Business Law',
   'Financial & Tax',
   'Employment Law',
-  'Wills, Trusts & Estates',
+  'Estate Planning',
   'Family Law',
   'Criminal Defense',
   'Personal Injury',
-  'Immigration',
+  'Immigration Law',
+  'Bankruptcy and Debt',
 ];
 
 async function main() {

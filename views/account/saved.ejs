@@ -1,0 +1,34 @@
+<%- include('../partials/head') %>
+
+<div class="hero">
+  <h1>My Saved Attorneys</h1>
+  <div class="rule"></div>
+  <p class="lead">Your shortlist of attorneys you may want to contact.</p>
+</div>
+
+<% if (!listings.length) { %>
+  <div class="empty">You haven't saved any attorneys yet. <a href="/directory">Browse the directory</a>.</div>
+<% } else { %>
+  <div class="list">
+    <% listings.forEach(function (l) { %>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem">
+          <% if (l.avatar_url) { %>
+            <img class="avatar avatar-sm" src="<%= l.avatar_url %>" alt="">
+          <% } else { %>
+            <span class="avatar avatar-sm avatar-placeholder"><%= l.name.charAt(0).toUpperCase() %></span>
+          <% } %>
+          <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
+        </div>
+        <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
+        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state].filter(Boolean).join(', ') %></p><% } %>
+        <form method="post" action="/listing/<%= l.id %>/unsave" style="margin-top:.6rem">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="btn secondary" type="submit">Remove</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>

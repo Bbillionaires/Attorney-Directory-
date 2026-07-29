@@ -240,4 +240,33 @@ router.get('/leads', async (req, res, next) => {
   }
 });
 
+router.get('/case-intakes', async (req, res, next) => {
+  try {
+    const { rows: caseIntakes } = await pool.query(
+      `SELECT case_intakes.*, categories.name AS category_name FROM case_intakes
+       LEFT JOIN categories ON categories.id = case_intakes.category_id
+       ORDER BY (case_intakes.status = 'submitted') DESC, case_intakes.created_at DESC`
+    );
+    res.render('admin/case-intakes', { title: 'Case Intakes', caseIntakes });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/case-intakes/:id/status', async (req, res, next) => {
+  try {
+    const id = parseId(req, res);
+    if (id === null) return;
+
+    const status = req.body.status;
+    if (!['submitted', 'in_review', 'matched', 'closed'].includes(status)) {
+      return res.status(400).send('Invalid status');
+    }
+    await pool.query('UPDATE case_intakes SET status = $1 WHERE id = $2', [status, id]);
+    res.redirect('/admin/case-intakes');
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

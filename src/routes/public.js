@@ -16,7 +16,7 @@ async function withAvatarUrl(row) {
   return { ...row, avatar_url: await getSignedDownloadUrl(row.avatar_key, 3600) };
 }
 
-router.get('/', async (req, res, next) => {
+router.get('/directory', async (req, res, next) => {
   try {
     const q = (req.query.q || '').trim();
     const category = (req.query.category || '').trim();
@@ -56,7 +56,7 @@ router.get('/', async (req, res, next) => {
 
     const { rows: categories } = await pool.query('SELECT * FROM categories ORDER BY name ASC');
 
-    res.render('index', { title: 'Browse', listings, categories, states: US_STATES, query: { q, category, city, state } });
+    res.render('directory', { title: 'Attorney Directory', listings, categories, states: US_STATES, query: { q, category, city, state } });
   } catch (err) {
     next(err);
   }
@@ -96,12 +96,22 @@ router.get('/listing/:id', async (req, res, next) => {
       ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
       : null;
 
+    let isSaved = false;
+    if (req.session.userId) {
+      const { rows: savedRows } = await pool.query(
+        'SELECT 1 FROM saved_listings WHERE user_id = $1 AND listing_id = $2',
+        [req.session.userId, id]
+      );
+      isSaved = savedRows.length > 0;
+    }
+
     res.render('listing', {
       title: listing.name,
       listing,
       contract: contractRows[0] || null,
       reviews,
       averageRating,
+      isSaved,
     });
   } catch (err) {
     next(err);

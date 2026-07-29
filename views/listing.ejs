@@ -1,6 +1,6 @@
 <%- include('partials/head') %>
 
-<p><a href="/">&larr; Back to directory</a></p>
+<p><a href="/directory">&larr; Back to directory</a></p>
 
 <div style="display:flex;align-items:center;gap:1.1rem">
   <% if (listing.avatar_url) { %>
@@ -34,7 +34,13 @@
     <% } %>
     <a class="btn secondary" href="/listing/<%= listing.id %>/review">Leave a review</a>
     <a class="btn secondary" href="/listing/<%= listing.id %>/verify-case">Verify a case</a>
+    <form method="post" action="/listing/<%= listing.id %>/<%= isSaved ? 'unsave' : 'save' %>" style="display:inline">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn secondary" type="submit"><%= isSaved ? 'Remove from saved' : 'Save attorney' %></button>
+    </form>
   </p>
+<% } else if (!currentUser) { %>
+  <p><a class="btn secondary" href="/login">Log in to save this attorney</a></p>
 <% } %>
 
 <% if (contract) { %>

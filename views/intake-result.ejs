@@ -1,0 +1,34 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Thanks, <%= intake.name %>.</h1>
+  <div class="rule"></div>
+  <p class="lead">We've received your request. Save your reference code below so you can check its status later.</p>
+</div>
+
+<div class="search-panel">
+  <p class="small muted">Reference code</p>
+  <h2 style="margin:.1rem 0 0"><%= intake.reference_code %></h2>
+  <p class="small muted" style="margin-top:.3rem">You'll need this along with your email to check your request status.</p>
+</div>
+
+<h2 style="margin-top:2.4rem">Attorneys who may be able to help</h2>
+<% if (!matches.length) { %>
+  <div class="empty">No exact matches yet — browse the <a href="/directory">full directory</a> instead.</div>
+<% } else { %>
+  <div class="list">
+    <% matches.forEach(function (l) { %>
+      <div class="card">
+        <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
+        <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
+        <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
+        <% if (l.city || l.state) { %><p class="small muted"><%= [l.city, l.state].filter(Boolean).join(', ') %></p><% } %>
+        <p class="small muted"><%= l.description %></p>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<p style="margin-top:1.4rem"><a class="btn secondary" href="/directory">Browse the Full Directory</a></p>
+
+<%- include('partials/foot') %>

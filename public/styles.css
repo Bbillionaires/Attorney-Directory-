@@ -363,3 +363,65 @@ ul.details strong { color: var(--gold-bright); font-weight: 600; margin-right: .
 }
 .avatar-sm { width: 28px; height: 28px; font-size: .8rem; }
 .avatar-lg { width: 84px; height: 84px; font-size: 2rem; }
+
+/* Homepage marketing sections */
+.section { margin: 3.4rem 0; }
+.section-kicker {
+  display: block;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--gold-dim);
+  margin-bottom: .3rem;
+}
+.section-intro { color: var(--muted); max-width: 680px; margin: .4rem 0 1.4rem; }
+.cta-row { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1rem; }
+.bullets { list-style: none; padding: 0; margin: .8rem 0; }
+.bullets li { padding: .28rem 0; color: var(--muted); font-size: .92rem; }
+.bullets li::before { content: '—'; color: var(--gold-dim); margin-right: .5rem; }
+.numbered-list { padding-left: 1.3rem; color: var(--muted); margin: .8rem 0; }
+.numbered-list li { padding: .3rem 0; }
+.numbered-list a { color: var(--text); }
+.numbered-list a:hover { color: var(--gold-bright); }
+.checkbox-row { display: flex; align-items: flex-start; gap: .6rem; margin: .9rem 0; }
+.checkbox-row input[type="checkbox"] { width: auto; accent-color: var(--gold); margin-top: .3rem; }
+.checkbox-row label { margin: 0; color: var(--text); font-size: .95rem; display: block; }
+.checkbox-row .checkbox-desc { color: var(--muted); font-size: .85rem; display: block; }
+.disclaimer {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem 1.6rem;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: .88rem;
+}
+.disclaimer p { margin: .6rem 0; }
+.final-cta {
+  text-align: center;
+  padding: 2.6rem 1.5rem;
+  border: 1px solid var(--gold-dim);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(201, 162, 75, .08), transparent);
+}
+.final-cta .cta-row { justify-content: center; }
+.step-list { counter-reset: step; list-style: none; padding: 0; display: grid; gap: 1rem; }
+.step-list li { counter-increment: step; padding-left: 2.6rem; position: relative; color: var(--muted); }
+.step-list li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: -.1rem;
+  width: 1.8rem; height: 1.8rem;
+  border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold-bright);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Playfair Display", Georgia, serif; font-weight: 700; font-size: .9rem;
+}
+.notice-banner {
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+  padding: .8rem 1rem;
+  margin: 1rem 0;
+  font-size: .9rem;
+}
+.notice-banner.ok { color: var(--ok); border-color: var(--ok); }
+.notice-banner.error { color: var(--danger); border-color: var(--danger); }

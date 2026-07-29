@@ -154,3 +154,53 @@ CREATE TABLE IF NOT EXISTS leads (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS leads_type_idx ON leads (type);
+
+-- Category renames to match the homepage's practice-area menu (in-place, preserves listings.category_id FKs)
+UPDATE categories SET name = 'Real Estate Law' WHERE name = 'Real Estate';
+UPDATE categories SET name = 'Business Law' WHERE name = 'Corporate & Business';
+UPDATE categories SET name = 'Estate Planning' WHERE name = 'Wills, Trusts & Estates';
+UPDATE categories SET name = 'Immigration Law' WHERE name = 'Immigration';
+
+-- Unified case-intake: Quick Case Review / Attorney Match / Legal Question homepage cards
+CREATE TABLE IF NOT EXISTS case_intakes (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  source TEXT NOT NULL CHECK (source IN ('quick_case_review', 'attorney_match', 'legal_question')),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL DEFAULT '',
+  category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
+  city TEXT NOT NULL DEFAULT '',
+  state TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL,
+  reference_code TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN ('submitted', 'in_review', 'matched', 'closed')),
+  ip TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS case_intakes_reference_code_uidx ON case_intakes (reference_code);
+CREATE INDEX IF NOT EXISTS case_intakes_user_id_idx ON case_intakes (user_id);
+CREATE INDEX IF NOT EXISTS case_intakes_status_idx ON case_intakes (status);
+
+-- Saved / shortlisted attorneys
+CREATE TABLE IF NOT EXISTS saved_listings (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  listing_id INTEGER NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS saved_listings_user_listing_uidx ON saved_listings (user_id, listing_id);
+CREATE INDEX IF NOT EXISTS saved_listings_listing_id_idx ON saved_listings (listing_id);
+
+-- Newsletter signup (capture-only; no ESP configured yet, so no emails actually send)
+CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  pref_case_updates BOOLEAN NOT NULL DEFAULT false,
+  pref_legal_alerts BOOLEAN NOT NULL DEFAULT false,
+  pref_helpful_guides BOOLEAN NOT NULL DEFAULT false,
+  unsubscribe_token TEXT NOT NULL,
+  unsubscribed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS newsletter_subscribers_token_uidx ON newsletter_subscribers (unsubscribe_token);

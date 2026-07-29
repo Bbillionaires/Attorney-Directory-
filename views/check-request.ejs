@@ -1,0 +1,39 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Check My Request</h1>
+  <div class="rule"></div>
+  <p class="lead">Already submitted your information? Enter your reference code and email to view its status.</p>
+</div>
+
+<% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+<% if (intake) { %>
+  <div class="search-panel">
+    <span class="badge"><%= intake.status.replace('_', ' ') %></span>
+    <h3 style="margin-top:.4rem">Reference <%= intake.reference_code %></h3>
+    <ul class="details">
+      <% if (intake.category_name) { %><li><strong>Legal issue</strong> <%= intake.category_name %></li><% } %>
+      <% if (intake.city || intake.state) { %><li><strong>Location</strong> <%= [intake.city, intake.state].filter(Boolean).join(', ') %></li><% } %>
+      <li><strong>Submitted</strong> <%= new Date(intake.created_at).toLocaleDateString() %></li>
+    </ul>
+  </div>
+<% } else { %>
+  <div class="search-panel">
+    <form method="post" action="/check-request">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <label for="reference_code">Reference code</label>
+      <input type="text" id="reference_code" name="reference_code" value="<%= form.reference_code || '' %>" placeholder="XXXX-XXXX" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="<%= form.email || '' %>" required>
+
+      <p style="margin-top:1rem"><%- include('partials/turnstile') %></p>
+
+      <p><button class="btn" type="submit">View My Status</button></p>
+    </form>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

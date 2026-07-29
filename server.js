@@ -7,6 +7,7 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 
 const { pool } = require('./src/db');
+const homeRoutes = require('./src/routes/home');
 const publicRoutes = require('./src/routes/public');
 const adminRoutes = require('./src/routes/admin');
 const authRoutes = require('./src/routes/auth');
@@ -16,6 +17,10 @@ const contractRoutes = require('./src/routes/contracts');
 const reviewRoutes = require('./src/routes/reviews');
 const leadRoutes = require('./src/routes/leads');
 const accountRoutes = require('./src/routes/account');
+const intakeRoutes = require('./src/routes/intake');
+const savedListingsRoutes = require('./src/routes/savedListings');
+const newsletterRoutes = require('./src/routes/newsletter');
+const pagesRoutes = require('./src/routes/pages');
 const stripeWebhookRoutes = require('./src/routes/stripeWebhook');
 const { adminAuth } = require('./src/adminAuth');
 const { attachCurrentUser } = require('./src/middleware/auth');
@@ -65,6 +70,7 @@ app.use((req, res, next) => {
 app.use(attachCurrentUser);
 app.use(attachCsrfToken);
 
+app.use('/', homeRoutes);
 app.use('/', publicRoutes);
 app.use('/', authRoutes);
 app.use('/', questionRoutes);
@@ -72,6 +78,10 @@ app.use('/', contractRoutes);
 app.use('/', reviewRoutes);
 app.use('/', leadRoutes);
 app.use('/', accountRoutes);
+app.use('/', intakeRoutes);
+app.use('/', savedListingsRoutes);
+app.use('/', newsletterRoutes);
+app.use('/', pagesRoutes);
 app.use('/attorney', attorneyRoutes);
 app.use('/admin', adminAuth, adminRoutes);
 

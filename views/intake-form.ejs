@@ -1,0 +1,58 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1><%= sourceMeta.title %></h1>
+  <div class="rule"></div>
+  <p class="lead"><%= sourceMeta.lead %></p>
+</div>
+
+<div class="search-panel">
+  <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+  <form method="post" action="/intake">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="source" value="<%= source %>">
+
+    <div class="row">
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="<%= form.name || '' %>" required>
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= form.email || '' %>" required>
+      </div>
+    </div>
+
+    <label for="phone">Phone</label>
+    <input type="text" id="phone" name="phone" value="<%= form.phone || '' %>">
+
+    <div class="row">
+      <div>
+        <label for="category_id">Type of legal issue</label>
+        <select id="category_id" name="category_id">
+          <option value="">Not sure</option>
+          <% categories.forEach(function (c) { %>
+            <option value="<%= c.id %>" <%= String(form.category_id) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label for="state">State</label>
+        <input type="text" id="state" name="state" value="<%= form.state || '' %>" maxlength="2" placeholder="e.g. TX" style="text-transform:uppercase">
+      </div>
+    </div>
+
+    <label for="city">City</label>
+    <input type="text" id="city" name="city" value="<%= form.city || '' %>">
+
+    <label for="description">Tell us what happened</label>
+    <textarea id="description" name="description" rows="5" required><%= form.description || '' %></textarea>
+
+    <p style="margin-top:1rem"><%- include('partials/turnstile') %></p>
+
+    <p><button class="btn" type="submit">Submit</button></p>
+  </form>
+</div>
+
+<%- include('partials/foot') %>

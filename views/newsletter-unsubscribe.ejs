@@ -1,0 +1,14 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>Unsubscribe</h1>
+  <div class="rule"></div>
+</div>
+
+<% if (success) { %>
+  <div class="empty">You've been unsubscribed. You will no longer receive updates from Attorney Menu.</div>
+<% } else { %>
+  <div class="empty">We couldn't find that subscription. It may have already been removed.</div>
+<% } %>
+
+<%- include('partials/foot') %>
