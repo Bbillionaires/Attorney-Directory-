@@ -27,6 +27,7 @@
         <% } else { %>
           <a href="/my/purchases">My Purchases</a>
         <% } %>
+        <a href="/account">My Account</a>
         <form action="/logout" method="post" style="display:inline">
           <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
           <button type="submit" style="background:none;border:none;color:var(--muted);cursor:pointer;font:inherit;padding:.4rem .75rem">Log out</button>

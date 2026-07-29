@@ -15,6 +15,7 @@ const questionRoutes = require('./src/routes/questions');
 const contractRoutes = require('./src/routes/contracts');
 const reviewRoutes = require('./src/routes/reviews');
 const leadRoutes = require('./src/routes/leads');
+const accountRoutes = require('./src/routes/account');
 const stripeWebhookRoutes = require('./src/routes/stripeWebhook');
 const { adminAuth } = require('./src/adminAuth');
 const { attachCurrentUser } = require('./src/middleware/auth');
@@ -70,6 +71,7 @@ app.use('/', questionRoutes);
 app.use('/', contractRoutes);
 app.use('/', reviewRoutes);
 app.use('/', leadRoutes);
+app.use('/', accountRoutes);
 app.use('/attorney', attorneyRoutes);
 app.use('/admin', adminAuth, adminRoutes);
 

@@ -341,3 +341,25 @@ ul.details strong { color: var(--gold-bright); font-weight: 600; margin-right: .
     animation: none;
   }
 }
+
+/* Avatars */
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--gold-dim);
+  background: var(--panel);
+  flex-shrink: 0;
+}
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-bright);
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.avatar-sm { width: 28px; height: 28px; font-size: .8rem; }
+.avatar-lg { width: 84px; height: 84px; font-size: 2rem; }

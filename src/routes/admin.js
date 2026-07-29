@@ -12,6 +12,8 @@ const EMPTY_LISTING = {
   email: '',
   website: '',
   address: '',
+  city: '',
+  state: '',
   active: true,
 };
 
@@ -33,6 +35,8 @@ function listingFromBody(body) {
     email: (body.email || '').trim(),
     website: (body.website || '').trim(),
     address: (body.address || '').trim(),
+    city: (body.city || '').trim(),
+    state: (body.state || '').trim().toUpperCase(),
     active: body.active === '1',
   };
 }
@@ -74,9 +78,9 @@ router.post('/', async (req, res, next) => {
       return res.status(400).send('Name is required');
     }
     await pool.query(
-      `INSERT INTO listings (name, description, category_id, phone, email, website, address, active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address, listing.active]
+      `INSERT INTO listings (name, description, category_id, phone, email, website, address, city, state, active)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address, listing.city, listing.state, listing.active]
     );
     res.redirect('/admin');
   } catch (err) {
@@ -119,9 +123,9 @@ router.put('/:id', async (req, res, next) => {
     }
     await pool.query(
       `UPDATE listings
-       SET name = $1, description = $2, category_id = $3, phone = $4, email = $5, website = $6, address = $7, active = $8
-       WHERE id = $9`,
-      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address, listing.active, id]
+       SET name = $1, description = $2, category_id = $3, phone = $4, email = $5, website = $6, address = $7, active = $8, city = $9, state = $10
+       WHERE id = $11`,
+      [listing.name, listing.description, listing.category_id, listing.phone, listing.email, listing.website, listing.address, listing.active, listing.city, listing.state, id]
     );
     res.redirect('/admin');
   } catch (err) {

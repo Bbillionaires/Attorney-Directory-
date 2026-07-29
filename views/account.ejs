@@ -1,0 +1,31 @@
+<%- include('partials/head') %>
+
+<div class="hero">
+  <h1>My account</h1>
+  <div class="rule"></div>
+  <p class="lead"><%= user.email %> · <%= user.role === 'attorney' ? 'Attorney' : 'Client' %></p>
+</div>
+
+<div class="search-panel">
+  <% if (error) { %><p class="muted" style="color:var(--danger)"><%= error %></p><% } %>
+
+  <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem">
+    <% if (avatarUrl) { %>
+      <img class="avatar avatar-lg" src="<%= avatarUrl %>" alt="Your profile photo">
+    <% } else { %>
+      <span class="avatar avatar-lg avatar-placeholder"><%= user.email.charAt(0).toUpperCase() %></span>
+    <% } %>
+    <p class="small muted" style="margin:0">
+      <% if (user.role === 'attorney') { %>Shown on your public profile and next to your reviews.<% } else { %>Shown next to reviews you leave for attorneys.<% } %>
+    </p>
+  </div>
+
+  <form method="post" action="/account/avatar" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="avatar">Upload a new photo (JPEG or PNG)</label>
+    <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/png">
+    <p><button class="btn" type="submit">Save photo</button></p>
+  </form>
+</div>
+
+<%- include('partials/foot') %>

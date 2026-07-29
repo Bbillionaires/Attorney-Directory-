@@ -2,14 +2,24 @@
 
 <p><a href="/">&larr; Back to directory</a></p>
 
-<% if (listing.category_name) { %><span class="badge"><%= listing.category_name %></span><% } %>
-<% if (!listing.active) { %><span class="badge">Inactive</span><% } %>
-<% if (listing.is_verified) { %><span class="badge">Verified</span><% } %>
-<h1><%= listing.name %></h1>
+<div style="display:flex;align-items:center;gap:1.1rem">
+  <% if (listing.avatar_url) { %>
+    <img class="avatar avatar-lg" src="<%= listing.avatar_url %>" alt="">
+  <% } else { %>
+    <span class="avatar avatar-lg avatar-placeholder"><%= listing.name.charAt(0).toUpperCase() %></span>
+  <% } %>
+  <div>
+    <% if (listing.category_name) { %><span class="badge"><%= listing.category_name %></span><% } %>
+    <% if (!listing.active) { %><span class="badge">Inactive</span><% } %>
+    <% if (listing.is_verified) { %><span class="badge">Verified</span><% } %>
+    <h1 style="margin:.2rem 0 0"><%= listing.name %></h1>
+  </div>
+</div>
 
 <p class="muted"><%= listing.description %></p>
 
 <ul class="details">
+  <% if (listing.city || listing.state) { %><li><strong>Location</strong> <%= [listing.city, listing.state].filter(Boolean).join(', ') %></li><% } %>
   <% if (listing.phone) { %><li><strong>Phone</strong> <%= listing.phone %></li><% } %>
   <% if (listing.email) { %><li><strong>Email</strong> <a href="mailto:<%= listing.email %>"><%= listing.email %></a></li><% } %>
   <% if (listing.website) { %><li><strong>Website</strong> <a href="<%= listing.website %>" target="_blank" rel="noopener noreferrer"><%= listing.website %></a></li><% } %>
@@ -48,9 +58,16 @@
 <% } else { %>
   <ul class="details">
     <% reviews.forEach(function (r) { %>
-      <li>
-        <strong><%= r.rating %>/5</strong> — <%= r.reviewer_email %>
-        <% if (r.body) { %><p class="small muted" style="margin:.3rem 0 0"><%= r.body %></p><% } %>
+      <li style="display:flex;gap:.7rem;align-items:flex-start">
+        <% if (r.avatar_url) { %>
+          <img class="avatar avatar-sm" src="<%= r.avatar_url %>" alt="">
+        <% } else { %>
+          <span class="avatar avatar-sm avatar-placeholder"><%= r.reviewer_email.charAt(0).toUpperCase() %></span>
+        <% } %>
+        <div>
+          <strong><%= r.rating %>/5</strong> — <%= r.reviewer_email %>
+          <% if (r.body) { %><p class="small muted" style="margin:.3rem 0 0"><%= r.body %></p><% } %>
+        </div>
       </li>
     <% }) %>
   </ul>

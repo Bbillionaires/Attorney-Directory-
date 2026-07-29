@@ -13,7 +13,14 @@
     <% contracts.forEach(function (c) { %>
       <div class="card">
         <h3><%= c.title %></h3>
-        <p class="small muted">by <a href="/listing/<%= c.listing_id %>"><%= c.listing_name %></a></p>
+        <p class="small muted" style="display:flex;align-items:center;gap:.5rem">
+          <% if (c.avatar_url) { %>
+            <img class="avatar avatar-sm" src="<%= c.avatar_url %>" alt="">
+          <% } else { %>
+            <span class="avatar avatar-sm avatar-placeholder"><%= c.listing_name.charAt(0).toUpperCase() %></span>
+          <% } %>
+          by <a href="/listing/<%= c.listing_id %>"><%= c.listing_name %></a>
+        </p>
         <p class="small muted"><%= c.description %></p>
         <p class="price">$<%= (c.price_cents / 100).toFixed(2) %></p>
         <form method="post" action="/contracts/<%= c.id %>/buy">

@@ -9,13 +9,18 @@ const router = express.Router();
 
 router.get('/contracts', async (req, res, next) => {
   try {
-    const { rows: contracts } = await pool.query(
-      `SELECT contracts.*, listings.id AS listing_id, listings.name AS listing_name
+    const { rows: contractRows } = await pool.query(
+      `SELECT contracts.*, listings.id AS listing_id, listings.name AS listing_name, users.avatar_key
        FROM contracts
        JOIN listings ON listings.id = contracts.listing_id
+       LEFT JOIN users ON users.id = listings.user_id
        WHERE contracts.active = true AND listings.active = true
        ORDER BY contracts.created_at DESC`
     );
+    const contracts = await Promise.all(contractRows.map(async (c) => ({
+      ...c,
+      avatar_url: c.avatar_key ? await getSignedDownloadUrl(c.avatar_key, 3600) : null,
+    })));
     res.render('contracts', { title: 'Contracts for Sale', contracts });
   } catch (err) {
     next(err);

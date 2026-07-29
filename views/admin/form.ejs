@@ -47,6 +47,17 @@
     </div>
   </div>
 
+  <div class="row">
+    <div>
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" value="<%= listing.city %>">
+    </div>
+    <div>
+      <label for="state">State</label>
+      <input type="text" id="state" name="state" value="<%= listing.state %>" maxlength="2" placeholder="e.g. TX" style="text-transform:uppercase">
+    </div>
+  </div>
+
   <p>
     <label style="display:inline-flex;align-items:center;gap:.5rem;width:auto;margin:0">
       <input type="checkbox" name="active" value="1" <%= listing.active ? 'checked' : '' %> style="width:auto;accent-color:var(--gold)">

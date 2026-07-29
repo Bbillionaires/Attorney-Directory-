@@ -18,6 +18,10 @@ CREATE TABLE IF NOT EXISTS listings (
 
 CREATE INDEX IF NOT EXISTS listings_category_id_idx ON listings (category_id);
 CREATE INDEX IF NOT EXISTS listings_active_idx ON listings (active);
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS city TEXT NOT NULL DEFAULT '';
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS state TEXT NOT NULL DEFAULT '';
+CREATE INDEX IF NOT EXISTS listings_city_idx ON listings (city);
+CREATE INDEX IF NOT EXISTS listings_state_idx ON listings (state);
 
 -- Accounts
 CREATE TABLE IF NOT EXISTS users (
@@ -32,6 +36,7 @@ CREATE TABLE IF NOT EXISTS users (
   CONSTRAINT attorney_requires_bar_number CHECK (role <> 'attorney' OR bar_number IS NOT NULL)
 );
 CREATE INDEX IF NOT EXISTS users_role_idx ON users (role);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_key TEXT;
 
 -- Session store (connect-pg-simple reads/writes this table)
 CREATE TABLE IF NOT EXISTS "session" (
