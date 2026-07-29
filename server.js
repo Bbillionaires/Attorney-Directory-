@@ -27,6 +27,7 @@ if (!sessionSecret) {
 }
 
 const app = express();
+const BUILD_ID = Date.now();
 
 app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
@@ -57,6 +58,7 @@ app.use(session({
 
 app.use((req, res, next) => {
   res.locals.turnstileSiteKey = process.env.TURNSTILE_SITE_KEY || '';
+  res.locals.buildId = BUILD_ID;
   next();
 });
 app.use(attachCurrentUser);

@@ -86,34 +86,59 @@ header {
 
 .container { max-width: 1040px; margin: 0 auto; padding: 2rem 1.2rem 3rem; position: relative; z-index: 1; }
 
-/* Ornamental engraved-style frame around the page content, corner flourishes */
-.menu-frame::before {
+/* Ornamental engraved-style frame around the page content: outer rule,
+   woven guilloche band, inner rule — the classic banknote/certificate
+   border structure — plus flourish corners. */
+.menu-frame::before,
+.menu-frame::after {
   content: '';
   position: absolute;
-  top: 8px; left: 6px; right: 6px; bottom: 8px;
-  box-shadow:
-    inset 0 0 0 1px var(--gold-dim),
-    inset 0 0 0 6px transparent,
-    inset 0 0 0 7px rgba(201, 162, 75, .28);
   pointer-events: none;
   z-index: 0;
+  border: 1px solid var(--gold-dim);
 }
+.menu-frame::before { top: 2px; left: 2px; right: 2px; bottom: 2px; }
+.menu-frame::after { top: 26px; left: 26px; right: 26px; bottom: 26px; opacity: .8; }
+
+.menu-frame .edge {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .55;
+}
+.menu-frame .edge-top, .menu-frame .edge-bottom {
+  left: 48px; right: 48px;
+  height: 16px;
+  background: url('/guilloche-h.svg') repeat-x left center;
+  background-size: 40px 16px;
+}
+.menu-frame .edge-top { top: 6px; }
+.menu-frame .edge-bottom { bottom: 6px; }
+.menu-frame .edge-left, .menu-frame .edge-right {
+  top: 48px; bottom: 48px;
+  width: 16px;
+  background: url('/guilloche-v.svg') repeat-y center top;
+  background-size: 16px 40px;
+}
+.menu-frame .edge-left { left: 6px; }
+.menu-frame .edge-right { right: 6px; }
+
 .menu-frame .corner {
   position: absolute;
-  width: 34px;
-  height: 34px;
+  width: 46px;
+  height: 46px;
   color: var(--gold-dim);
   pointer-events: none;
   z-index: 0;
 }
 .menu-frame .corner svg { width: 100%; height: 100%; fill: none; stroke: currentColor; }
-.menu-frame .corner-tl { top: 2px; left: 0; }
-.menu-frame .corner-tr { top: 2px; right: 0; transform: scaleX(-1); }
-.menu-frame .corner-bl { bottom: 2px; left: 0; transform: scaleY(-1); }
-.menu-frame .corner-br { bottom: 2px; right: 0; transform: scale(-1, -1); }
+.menu-frame .corner-tl { top: 0; left: 0; }
+.menu-frame .corner-tr { top: 0; right: 0; transform: scaleX(-1); }
+.menu-frame .corner-bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.menu-frame .corner-br { bottom: 0; right: 0; transform: scale(-1, -1); }
 @media (max-width: 700px) {
-  .menu-frame::before { display: none; }
-  .menu-frame .corner { display: none; }
+  .menu-frame::before, .menu-frame::after { display: none; }
+  .menu-frame .corner, .menu-frame .edge { display: none; }
 }
 
 .hero { margin-bottom: 1.6rem; }
