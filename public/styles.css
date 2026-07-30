@@ -542,3 +542,25 @@ ul.details strong { color: var(--gold-bright); font-weight: 600; margin-right: .
   vertical-align: middle;
   box-shadow: none;
 }
+
+/* Clickable US states map */
+.us-map-wrap {
+  background: var(--black);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+}
+.us-map-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.us-map-wrap .state-link {
+  cursor: pointer;
+  transition: filter .15s ease;
+}
+.us-map-wrap .state-link:hover,
+.us-map-wrap .state-link:focus {
+  filter: brightness(1.45);
+  outline: none;
+}
