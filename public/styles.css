@@ -507,7 +507,17 @@ ul.details strong { color: var(--gold-bright); font-weight: 600; margin-right: .
   border-radius: 14px;
   overflow: hidden;
 }
-.map-img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.map-img,
+.map-wrap svg { width: 100%; height: 100%; display: block; object-fit: contain; }
+.map-wrap .map-link {
+  cursor: pointer;
+  transition: filter .15s ease;
+}
+.map-wrap .map-link:hover,
+.map-wrap .map-link:focus {
+  filter: brightness(1.6);
+  outline: none;
+}
 .map-marker {
   position: absolute;
   transform: translate(-50%, -50%);

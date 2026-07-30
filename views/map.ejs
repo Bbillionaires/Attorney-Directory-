@@ -6,8 +6,9 @@
   <p class="lead">Every attorney who registers with us — or that we bring on directly as a partner firm — plotted on the map, wherever they practice.</p>
 </div>
 
+<p class="small muted">Click any country to see attorneys there, grouped by city and practice area.</p>
 <div class="map-wrap">
-  <img class="map-img" src="/world-map.svg" alt="World map" draggable="false">
+  <%- worldMapSvg %>
   <% markers.forEach(function (m) { %>
     <a class="map-marker <%= m.is_verified ? 'is-verified' : '' %>"
        style="left:<%= m.leftPct.toFixed(3) %>%; top:<%= m.topPct.toFixed(3) %>%"

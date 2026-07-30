@@ -3,13 +3,13 @@
 <p><a href="/map">&larr; Back to map</a></p>
 
 <div class="hero">
-  <h1>Attorneys in <%= stateName %></h1>
+  <h1>Attorneys in <%= regionName %></h1>
   <div class="rule"></div>
   <p class="lead"><%= total %> listing<%= total === 1 ? '' : 's' %>, grouped by city and practice area.</p>
 </div>
 
 <% if (!cities.length) { %>
-  <div class="empty">No attorneys listed in <%= stateName %> yet. <a href="/directory">Browse the full directory</a> instead.</div>
+  <div class="empty">No attorneys listed in <%= regionName %> yet. <a href="/directory">Browse the full directory</a> instead.</div>
 <% } else { %>
   <% cities.forEach(function (c) { %>
     <div class="section" style="margin:2.2rem 0">
