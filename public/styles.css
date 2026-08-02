@@ -21,10 +21,30 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: radial-gradient(ellipse at top, #100e09 0%, #080705 55%, #000 100%);
-  background-color: #000;
+  background: radial-gradient(ellipse at top, #1c1912 0%, #120f0a 55%, #050402 100%);
+  background-color: #050402;
   color: var(--text);
   font: 16px/1.6 "Inter", system-ui, "Segoe UI", Arial, sans-serif;
+}
+
+/* Gentle back-and-forth breathing over the base background — lightens
+   toward a warm grey, then settles back, on a slow repeating cycle. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #4a453c;
+  opacity: 0;
+  animation: bgBreathe 9s ease-in-out infinite;
+}
+@keyframes bgBreathe {
+  0%, 100% { opacity: 0; }
+  50% { opacity: .3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
 }
 
 h1, h2, h3, .brand {
@@ -36,6 +56,33 @@ h1, h2, h3, .brand {
 h1 { font-size: 2.1rem; color: var(--gold-bright); margin: .2rem 0 .3rem; }
 h2 { color: var(--gold-bright); }
 h3 { color: var(--text); }
+
+/* A moving sheen sweeping across the "Attorney Menu" brand lettering,
+   like light glancing off polished gold. */
+.gold-shine {
+  background: linear-gradient(
+    100deg,
+    var(--gold-dim) 25%,
+    var(--gold-bright) 45%,
+    #fff6d9 50%,
+    var(--gold-bright) 55%,
+    var(--gold-dim) 75%
+  );
+  background-size: 250% 100%;
+  background-position: 200% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: goldShine 5s ease-in-out infinite;
+}
+@keyframes goldShine {
+  0%, 15% { background-position: 200% 0; }
+  85%, 100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gold-shine { animation: none; background-position: 0 0; }
+}
 
 a { color: var(--gold); text-decoration: none; }
 a:hover { color: var(--gold-bright); text-decoration: underline; }
