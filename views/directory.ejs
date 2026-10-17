@@ -60,7 +60,8 @@
           <div>
             <% if (l.category_name) { %><span class="badge"><%= l.category_name %></span><% } %>
             <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
-            <% if (!l.user_id) { %><span class="badge">Partner Firm</span><% } %>
+            <% if (l.source === 'partner') { %><span class="badge">Partner Firm</span><% } %>
+            <%- include('partials/status-badges', { l: l }) %>
           </div>
         </div>
         <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
@@ -69,6 +70,30 @@
       </div>
     <% }) %>
   </div>
+
+  <% if (pagination.totalPages > 1) { %>
+    <% function pageHref(p) {
+         const qs = new URLSearchParams();
+         if (query.q) qs.set('q', query.q);
+         if (query.category) qs.set('category', query.category);
+         if (query.city) qs.set('city', query.city);
+         if (query.state) qs.set('state', query.state);
+         if (query.country) qs.set('country', query.country);
+         qs.set('page', p);
+         return '/directory?' + qs.toString();
+       } %>
+    <nav class="pagination" aria-label="Pagination">
+      <% if (pagination.page > 1) { %>
+        <a class="btn secondary" href="<%= pageHref(pagination.page - 1) %>">&larr; Previous</a>
+      <% } %>
+      <span class="small muted pagination-status">
+        Page <%= pagination.page %> of <%= pagination.totalPages %> (<%= pagination.total.toLocaleString() %> total)
+      </span>
+      <% if (pagination.page < pagination.totalPages) { %>
+        <a class="btn secondary" href="<%= pageHref(pagination.page + 1) %>">Next &rarr;</a>
+      <% } %>
+    </nav>
+  <% } %>
 <% } %>
 
 <%- include('partials/foot') %>

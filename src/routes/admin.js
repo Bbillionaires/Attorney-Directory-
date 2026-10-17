@@ -6,6 +6,8 @@ const { COUNTRIES } = require('../config/countries');
 
 const router = express.Router();
 
+const PAGE_SIZE = 50;
+
 const EMPTY_LISTING = {
   name: '',
   description: '',
@@ -47,14 +49,29 @@ function listingFromBody(body) {
 
 router.get('/', async (req, res, next) => {
   try {
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+
+    const { rows: countRows } = await pool.query('SELECT COUNT(*) FROM listings');
+    const total = Number(countRows[0].count);
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const currentPage = Math.min(page, totalPages);
+    const offset = (currentPage - 1) * PAGE_SIZE;
+
     const { rows: listings } = await pool.query(
-      `SELECT listings.*, categories.name AS category_name, users.bar_number
+      `SELECT listings.*, categories.name AS category_name,
+              COALESCE(listings.bar_number, users.bar_number) AS bar_number
        FROM listings
        LEFT JOIN categories ON categories.id = listings.category_id
        LEFT JOIN users ON users.id = listings.user_id
-       ORDER BY listings.id DESC`
+       ORDER BY listings.id DESC
+       LIMIT $1 OFFSET $2`,
+      [PAGE_SIZE, offset]
     );
-    res.render('admin/index', { title: 'Admin', listings });
+    res.render('admin/index', {
+      title: 'Admin',
+      listings,
+      pagination: { page: currentPage, totalPages, total, pageSize: PAGE_SIZE },
+    });
   } catch (err) {
     next(err);
   }

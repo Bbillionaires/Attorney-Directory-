@@ -22,7 +22,7 @@
   <span class="map-marker-dot map-legend-dot"></span> Attorney &nbsp;
   <span class="map-marker-dot map-legend-dot is-verified"></span> Verified &nbsp;
   <% if (markers.length) { %>
-    — <%= placed %> of <%= total %> active listings currently have a plottable location.
+    — <%= placed.toLocaleString() %> of <%= total.toLocaleString() %> active listings currently have a plottable location<%= placed > markerLimit ? ` (showing a random sample of ${markerLimit.toLocaleString()})` : '' %>.
   <% } else { %>
     — no attorneys have a plottable location yet; the map fills in as attorneys register or are added.
   <% } %>

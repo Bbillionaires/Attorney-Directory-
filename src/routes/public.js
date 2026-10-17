@@ -11,6 +11,8 @@ const US_STATES = [
   'WV', 'WI', 'WY',
 ];
 
+const PAGE_SIZE = 24;
+
 async function withAvatarUrl(row) {
   if (!row.avatar_key) return { ...row, avatar_url: null };
   return { ...row, avatar_url: await getSignedDownloadUrl(row.avatar_key, 3600) };
@@ -22,6 +24,8 @@ router.get('/directory', async (req, res, next) => {
     const category = (req.query.category || '').trim();
     const city = (req.query.city || '').trim();
     const state = (req.query.state || '').trim();
+    const country = (req.query.country || '').trim();
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
 
     const conditions = ['listings.active = true'];
     const params = [];
@@ -42,21 +46,45 @@ router.get('/directory', async (req, res, next) => {
       params.push(state);
       conditions.push(`listings.state = $${params.length}`);
     }
+    if (country) {
+      params.push(country);
+      conditions.push(`listings.country = $${params.length}`);
+    }
 
+    const whereClause = conditions.join(' AND ');
+
+    const { rows: countRows } = await pool.query(
+      `SELECT COUNT(*) FROM listings WHERE ${whereClause}`,
+      params
+    );
+    const total = Number(countRows[0].count);
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const currentPage = Math.min(page, totalPages);
+    const offset = (currentPage - 1) * PAGE_SIZE;
+
+    const pageParams = [...params, PAGE_SIZE, offset];
     const { rows: listingRows } = await pool.query(
       `SELECT listings.*, categories.name AS category_name, users.avatar_key
        FROM listings
        LEFT JOIN categories ON categories.id = listings.category_id
        LEFT JOIN users ON users.id = listings.user_id
-       WHERE ${conditions.join(' AND ')}
-       ORDER BY listings.name ASC`,
-      params
+       WHERE ${whereClause}
+       ORDER BY listings.name ASC
+       LIMIT $${pageParams.length - 1} OFFSET $${pageParams.length}`,
+      pageParams
     );
     const listings = await Promise.all(listingRows.map(withAvatarUrl));
 
     const { rows: categories } = await pool.query('SELECT * FROM categories ORDER BY name ASC');
 
-    res.render('directory', { title: 'Attorney Directory', listings, categories, states: US_STATES, query: { q, category, city, state } });
+    res.render('directory', {
+      title: 'Attorney Directory',
+      listings,
+      categories,
+      states: US_STATES,
+      query: { q, category, city, state, country },
+      pagination: { page: currentPage, totalPages, total, pageSize: PAGE_SIZE },
+    });
   } catch (err) {
     next(err);
   }

@@ -211,3 +211,26 @@ CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE UNIQUE INDEX IF NOT EXISTS newsletter_subscribers_token_uidx ON newsletter_subscribers (unsubscribe_token);
+
+-- Bulk-imported bar-roster listings (e.g. The Florida Bar's full membership
+-- export) alongside self-registered attorneys and hand-added partner firms.
+-- bar_number is distinct from users.bar_number: this one lives on the listing
+-- itself so it applies even when there's no linked user account.
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS bar_number TEXT;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS membership_status TEXT NOT NULL DEFAULT 'member'
+  CHECK (membership_status IN ('member', 'inactive', 'house_counsel'));
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS eligible_to_practice BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS professional_type TEXT NOT NULL DEFAULT 'attorney'
+  CHECK (professional_type IN ('attorney', 'paralegal'));
+-- Distinguishes the three ways a listing comes to exist: self-registered
+-- (the attorney made their own account), hand-added by admin for an attorney
+-- we actually have a business relationship with ("Partner Firm" badge), or
+-- a bulk bar-roster import with no relationship at all. user_id alone can't
+-- tell "partner" and "roster_import" apart, since neither has one.
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'partner'
+  CHECK (source IN ('self', 'partner', 'roster_import'));
+UPDATE listings SET source = 'self' WHERE user_id IS NOT NULL AND source = 'partner';
+-- Partial + case-insensitive so re-running the import is idempotent (ON CONFLICT upsert).
+CREATE UNIQUE INDEX IF NOT EXISTS listings_bar_number_uidx ON listings (lower(bar_number)) WHERE bar_number IS NOT NULL;
+CREATE INDEX IF NOT EXISTS listings_membership_status_idx ON listings (membership_status);
+CREATE INDEX IF NOT EXISTS listings_professional_type_idx ON listings (professional_type);

@@ -5,30 +5,31 @@
 <div class="hero">
   <h1>Attorneys in <%= regionName %></h1>
   <div class="rule"></div>
-  <p class="lead"><%= total %> listing<%= total === 1 ? '' : 's' %>, grouped by city and practice area.</p>
+  <p class="lead"><%= total.toLocaleString() %> listing<%= total === 1 ? '' : 's' %> across <%= cities.length.toLocaleString() %> cit<%= cities.length === 1 ? 'y' : 'ies' %>. Pick a city to browse.</p>
 </div>
+
+<% function cityHref(city, categoryId) {
+     const qs = new URLSearchParams(regionQuery);
+     qs.set('city', city);
+     if (categoryId) qs.set('category', categoryId);
+     return '/directory?' + qs.toString();
+   } %>
 
 <% if (!cities.length) { %>
   <div class="empty">No attorneys listed in <%= regionName %> yet. <a href="/directory">Browse the full directory</a> instead.</div>
 <% } else { %>
-  <% cities.forEach(function (c) { %>
-    <div class="section" style="margin:2.2rem 0">
-      <h2><%= c.city %></h2>
-      <% c.categories.forEach(function (cat) { %>
-        <h3 class="small" style="color:var(--gold-dim);text-transform:uppercase;letter-spacing:1px;margin:1.1rem 0 .6rem"><%= cat.category %></h3>
-        <div class="list">
-          <% cat.firms.forEach(function (l) { %>
-            <div class="card">
-              <% if (l.is_verified) { %><span class="badge">Verified</span><% } %>
-              <% if (!l.user_id) { %><span class="badge">Partner Firm</span><% } %>
-              <h3><a href="/listing/<%= l.id %>"><%= l.name %></a></h3>
-              <p class="small muted"><%= l.description %></p>
-            </div>
-          <% }) %>
-        </div>
-      <% }) %>
-    </div>
-  <% }) %>
+  <div class="list">
+    <% cities.forEach(function (c) { %>
+      <div class="card">
+        <h3><a href="<%= cityHref(c.city) %>"><%= c.city %></a></h3>
+        <p class="small muted"><%= c.total.toLocaleString() %> listing<%= c.total === 1 ? '' : 's' %></p>
+        <p class="small">
+          <% c.categories.slice(0, 8).forEach(function (cat, i) { %><% if (i) { %> &middot; <% } %><a href="<%= cityHref(c.city, cat.categoryId) %>"><%= cat.category %> (<%= cat.count %>)</a><% }) %>
+          <% if (c.categories.length > 8) { %> &middot; <a href="<%= cityHref(c.city) %>">+<%= c.categories.length - 8 %> more</a><% } %>
+        </p>
+      </div>
+    <% }) %>
+  </div>
 <% } %>
 
 <p style="margin-top:1.6rem"><a class="btn secondary" href="/map">Back to Map</a></p>

@@ -1,0 +1,4 @@
+<% if (l.professional_type === 'paralegal') { %><span class="badge badge-muted">Paralegal</span><% } %>
+<% if (l.membership_status === 'inactive') { %><span class="badge badge-muted">Inactive</span><% } %>
+<% if (l.membership_status === 'house_counsel') { %><span class="badge badge-muted">House Counsel</span><% } %>
+<% if (!l.eligible_to_practice) { %><span class="badge badge-muted">Not Eligible to Practice</span><% } %>

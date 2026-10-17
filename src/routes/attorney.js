@@ -77,8 +77,8 @@ router.post('/profile', verifyCsrfToken, async (req, res, next) => {
       );
     } else {
       await pool.query(
-        `INSERT INTO listings (name, description, category_id, phone, email, website, address, active, question_price_cents, city, state, country, latitude, longitude, user_id)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`,
+        `INSERT INTO listings (name, description, category_id, phone, email, website, address, active, question_price_cents, city, state, country, latitude, longitude, user_id, source)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,'self')`,
         [fields.name, fields.description, fields.category_id, fields.phone, fields.email,
          fields.website, fields.address, fields.active, fields.question_price_cents, fields.city, fields.state,
          fields.country, latitude, longitude, req.session.userId]
